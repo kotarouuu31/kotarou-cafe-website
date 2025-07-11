@@ -1,36 +1,140 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kotarou Cafe Website
 
-## Getting Started
+![Kotarou Cafe](https://img.shields.io/badge/Kotarou%20Cafe-2025-amber)
+![Next.js](https://img.shields.io/badge/Next.js-15.0-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.0-38bdf8)
+![AI Development](https://img.shields.io/badge/AI%20Development-Windsurf-purple)
 
-First, run the development server:
+## 📖 プロジェクト概要
+
+Kotarou Cafeは、モダンな技術スタックを活用した実店舗向けカフェウェブサイトです。単なる情報サイトを超え、DDJ-FLX4との連携機能やラテアート進捗管理など、実店舗運営に役立つ機能を実装しています。AI支援開発手法を積極的に取り入れ、効率的かつ高品質な開発を実現しました。
+
+<p align="center">
+  <img src="https://via.placeholder.com/800x400?text=Kotarou+Cafe+Screenshot" alt="Kotarou Cafe Screenshot" width="80%">
+</p>
+
+## 🛠️ 技術スタック
+
+### フロントエンド
+- **Next.js 15**: App Routerを活用した最新のReactフレームワーク
+- **TypeScript**: 型安全な開発環境の構築
+- **Tailwind CSS**: 効率的なUIデザインの実装
+- **React Hook Form**: フォームのバリデーションと状態管理
+
+### バックエンド（開発中）
+- **Next.js API Routes**: サーバーサイド機能の実装
+- **DDJ-FLX4 API連携**: 音楽機器との連携（準備中）
+
+### 開発手法
+- **AI活用開発（Windsurf）**: コード生成・実装支援
+- **プロジェクト管理・技術支援（Claude）**: 開発戦略立案と実装サポート
+- **Vibe Coding**: 感性と技術を融合した開発アプローチ
+
+## 🤖 AI協働開発
+
+本プロジェクトでは、AI技術を積極的に活用した協働開発手法を採用しています：
+
+- **Windsurf**: 
+  - コンポーネント設計と実装
+  - UIデザインパターンの提案
+  - コードの最適化と品質向上
+
+- **Claude（クー）**: 専属マネージャーとして
+  - Vibe Coding戦略立案
+  - 技術的課題解決支援
+  - 就活用ポートフォリオ最適化
+  - 日々のモチベーション管理
+  - コードレビューと改善提案
+
+AIとの協働により、開発速度と品質の両立を実現しています。
+
+## ✨ 主な機能
+
+### 🎵 音楽表示（DDJ連携準備中）
+- リアルタイムプレイリスト表示
+- DJ機器との連携インターフェース
+- 来店客向け楽曲リクエスト機能
+
+### 📅 イベント・スケジュール管理
+- カレンダー形式のイベント表示
+- イベント詳細ページと予約機能
+- 定期イベントの自動表示
+
+### 🎨 ラテアート進捗ギャラリー
+- 作品のBefore/After表示
+- 難易度別フィルタリング
+- いいね機能とコメント機能
+- 技法別カテゴリ分類
+
+### 📝 お問い合わせフォーム
+- バリデーション機能
+- 複数種類の問い合わせ対応
+- 送信完了フィードバック
+- Google Maps連携
+
+### 📱 レスポンシブデザイン
+- モバイルファースト設計
+- 全デバイス対応のUI
+- 最適化されたユーザー体験
+
+## 🎯 特徴
+
+### Vibe Coding開発手法
+感性と技術を融合させた独自の開発アプローチ。ユーザー体験を最重視し、カフェの雰囲気を忠実にデジタル空間に再現することを目指しています。
+
+### AI支援による効率的開発
+最新のAI技術を活用し、コード生成から設計提案まで、開発プロセス全体を効率化。人間の創造性とAIの処理能力を組み合わせた次世代の開発スタイルを実践しています。
+
+### 実店舗での実用性重視
+単なるポートフォリオサイトではなく、実際のカフェ運営に役立つ機能を重視。顧客体験の向上とスタッフの業務効率化の両方に貢献するシステム設計を行っています。
+
+## 🚀 開発背景
+
+「実店舗で本当に使えるWebシステム」を目指した技術実証プロジェクトとして開発をスタート。従来のカフェサイトにありがちな情報提供だけでなく、店舗運営に直接貢献する機能を実装することで、デジタルとリアルの融合を目指しています。
+
+DDJ機器との連携、リアルタイム更新、AI活用開発など、モダンな技術スタックを実際のビジネス環境で活用するチャレンジとして位置づけています。
+
+## 📱 デモ
+
+現在開発中のため、デモサイトは準備中です。デプロイ完了後にURLを追加予定です。
+
+## 📦 インストール・起動方法
 
 ```bash
+# リポジトリのクローン
+git clone https://github.com/yourusername/kotarou-cafe.git
+cd kotarou-cafe
+
+# 依存関係のインストール
+npm install
+
+# 開発サーバーの起動
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ブラウザで [http://localhost:3000](http://localhost:3000) を開いてアプリケーションを確認できます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔍 今後の展望
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- DDJ-FLX4との完全連携
+- 予約システムの強化
+- オンライン決済機能の追加
+- スタッフ管理システムの実装
+- モバイルアプリ版の開発
 
-## Learn More
+## 👨‍💻 開発者
 
-To learn more about Next.js, take a look at the following resources:
+- **名前**: Kotarou
+- **役割**: フルスタック開発者
+- **技術**: Next.js, TypeScript, Tailwind CSS, AI開発
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📄 ライセンス
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+MIT License
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<p align="center">
+  <i>Developed with ☕ and AI assistance</i>
+</p>

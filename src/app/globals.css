@@ -1,26 +1,161 @@
 @import "tailwindcss";
+@import "react-calendar/dist/Calendar.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FFFBF5;
+  --foreground: #4A3520;
+  --primary: #8B5A2B;
+  --primary-light: #B78B5C;
+  --primary-dark: #6A4420;
+  --secondary: #D4A276;
+  --accent: #C8815F;
+  --accent-light: #E6C3B0;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --font-heading: var(--font-playfair);
+  --font-body: var(--font-poppins);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #2C1E12;
+    --foreground: #F5E8D7;
+    --primary: #D4A276;
+    --primary-light: #E6C3A0;
+    --primary-dark: #A37B59;
+    --secondary: #8B5A2B;
+    --accent: #E6A376;
+    --accent-light: #F5C4A6;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+}
+
+/* カレンダースタイルのカスタマイズ */
+.react-calendar {
+  width: 100%;
+  max-width: 100%;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-family: var(--font-body);
+  line-height: 1.125em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+  font-size: 16px;
+  color: var(--foreground);
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background-color: #f0f0f0;
+  border-radius: 0.25rem;
+}
+
+.react-calendar__tile {
+  max-width: 100%;
+  padding: 10px 6px;
+  background: none;
+  text-align: center;
+  line-height: 16px;
+  font-size: 14px;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: var(--primary-light);
+  color: white;
+  border-radius: 0.25rem;
+}
+
+.react-calendar__tile--now {
+  background: var(--accent-light);
+  border-radius: 0.25rem;
+}
+
+.react-calendar__tile--active {
+  background: var(--primary);
+  color: white;
+  border-radius: 0.25rem;
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: var(--primary-dark);
+}
+
+/* イベント関連のユーティリティクラス */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 音楽関連のアニメーション */
+@keyframes music-bar1 {
+  0%, 100% { height: 3px; }
+  50% { height: 12px; }
+}
+
+@keyframes music-bar2 {
+  0%, 100% { height: 6px; }
+  25% { height: 15px; }
+  75% { height: 10px; }
+}
+
+@keyframes music-bar3 {
+  0%, 100% { height: 9px; }
+  50% { height: 5px; }
+}
+
+.animate-music-bar1 {
+  animation: music-bar1 0.8s ease-in-out infinite;
+}
+
+.animate-music-bar2 {
+  animation: music-bar2 1s ease-in-out infinite;
+}
+
+.animate-music-bar3 {
+  animation: music-bar3 0.6s ease-in-out infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce 2s infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
