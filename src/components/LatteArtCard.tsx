@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { LatteArtWork } from '../types/latte-art';
-import { getDifficultyText, formatTimeSpent } from '../data/latte-art';
+import { formatTimeSpent } from '../data/latte-art';
 
 type LatteArtCardProps = {
   artwork: LatteArtWork;

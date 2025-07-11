@@ -1,5 +1,5 @@
 import { Event, BusinessHours, SpecialBusinessHours } from '../types/events';
-import { format, parseISO, isWithinInterval, isSameDay, addDays, addWeeks, addMonths, getDay, getDate } from 'date-fns';
+import { format, parseISO, isWithinInterval, isSameDay, getDay, getDate } from 'date-fns';
 import { ja } from 'date-fns/locale';
 
 // 指定した日付のイベントを取得する

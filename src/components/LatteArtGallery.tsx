@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import LatteArtCard from './LatteArtCard';
 import LatteArtDetail from './LatteArtDetail';
 import { LatteArtWork } from '../types/latte-art';

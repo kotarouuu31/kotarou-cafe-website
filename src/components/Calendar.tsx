@@ -89,7 +89,13 @@ const EventCalendar: React.FC<CalendarProps> = ({ events, onDateClick }) => {
           <Calendar
             locale="ja-JP"
             value={selectedDate}
-            onChange={handleDateClick as any}
+            onChange={(value) => {
+              if (value instanceof Date) {
+                handleDateClick(value);
+              } else if (Array.isArray(value) && value[0] instanceof Date) {
+                handleDateClick(value[0]);
+              }
+            }}
             tileContent={tileContent}
             className="rounded-lg border-none shadow-sm"
             formatDay={(locale, date) => format(date, 'd')}
