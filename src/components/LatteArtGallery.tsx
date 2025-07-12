@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { LatteArtWork } from '../types/latte-art';
 import { latteArtWorks, getTodaysLatteArt, formatDate } from '../data/latte-art';
 
@@ -38,10 +39,13 @@ const LatteArtGallery: React.FC = () => {
             <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-4xl mx-auto">
               <div className="md:flex">
                 <div className="md:w-1/2 relative h-72 md:h-auto">
-                  <img 
+                  <Image 
                     src={`https://source.unsplash.com/${todaysArt.imageUrl}`} 
                     alt={todaysArt.title} 
-                    className="w-full h-full object-cover"
+                    className="object-cover"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority
                   />
                 </div>
                 
@@ -75,10 +79,12 @@ const LatteArtGallery: React.FC = () => {
             {sortedArtworks.map(artwork => (
               <div key={artwork.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="relative h-48">
-                  <img 
+                  <Image 
                     src={`https://source.unsplash.com/${artwork.imageUrl}`} 
                     alt={artwork.title} 
-                    className="w-full h-full object-cover"
+                    className="object-cover"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     onClick={() => setSelectedArtwork(artwork)}
                   />
                 </div>
@@ -123,11 +129,15 @@ const LatteArtGallery: React.FC = () => {
               </button>
             </div>
             <div className="p-4">
-              <img 
-                src={`https://source.unsplash.com/${selectedArtwork?.imageUrl}`} 
-                alt={selectedArtwork?.title} 
-                className="w-full h-auto max-h-[60vh] object-contain mb-4"
-              />
+              <div className="relative w-full h-[60vh] mb-4">
+                <Image 
+                  src={`https://source.unsplash.com/${selectedArtwork?.imageUrl}`} 
+                  alt={selectedArtwork?.title || ''} 
+                  className="object-contain"
+                  fill
+                  sizes="100vw"
+                />
+              </div>
               <div className="flex justify-between items-center mb-2">
                 <h4 className="font-medium text-lg">{selectedArtwork?.title}</h4>
                 <span className="text-gray-500">{formatDate(selectedArtwork?.createdAt)}</span>

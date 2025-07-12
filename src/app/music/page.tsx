@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import NowPlaying from '@/components/NowPlaying';
 import TrackHistory from '@/components/TrackHistory';
 import { generateMockHistoryData, getTrackHistory } from '@/lib/serato';
@@ -11,20 +11,8 @@ export default function MusicPage() {
   const [useMockData, setUseMockData] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 初期データ読み込み
-  useEffect(() => {
-    loadData();
-    
-    // 30秒ごとにデータを更新
-    const intervalId = setInterval(() => {
-      loadData();
-    }, 30000);
-    
-    return () => clearInterval(intervalId);
-  }, [useMockData]);
-
   // データ読み込み関数
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
       // 実際のデータ取得かモックデータ生成
@@ -38,7 +26,19 @@ export default function MusicPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [useMockData]);
+
+  // 初期データ読み込み
+  useEffect(() => {
+    loadData();
+    
+    // 30秒ごとにデータを更新
+    const intervalId = setInterval(() => {
+      loadData();
+    }, 30000);
+    
+    return () => clearInterval(intervalId);
+  }, [loadData]);
 
   // モックデータ/実データ切り替え
   const toggleDataSource = () => {

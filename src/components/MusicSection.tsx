@@ -2,14 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import NowPlaying from './NowPlaying';
-import RecentTracks from './RecentTracks';
 import DJSchedule from './DJSchedule';
 import Link from 'next/link';
 import { generateMockHistoryData } from '@/lib/serato';
 import { NowPlaying as NowPlayingType } from '@/types/serato';
 
 const MusicSection: React.FC = () => {
-  const [showRecentTracks, setShowRecentTracks] = useState(false);
   const [showDJSchedule, setShowDJSchedule] = useState(false);
   const [nowPlaying, setNowPlaying] = useState<NowPlayingType>({ track: null, startedAt: null });
   
@@ -28,20 +26,9 @@ const MusicSection: React.FC = () => {
     return () => clearInterval(switchTrackInterval);
   }, []);
   
-  // 最近再生した楽曲のトグル
-  const toggleRecentTracks = () => {
-    setShowRecentTracks(!showRecentTracks);
-    if (!showRecentTracks) {
-      setShowDJSchedule(false); // 他方を閉じる
-    }
-  };
-  
   // DJスケジュールのトグル
   const toggleDJSchedule = () => {
     setShowDJSchedule(!showDJSchedule);
-    if (!showDJSchedule) {
-      setShowRecentTracks(false); // 他方を閉じる
-    }
   };
   
   return (
