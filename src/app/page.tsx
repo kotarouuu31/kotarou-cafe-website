@@ -1,8 +1,30 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import MusicSection from '../components/MusicSection';
+import { useState, useEffect } from 'react';
+import { generateMockHistoryData } from '@/lib/serato';
+import NowPlaying from '@/components/NowPlaying';
+import { NowPlaying as NowPlayingType } from '@/types/serato';
 
 export default function Home() {
+  const [nowPlaying, setNowPlaying] = useState<NowPlayingType>({ track: null, startedAt: null });
+  
+  // デモ用：30秒ごとに曲を切り替える
+  useEffect(() => {
+    // 初期データをセット
+    const mockData = generateMockHistoryData(5);
+    setNowPlaying(mockData.nowPlaying);
+    
+    // 定期的に更新
+    const switchTrackInterval = setInterval(() => {
+      const mockData = generateMockHistoryData(5);
+      setNowPlaying(mockData.nowPlaying);
+    }, 30000);
+    
+    return () => clearInterval(switchTrackInterval);
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header/Navigation */}
@@ -13,31 +35,19 @@ export default function Home() {
           </div>
           <nav className="hidden md:flex space-x-8">
             <Link href="/" className="font-medium text-primary hover:text-accent transition-colors">
-              ホーム
+              Home
             </Link>
             <Link href="/menu" className="font-medium text-foreground hover:text-accent transition-colors">
-              メニュー
+              Menu
             </Link>
             <Link href="/events" className="font-medium text-foreground hover:text-accent transition-colors">
-              イベント
-            </Link>
-            <Link href="/latte-art" className="font-medium text-foreground hover:text-accent transition-colors">
-              ラテアート
-            </Link>
-            <Link href="/music" className="font-medium text-foreground hover:text-accent transition-colors">
-              ミュージック
-            </Link>
-            <Link href="/dj-test" className="font-medium text-foreground hover:text-accent transition-colors bg-secondary/10 px-3 py-1 rounded-full">
-              DJテスト
-            </Link>
-            <Link href="/social" className="font-medium text-foreground hover:text-accent transition-colors">
-              SNS
+              Events
             </Link>
             <Link href="/about" className="font-medium text-foreground hover:text-accent transition-colors">
-              お店について
+              About
             </Link>
             <Link href="/contact" className="font-medium text-foreground hover:text-accent transition-colors">
-              お問い合わせ
+              Contact
             </Link>
           </nav>
           <button className="md:hidden text-foreground">
@@ -67,25 +77,18 @@ export default function Home() {
             Kotarou Cafe
           </h1>
           <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto drop-shadow-md">
-            美味しいコーヒーとくつろぎの空間をお楽しみください
+            Enjoy delicious coffee and a relaxing atmosphere
           </p>
           <Link href="/menu" className="inline-block bg-primary hover:bg-accent text-white font-medium py-3 px-8 rounded-full transition-colors">
-            メニューを見る
+            View Menu
           </Link>
-        </div>
-      </section>
-
-      {/* Music Section */}
-      <section className="py-12 px-4 bg-gradient-to-b from-background to-primary/10">
-        <div className="container mx-auto">
-          <MusicSection />
         </div>
       </section>
 
       {/* Features Section */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="font-heading text-3xl font-bold text-center mb-12 text-primary">Kotarou Cafeの特徴</h2>
+          <h2 className="font-heading text-3xl font-bold text-center mb-12 text-primary">Our Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
               <div className="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -93,8 +96,8 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">厳選されたコーヒー豆</h3>
-              <p className="text-foreground/80">世界中から厳選した最高品質のコーヒー豆を使用しています。</p>
+              <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">Specialty Coffee</h3>
+              <p className="text-foreground/80">We carefully select and roast our beans to bring you the perfect cup.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
               <div className="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -102,8 +105,8 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">くつろぎの空間</h3>
-              <p className="text-foreground/80">ゆったりとした時間を過ごせる、居心地の良い空間をご用意しています。</p>
+              <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">Relaxing Space</h3>
+              <p className="text-foreground/80">A comfortable environment where you can unwind and enjoy your time.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
               <div className="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -111,64 +114,121 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
                 </svg>
               </div>
-              <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">手作りスイーツ</h3>
-              <p className="text-foreground/80">毎日シェフが心を込めて作る、こだわりのスイーツをご提供しています。</p>
+              <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">Homemade Sweets</h3>
+              <p className="text-foreground/80">Our chef prepares delicious treats daily with care and attention to detail.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Latte Art Preview Section */}
+      {/* Latte Art Section */}
       <section className="py-16 bg-gradient-to-b from-background to-[#f9f5f1]">
         <div className="container mx-auto px-4">
-          <h2 className="font-heading text-3xl font-bold text-center mb-4 text-primary">ラテアート ギャラリー</h2>
+          <h2 className="font-heading text-3xl font-bold text-center mb-4 text-primary">Latte Art Gallery</h2>
           <p className="text-center text-foreground/80 max-w-2xl mx-auto mb-10">
-            日々進化する私たちのラテアート作品をご紹介。美味しさだけでなく、目でも楽しめるコーヒー体験をお届けします。
+            Discover our evolving latte art creations. Experience coffee that delights not only your taste buds but also your eyes.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {/* ラテアートプレビュー画像 */}
-            <div className="relative h-64 rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105 bg-gradient-to-br from-amber-300 to-amber-500">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-white font-bold text-2xl">ハート</div>
+            {/* Latte Art Preview Images */}
+            <div className="relative h-64 rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105 bg-white">
+              <div className="relative h-48">
+                <Image 
+                  src="https://source.unsplash.com/vSuQJKZkt4U" 
+                  alt="Heart Latte Art" 
+                  fill 
+                  className="object-cover"
+                />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                <div className="text-white">
-                  <h3 className="font-heading font-bold text-lg">ハート</h3>
-                  <p className="text-sm text-white/80">フリーポア技法</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="relative h-64 rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105 bg-gradient-to-br from-amber-400 to-amber-600">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-white font-bold text-2xl">白鳥</div>
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                <div className="text-white">
-                  <h3 className="font-heading font-bold text-lg">白鳥</h3>
-                  <p className="text-sm text-white/80">フリーポア＆エッチング技法</p>
-                </div>
+              <div className="p-4">
+                <h3 className="font-heading font-bold text-lg text-primary">Heart</h3>
+                <p className="text-sm text-foreground/80 mb-2">Free Pour Technique</p>
               </div>
             </div>
             
-            <div className="relative h-64 rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105 bg-gradient-to-br from-amber-500 to-amber-700">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-white font-bold text-2xl">紅葉</div>
+            <div className="relative h-64 rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105 bg-white">
+              <div className="relative h-48">
+                <Image 
+                  src="https://source.unsplash.com/Mw4wfleYxfU" 
+                  alt="Swan Latte Art" 
+                  fill 
+                  className="object-cover"
+                />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                <div className="text-white">
-                  <h3 className="font-heading font-bold text-lg">紅葉</h3>
-                  <p className="text-sm text-white/80">エッチング＆カラーアート技法</p>
-                </div>
+              <div className="p-4">
+                <h3 className="font-heading font-bold text-lg text-primary">Swan</h3>
+                <p className="text-sm text-foreground/80 mb-2">Free Pour & Etching</p>
+              </div>
+            </div>
+            
+            <div className="relative h-64 rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105 bg-white">
+              <div className="relative h-48">
+                <Image 
+                  src="https://source.unsplash.com/6VhPY27jdps" 
+                  alt="Leaf Latte Art" 
+                  fill 
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="font-heading font-bold text-lg text-primary">Autumn Leaf</h3>
+                <p className="text-sm text-foreground/80 mb-2">Etching & Color Art</p>
               </div>
             </div>
           </div>
           
           <div className="text-center">
-            <Link href="/latte-art" className="inline-block bg-primary hover:bg-accent text-white font-medium py-3 px-8 rounded-full transition-colors">
-              ギャラリーをもっと見る
+            <Link href="/latte-art" className="inline-block bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-full transition-colors">
+              View Gallery
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Music Section */}
+      <section className="py-16 bg-primary-light/10">
+        <div className="container mx-auto px-4">
+          <h2 className="font-heading text-3xl font-bold text-center mb-4 text-primary">Music Corner</h2>
+          <p className="text-center mb-8 max-w-2xl mx-auto">
+            Enjoy the perfect soundtrack to your coffee experience. Our carefully curated music selection enhances your time at Kotarou Cafe.
+          </p>
+          
+          <div className="bg-gradient-to-br from-primary-dark to-primary-light/80 text-white py-8 px-4 rounded-lg shadow-xl mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Now Playing */}
+              <div className="lg:col-span-2">
+                <h3 className="font-heading text-2xl font-bold mb-4">
+                  <span className="inline-block animate-bounce-slow mr-2">🎧</span>
+                  Now Playing
+                </h3>
+                <NowPlaying nowPlaying={nowPlaying} />
+              </div>
+              
+              {/* DJ Schedule Preview */}
+              <div>
+                <h3 className="font-heading text-2xl font-bold mb-4">DJ Schedule</h3>
+                <div className="bg-white/10 p-4 rounded-md">
+                  <div className="mb-3">
+                    <p className="text-sm text-white/80">Friday</p>
+                    <p className="font-medium">DJ Kotarou - House Vibes</p>
+                  </div>
+                  <div className="mb-3">
+                    <p className="text-sm text-white/80">Saturday</p>
+                    <p className="font-medium">Guest DJ - Jazz Fusion</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 text-center">
+              <Link 
+                href="/music"
+                className="inline-block py-3 px-6 rounded-md transition-all bg-white/20 hover:bg-white/30 font-medium"
+              >
+                Explore Our Music
+                <span className="ml-2">▶</span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -176,174 +236,66 @@ export default function Home() {
       {/* Events Preview Section */}
       <section className="py-16 bg-primary-light/10">
         <div className="container mx-auto px-4">
-          <h2 className="font-heading text-3xl font-bold text-center mb-4 text-primary">イベント情報</h2>
-          <p className="text-center mb-8 max-w-2xl mx-auto">Kotarou Cafeでは様々なイベントを開催しています。ライブ演奏、DJナイト、ワークショップなど、ぜひお楽しみください。</p>
+          <h2 className="font-heading text-3xl font-bold text-center mb-4 text-primary">Events</h2>
+          <p className="text-center mb-8 max-w-2xl mx-auto">Join us for various events at Kotarou Cafe. From live performances and DJ nights to workshops, there's always something exciting happening.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {/* イベント1 */}
+            {/* Event 1 */}
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="relative h-48">
                 <Image
                   src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
-                  alt="ジャズライブナイト"
+                  alt="Jazz Night"
                   fill
                   style={{ objectFit: 'cover' }}
                 />
               </div>
               <div className="p-4">
-                <h3 className="font-heading text-xl font-bold mb-2">ジャズライブナイト</h3>
-                <p className="text-sm text-blue-600 mb-2">隔週土曜日 19:00-21:00</p>
-                <p className="text-sm mb-4 line-clamp-2">地元ミュージシャンによる心地よいジャズの夕べ。美味しいコーヒーと共にお楽しみください。</p>
-                <Link href="/events" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">詳細を見る →</Link>
+                <h3 className="font-heading text-xl font-bold mb-2">Jazz Night</h3>
+                <p className="text-sm text-blue-600 mb-2">Every other Saturday 19:00-21:00</p>
+                <p className="text-sm mb-4 line-clamp-2">Enjoy a relaxing evening of jazz by local musicians while sipping on our delicious coffee.</p>
               </div>
             </div>
             
-            {/* イベント2 */}
+            {/* Event 2 */}
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="relative h-48">
                 <Image
-                  src="https://images.unsplash.com/photo-1571266028243-e4b4521c1d1d"
-                  alt="DJ Night"
+                  src="https://images.unsplash.com/photo-1513829596324-4bb2800c5efb"
+                  alt="Coffee Workshop"
                   fill
                   style={{ objectFit: 'cover' }}
                 />
               </div>
               <div className="p-4">
-                <h3 className="font-heading text-xl font-bold mb-2">DJ Night - アンビエント</h3>
-                <p className="text-sm text-purple-600 mb-2">毎週金曜日 20:00-23:00</p>
-                <p className="text-sm mb-4 line-clamp-2">静かな夜に癒しのアンビエント音楽をお届けします。特別なカクテルメニューもご用意。</p>
-                <Link href="/events" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">詳細を見る →</Link>
+                <h3 className="font-heading text-xl font-bold mb-2">Coffee Workshop</h3>
+                <p className="text-sm text-blue-600 mb-2">Monthly on Sunday 14:00-16:00</p>
+                <p className="text-sm mb-4 line-clamp-2">Learn the art of brewing the perfect cup of coffee from our expert baristas.</p>
               </div>
             </div>
             
-            {/* イベント3 */}
+            {/* Event 3 */}
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="relative h-48">
                 <Image
-                  src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0"
-                  alt="朝活読書会"
+                  src="https://images.unsplash.com/photo-1505236858219-8359eb29e329"
+                  alt="Acoustic Live"
                   fill
                   style={{ objectFit: 'cover' }}
                 />
               </div>
               <div className="p-4">
-                <h3 className="font-heading text-xl font-bold mb-2">朝活読書会</h3>
-                <p className="text-sm text-amber-600 mb-2">毎週日曜日 8:00-10:00</p>
-                <p className="text-sm mb-4 line-clamp-2">静かな朝の時間に、好きな本を持ち寄って読書を楽しみましょう。モーニングセット付き。</p>
-                <Link href="/events" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">詳細を見る →</Link>
+                <h3 className="font-heading text-xl font-bold mb-2">Acoustic Live</h3>
+                <p className="text-sm text-blue-600 mb-2">Every Friday 18:00-20:00</p>
+                <p className="text-sm mb-4 line-clamp-2">Enjoy soothing acoustic performances by talented local artists in our cozy atmosphere.</p>
               </div>
             </div>
           </div>
           
           <div className="text-center">
             <Link href="/events" className="inline-block bg-primary hover:bg-accent text-white font-medium py-3 px-8 rounded-full transition-colors">
-              すべてのイベントを見る
+              View All Events
             </Link>
-          </div>
-        </div>
-      </section>
-      
-      {/* Menu Preview Section */}
-      <section className="py-16 bg-secondary/10">
-        <div className="container mx-auto px-4">
-          <h2 className="font-heading text-3xl font-bold text-center mb-4 text-primary">人気メニュー</h2>
-          <p className="text-center mb-12 max-w-2xl mx-auto">Kotarou Cafeで人気のメニューをご紹介します</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Menu Item 1 */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="relative h-60">
-                <Image 
-                  src="https://images.unsplash.com/photo-1509042239860-f550ce710b93" 
-                  alt="Specialty Coffee" 
-                  fill 
-                  style={{objectFit: 'cover'}} 
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">スペシャルティコーヒー</h3>
-                <p className="text-foreground/80 mb-4">厳選された豆から抽出した、香り高い一杯をお楽しみください。</p>
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-primary">¥550</span>
-                  <Link href="/menu" className="text-accent hover:underline">詳細を見る</Link>
-                </div>
-              </div>
-            </div>
-            {/* Menu Item 2 */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="relative h-60">
-                <Image 
-                  src="https://images.unsplash.com/photo-1571115177098-24ec42ed204d" 
-                  alt="Matcha Latte" 
-                  fill 
-                  style={{objectFit: 'cover'}} 
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">抹茶ラテ</h3>
-                <p className="text-foreground/80 mb-4">高級抹茶を使用した、まろやかな味わいのラテです。</p>
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-primary">¥600</span>
-                  <Link href="/menu" className="text-accent hover:underline">詳細を見る</Link>
-                </div>
-              </div>
-            </div>
-            {/* Menu Item 3 */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="relative h-60">
-                <Image 
-                  src="https://images.unsplash.com/photo-1551024506-0bccd828d307" 
-                  alt="Cheesecake" 
-                  fill 
-                  style={{objectFit: 'cover'}} 
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">ベイクドチーズケーキ</h3>
-                <p className="text-foreground/80 mb-4">濃厚でなめらかな口当たりの自家製チーズケーキです。</p>
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-primary">¥500</span>
-                  <Link href="/menu" className="text-accent hover:underline">詳細を見る</Link>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="text-center mt-12">
-            <Link href="/menu" className="inline-block border-2 border-primary hover:bg-primary hover:text-white text-primary font-medium py-2 px-6 rounded-full transition-colors">
-              メニューをもっと見る
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Information Section */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="font-heading text-3xl font-bold mb-6 text-primary">営業時間・アクセス</h2>
-              <div className="mb-6">
-                <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">営業時間</h3>
-                <p className="text-foreground/80">平日: 8:00 - 20:00</p>
-                <p className="text-foreground/80">土日祝: 10:00 - 22:00</p>
-              </div>
-              <div className="mb-6">
-                <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">住所</h3>
-                <p className="text-foreground/80">〒123-4567</p>
-                <p className="text-foreground/80">東京都渋谷区カフェ通り1-2-3</p>
-              </div>
-              <div>
-                <h3 className="font-heading text-xl font-semibold mb-2 text-foreground">アクセス</h3>
-                <p className="text-foreground/80">渋谷駅から徒歩5分</p>
-              </div>
-            </div>
-            <div className="relative h-80 md:h-96 rounded-lg overflow-hidden shadow-lg">
-              <Image 
-                src="https://images.unsplash.com/photo-1554118811-1e0d58224f24" 
-                alt="Cafe interior" 
-                fill 
-                style={{objectFit: 'cover'}} 
-              />
-            </div>
           </div>
         </div>
       </section>
@@ -354,7 +306,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className="font-heading text-xl font-bold mb-4">Kotarou Cafe</h3>
-              <p className="mb-4">美味しいコーヒーとくつろぎの空間をお楽しみください。</p>
+              <p className="mb-4">A place where coffee meets art and music.</p>
               <div className="flex space-x-4">
                 <a href="#" className="hover:text-accent transition-colors">
                   <span className="sr-only">Instagram</span>
@@ -371,24 +323,22 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <h3 className="font-heading text-xl font-bold mb-4">リンク</h3>
+              <h3 className="font-heading text-xl font-bold mb-4">Links</h3>
               <ul className="space-y-2">
-                <li><Link href="/" className="hover:text-accent transition-colors">ホーム</Link></li>
-                <li><Link href="/menu" className="hover:text-accent transition-colors">メニュー</Link></li>
-                <li><Link href="/events" className="hover:text-accent transition-colors">イベント</Link></li>
-                <li><Link href="/latte-art" className="hover:text-accent transition-colors">ラテアート</Link></li>
-                <li><Link href="/music" className="hover:text-accent transition-colors">ミュージック</Link></li>
-                <li><Link href="/dj-test" className="hover:text-accent transition-colors">DJテスト</Link></li>
-                <li><Link href="/social" className="hover:text-accent transition-colors">SNS</Link></li>
-                <li><Link href="/about" className="hover:text-accent transition-colors">お店について</Link></li>
-                <li><Link href="/contact" className="hover:text-accent transition-colors">お問い合わせ</Link></li>
+                <li><Link href="/" className="hover:text-accent transition-colors">Home</Link></li>
+                <li><Link href="/menu" className="hover:text-accent transition-colors">Menu</Link></li>
+                <li><Link href="/events" className="hover:text-accent transition-colors">Events</Link></li>
+                <li><Link href="/latte-art" className="hover:text-accent transition-colors">Latte Art</Link></li>
+                <li><Link href="/music" className="hover:text-accent transition-colors">Music</Link></li>
+                <li><Link href="/about" className="hover:text-accent transition-colors">About</Link></li>
+                <li><Link href="/contact" className="hover:text-accent transition-colors">Contact</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-heading text-xl font-bold mb-4">お問い合わせ</h3>
-              <p className="mb-2">電話: 03-1234-5678</p>
-              <p className="mb-2">メール: info@kotarou-cafe.com</p>
-              <p>お気軽にお問い合わせください。</p>
+              <h3 className="font-heading text-xl font-bold mb-4">Contact Us</h3>
+              <p className="mb-2">Phone: 03-1234-5678</p>
+              <p className="mb-2">Email: info@kotarou-cafe.com</p>
+              <p>Feel free to contact us anytime.</p>
             </div>
           </div>
           <div className="border-t border-white/20 mt-8 pt-8 text-center">
