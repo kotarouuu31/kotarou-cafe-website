@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 猫の顔 -->
+  <circle cx="150" cy="150" r="120" fill="#F9C9B6"/>
+  
+  <!-- 猫の耳 -->
+  <path d="M70 80L110 120L60 140Z" fill="#F9C9B6"/>
+  <path d="M230 80L190 120L240 140Z" fill="#F9C9B6"/>
+  <path d="M75 85L105 115L65 130Z" fill="#F08080"/>
+  <path d="M225 85L195 115L235 130Z" fill="#F08080"/>
+  
+  <!-- 猫の目 -->
+  <ellipse cx="110" cy="150" rx="20" ry="25" fill="white"/>
+  <ellipse cx="190" cy="150" rx="20" ry="25" fill="white"/>
+  <ellipse cx="110" cy="150" rx="10" ry="15" fill="#333"/>
+  <ellipse cx="190" cy="150" rx="10" ry="15" fill="#333"/>
+  
+  <!-- 猫の鼻 -->
+  <path d="M150 170L140 185H160Z" fill="#F08080"/>
+  
+  <!-- 猫の口 -->
+  <path d="M140 185Q150 195 160 185" stroke="#333" stroke-width="2" fill="none"/>
+  
+  <!-- ヒゲ -->
+  <line x1="100" y1="180" x2="60" y2="175" stroke="#333" stroke-width="2"/>
+  <line x1="100" y1="185" x2="60" y2="185" stroke="#333" stroke-width="2"/>
+  <line x1="100" y1="190" x2="60" y2="195" stroke="#333" stroke-width="2"/>
+  
+  <line x1="200" y1="180" x2="240" y2="175" stroke="#333" stroke-width="2"/>
+  <line x1="200" y1="185" x2="240" y2="185" stroke="#333" stroke-width="2"/>
+  <line x1="200" y1="190" x2="240" y2="195" stroke="#333" stroke-width="2"/>
+  
+  <!-- 404テキスト -->
+  <text x="150" y="240" font-family="Arial" font-size="48" font-weight="bold" text-anchor="middle" fill="#F08080">404</text>
+</svg>
