@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Poppins } from "next/font/google";
 import "./globals.css";
+import { ChatWidgetWrapper } from "@/components/chat/ChatWidgetWrapper";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import { CookieConsent } from "@/components/analytics/CookieConsent";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -27,10 +30,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
+      <head>
+        <GoogleAnalytics />
+      </head>
       <body
         className={`${playfair.variable} ${poppins.variable} antialiased`}
       >
         {children}
+        <ChatWidgetWrapper />
+        <CookieConsent />
       </body>
     </html>
   );
