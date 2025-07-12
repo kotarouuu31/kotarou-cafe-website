@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function AboutPage() {
-  const [instagramPosts, setInstagramPosts] = useState([
+  const [instagramPosts] = useState([
     {
       id: "1",
       imageUrl: "https://source.unsplash.com/random/600x600/?cafe",
@@ -187,7 +187,7 @@ export default function AboutPage() {
                   </li>
                 </ul>
                 <p className="text-foreground/80">
-                  We're committed to sustainable practices and supporting local artists and musicians, making Kotarou Cafe more than just a business—it's a community hub.
+                  We&apos;re committed to sustainable practices and supporting local artists and musicians, making Kotarou Cafe more than just a business—it&apos;s a community hub.
                 </p>
               </div>
             </div>

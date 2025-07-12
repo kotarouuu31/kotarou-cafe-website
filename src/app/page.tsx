@@ -237,7 +237,7 @@ export default function Home() {
       <section className="py-16 bg-primary-light/10">
         <div className="container mx-auto px-4">
           <h2 className="font-heading text-3xl font-bold text-center mb-4 text-primary">Events</h2>
-          <p className="text-center mb-8 max-w-2xl mx-auto">Join us for various events at Kotarou Cafe. From live performances and DJ nights to workshops, there's always something exciting happening.</p>
+          <p className="text-center mb-8 max-w-2xl mx-auto">Join us for various events at Kotarou Cafe. From live performances and DJ nights to workshops, there&apos;s always something exciting happening.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {/* Event 1 */}
