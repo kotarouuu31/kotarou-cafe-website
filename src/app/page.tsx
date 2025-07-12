@@ -30,6 +30,9 @@ export default function Home() {
             <Link href="/dj-test" className="font-medium text-foreground hover:text-accent transition-colors bg-secondary/10 px-3 py-1 rounded-full">
               DJテスト
             </Link>
+            <Link href="/social" className="font-medium text-foreground hover:text-accent transition-colors">
+              SNS
+            </Link>
             <Link href="/about" className="font-medium text-foreground hover:text-accent transition-colors">
               お店について
             </Link>
@@ -376,6 +379,7 @@ export default function Home() {
                 <li><Link href="/latte-art" className="hover:text-accent transition-colors">ラテアート</Link></li>
                 <li><Link href="/music" className="hover:text-accent transition-colors">ミュージック</Link></li>
                 <li><Link href="/dj-test" className="hover:text-accent transition-colors">DJテスト</Link></li>
+                <li><Link href="/social" className="hover:text-accent transition-colors">SNS</Link></li>
                 <li><Link href="/about" className="hover:text-accent transition-colors">お店について</Link></li>
                 <li><Link href="/contact" className="hover:text-accent transition-colors">お問い合わせ</Link></li>
               </ul>
