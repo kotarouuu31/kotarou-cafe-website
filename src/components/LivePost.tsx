@@ -113,8 +113,13 @@ const LivePost: React.FC<LivePostProps> = ({ onPost, isAdmin = false }) => {
         hashtags
       };
       
-      // 実際の実装では、selectedImageを使用して画像をアップロードする
-      // 例: if (selectedImage) { await uploadImage(selectedImage); }
+      // 実際の実装では、ここで画像をアップロードする
+      if (selectedImage) {
+        // モック実装: 実際にはここでAPIを呼び出して画像をアップロードする
+        console.log(`画像アップロード処理: ${selectedImage.name}, サイズ: ${selectedImage.size} bytes`);
+        // 実際の実装例: const uploadedUrl = await uploadImage(selectedImage);
+        // newPost.imageUrl = uploadedUrl;
+      }
       
       // 親コンポーネントに投稿データを渡す
       if (onPost) {
