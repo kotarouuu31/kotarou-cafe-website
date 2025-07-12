@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import SocialFeed, { InstagramPost } from '@/components/SocialFeed';
 import LivePost, { LivePostData } from '@/components/LivePost';
 import ShareButtons from '@/components/ShareButtons';
@@ -172,10 +173,13 @@ export default function SocialPage() {
                   <p className="mb-2">{post.content}</p>
                   {post.imageUrl && (
                     <div className="relative w-full h-64 mb-3">
-                      <img
+                      <Image
                         src={post.imageUrl}
                         alt="投稿画像"
-                        className="object-contain w-full h-full rounded-lg"
+                        width={800}
+                        height={600}
+                        className="object-contain rounded-lg"
+                        style={{ width: '100%', height: '100%' }}
                       />
                     </div>
                   )}
