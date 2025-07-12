@@ -24,6 +24,12 @@ export default function Home() {
             <Link href="/latte-art" className="font-medium text-foreground hover:text-accent transition-colors">
               ラテアート
             </Link>
+            <Link href="/music" className="font-medium text-foreground hover:text-accent transition-colors">
+              ミュージック
+            </Link>
+            <Link href="/dj-test" className="font-medium text-foreground hover:text-accent transition-colors bg-secondary/10 px-3 py-1 rounded-full">
+              DJテスト
+            </Link>
             <Link href="/about" className="font-medium text-foreground hover:text-accent transition-colors">
               お店について
             </Link>
@@ -367,6 +373,9 @@ export default function Home() {
                 <li><Link href="/" className="hover:text-accent transition-colors">ホーム</Link></li>
                 <li><Link href="/menu" className="hover:text-accent transition-colors">メニュー</Link></li>
                 <li><Link href="/events" className="hover:text-accent transition-colors">イベント</Link></li>
+                <li><Link href="/latte-art" className="hover:text-accent transition-colors">ラテアート</Link></li>
+                <li><Link href="/music" className="hover:text-accent transition-colors">ミュージック</Link></li>
+                <li><Link href="/dj-test" className="hover:text-accent transition-colors">DJテスト</Link></li>
                 <li><Link href="/about" className="hover:text-accent transition-colors">お店について</Link></li>
                 <li><Link href="/contact" className="hover:text-accent transition-colors">お問い合わせ</Link></li>
               </ul>
