@@ -1,10 +1,10 @@
 'use client';
 
 import React, { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
+// メインの404ページコンポーネント - useSearchParamsを使用しない
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col">
@@ -39,9 +39,9 @@ export default function NotFound() {
         </div>
       </header>
 
-      {/* メインコンテンツ */}
+      {/* メインコンテンツ - Suspenseでラップ */}
       <main className="flex-grow container mx-auto px-4 py-12">
-        <Suspense fallback={<div className="text-center py-12">Loading...</div>}>
+        <Suspense fallback={<NotFoundLoading />}>
           <NotFoundContent />
         </Suspense>
       </main>
@@ -100,7 +100,25 @@ export default function NotFound() {
   );
 }
 
-// Suspenseでラップされたコンテンツコンポーネント
+// ローディング表示用コンポーネント
+function NotFoundLoading() {
+  return (
+    <div className="text-center py-12">
+      <div className="animate-pulse flex flex-col items-center">
+        <div className="rounded-full bg-gray-200 h-32 w-32 mb-4"></div>
+        <div className="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
+        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+        <div className="h-10 bg-gray-200 rounded w-1/4"></div>
+      </div>
+    </div>
+  );
+}
+
+// useSearchParamsを使用するコンポーネント - 別ファイルに分離
+// このコンポーネントはSuspenseでラップされた内部でのみ使用される
+import { useSearchParams } from 'next/navigation';
+
 function NotFoundContent() {
   // useSearchParamsをSuspense内で使用
   const searchParams = useSearchParams();
@@ -121,7 +139,7 @@ function NotFoundContent() {
       <h1 className="text-4xl font-bold text-gray-800 mb-4">ページが見つかりませんニャン</h1>
       <p className="text-xl text-gray-600 mb-8">
         {from ? `"${from}"からのリンクが壊れているか、` : ''}
-        お探しのページは存在しないか、移動した可能性がありますニャ〇
+        お探しのページは存在しないか、移動した可能性がありますニャ〜
       </p>
       <Link 
         href="/" 
