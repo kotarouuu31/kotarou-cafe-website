@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 /**
  * ローカルストレージを使用して状態を永続化するカスタムフック
@@ -11,7 +11,7 @@ export function useLocalStorage<T>(
   initialValue: T
 ): [T, (value: T | ((val: T) => T)) => void, () => void] {
   // 初期値を取得する関数
-  const getStoredValue = (): T => {
+  const getStoredValue = useCallback((): T => {
     if (typeof window === 'undefined') {
       return initialValue;
     }
@@ -23,7 +23,7 @@ export function useLocalStorage<T>(
       console.error(`Error reading localStorage key "${key}":`, error);
       return initialValue;
     }
-  };
+  }, [key, initialValue]);
 
   // 状態を初期化
   const [storedValue, setStoredValue] = useState<T>(initialValue);
