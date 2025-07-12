@@ -31,7 +31,7 @@ export function useLocalStorage<T>(
   // マウント時にローカルストレージから値を読み込む
   useEffect(() => {
     setStoredValue(getStoredValue());
-  }, []);
+  }, [getStoredValue]);
 
   // 値を設定する関数
   const setValue = (value: T | ((val: T) => T)) => {

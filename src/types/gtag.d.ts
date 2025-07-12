@@ -3,7 +3,7 @@ interface Window {
   gtag: (
     command: 'event' | 'config' | 'consent' | 'js',
     targetId: string,
-    params?: Record<string, any>
+    params?: Record<string, unknown>
   ) => void;
-  dataLayer: Record<string, any>[];
+  dataLayer: Record<string, unknown>[];
 }

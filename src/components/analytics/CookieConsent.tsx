@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export const CookieConsent: React.FC = () => {
-  const [cookieConsent, setCookieConsent, resetCookieConsent] = useLocalStorage<boolean>(
+  const [cookieConsent, setCookieConsent] = useLocalStorage<boolean>(
     'kotarou-cafe-cookie-consent',
     false
   );

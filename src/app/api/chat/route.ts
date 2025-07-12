@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
     }
     
     // Gemini API形式に変換
-    const chatHistory = processedMessages.map((msg: any) => ({
+    const chatHistory = processedMessages.map((msg: { role: string; content: string }) => ({
       role: msg.role === 'assistant' ? 'model' : 'user', // Gemini APIではassistantではなくmodelを使用
       parts: [{ text: msg.content }],
     }));
