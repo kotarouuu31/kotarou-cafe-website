@@ -1,14 +1,47 @@
 "use client";
 
 import React from 'react';
-import { DJSchedule as DJScheduleType } from '../types/music';
-import { isDJTimeNow, getTodayDJSchedule } from '../data/music';
 
-type DJScheduleProps = {
-  schedules: DJScheduleType[];
+type DJSchedule = {
+  dayOfWeek: number; // 0 = 日曜日, 1 = 月曜日, ..., 6 = 土曜日
+  startTime: string;
+  endTime: string;
+  djName: string;
+  genre: string;
 };
 
-const DJSchedule: React.FC<DJScheduleProps> = ({ schedules }) => {
+const DJSchedule: React.FC = () => {
+  // スケジュールデータを内部で定義
+  const schedules: DJSchedule[] = [
+    { dayOfWeek: 5, startTime: '20:00', endTime: '23:00', djName: 'DJ Kotarou', genre: 'House' },
+    { dayOfWeek: 6, startTime: '19:00', endTime: '22:00', djName: 'DJ Neko', genre: 'Techno' },
+  ];
+  
+  // 今日のDJスケジュールを取得
+  const getTodayDJSchedule = (): DJSchedule | null => {
+    const today = new Date().getDay();
+    return schedules.find(schedule => schedule.dayOfWeek === today) || null;
+  };
+  
+  // 現在がDJ時間かどうかを判定
+  const isDJTimeNow = (): boolean => {
+    const todaySchedule = getTodayDJSchedule();
+    if (!todaySchedule) return false;
+    
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentTimeInMinutes = currentHour * 60 + currentMinute;
+    
+    const [startHour, startMinute] = todaySchedule.startTime.split(':').map(Number);
+    const [endHour, endMinute] = todaySchedule.endTime.split(':').map(Number);
+    
+    const startTimeInMinutes = startHour * 60 + startMinute;
+    const endTimeInMinutes = endHour * 60 + endMinute;
+    
+    return currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes <= endTimeInMinutes;
+  };
+  
   const todaySchedule = getTodayDJSchedule();
   const isDJTime = isDJTimeNow();
   const weekdays = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];

@@ -2,40 +2,46 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Track } from '../types/music';
-import { formatDuration } from '../data/music';
+import { NowPlaying as NowPlayingType } from '@/types/serato';
+import { formatTime, getElapsedTime } from '@/lib/serato';
 
 type NowPlayingProps = {
-  currentTrack: Track | null;
-  isPlaying: boolean;
+  nowPlaying: NowPlayingType;
 };
 
-const NowPlaying: React.FC<NowPlayingProps> = ({ currentTrack, isPlaying }) => {
+const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
+  const { track, startedAt } = nowPlaying;
+  const isPlaying = !!track && !!startedAt;
   const [progress, setProgress] = useState(0);
   
   // 再生中は進行状況を更新
   useEffect(() => {
-    if (!isPlaying || !currentTrack) {
+    if (!isPlaying) {
       return;
     }
     
     const timer = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(timer);
-          return 100;
-        }
-        return prev + (100 / (currentTrack.duration || 180)) * 0.5;
-      });
+      // トラックの長さをパースして秒数に変換
+      const trackLength = track?.length ? parseTrackLength(track.length) : 180;
+      const elapsedSeconds = getElapsedTime(startedAt);
+      const progressPercent = Math.min((elapsedSeconds / trackLength) * 100, 100);
+      
+      setProgress(progressPercent);
     }, 500);
     
     return () => clearInterval(timer);
-  }, [isPlaying, currentTrack]);
+  }, [isPlaying, track, startedAt]);
   
   // トラックが変わったらプログレスをリセット
   useEffect(() => {
     setProgress(0);
-  }, [currentTrack?.id]);
+  }, [track?.id]);
+  
+  // 「3:45」形式の時間を秒数に変換
+  const parseTrackLength = (length: string): number => {
+    const [minutes, seconds] = length.split(':').map(Number);
+    return (minutes * 60) + seconds;
+  };
   
   return (
     <div className="bg-gradient-to-r from-primary-dark/90 to-primary/90 text-white rounded-lg shadow-lg p-4 backdrop-blur-sm">
@@ -43,10 +49,10 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ currentTrack, isPlaying }) => {
         <div className="mr-4 relative">
           {/* 音楽ジャケット画像 */}
           <div className="w-16 h-16 md:w-24 md:h-24 relative overflow-hidden rounded-md shadow-md">
-            {currentTrack?.coverImage ? (
+            {false ? (
               <Image
-                src={currentTrack.coverImage}
-                alt={`${currentTrack.title} by ${currentTrack.artist}`}
+                src="/images/default-album.jpg"
+                alt={`${track?.title || 'Unknown'} by ${track?.artist || 'Unknown'}`}
                 fill
                 style={{ objectFit: 'cover' }}
               />
@@ -84,13 +90,27 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ currentTrack, isPlaying }) => {
             </div>
           </div>
           
-          {currentTrack ? (
+          {track ? (
             <>
-              <h3 className="font-bold text-lg md:text-xl mt-1 line-clamp-1">{currentTrack.title}</h3>
-              <p className="text-sm md:text-base text-white/80">{currentTrack.artist}</p>
-              {currentTrack.album && (
-                <p className="text-xs text-white/60">{currentTrack.album}</p>
+              <h3 className="font-bold text-lg md:text-xl mt-1 line-clamp-1">{track.title}</h3>
+              <p className="text-sm md:text-base text-white/80">{track.artist}</p>
+              {track.album && (
+                <p className="text-xs text-white/60">{track.album}</p>
               )}
+              
+              {/* BPMとキー情報 */}
+              <div className="flex space-x-3 mt-1">
+                {track.bpm && (
+                  <span className="text-xs bg-white/20 px-2 py-0.5 rounded">
+                    {track.bpm} BPM
+                  </span>
+                )}
+                {track.key && (
+                  <span className="text-xs bg-white/20 px-2 py-0.5 rounded">
+                    {track.key}
+                  </span>
+                )}
+              </div>
               
               {/* プログレスバー */}
               <div className="mt-2">
@@ -100,10 +120,10 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ currentTrack, isPlaying }) => {
                     style={{ width: `${progress}%` }}
                   ></div>
                 </div>
-                {currentTrack.duration && (
+                {track.length && (
                   <div className="flex justify-between text-xs mt-1 text-white/60">
-                    <span>{formatDuration(Math.floor((currentTrack.duration * progress) / 100))}</span>
-                    <span>{formatDuration(currentTrack.duration)}</span>
+                    <span>{formatTime(getElapsedTime(startedAt))}</span>
+                    <span>{track.length}</span>
                   </div>
                 )}
               </div>
