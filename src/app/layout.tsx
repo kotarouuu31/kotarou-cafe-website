@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Poppins } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { ChatWidgetWrapper } from "@/components/chat/ChatWidgetWrapper";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
@@ -31,7 +32,9 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
-        <GoogleAnalytics />
+        <Suspense fallback={null}>
+          <GoogleAnalytics />
+        </Suspense>
       </head>
       <body
         className={`${playfair.variable} ${poppins.variable} antialiased`}

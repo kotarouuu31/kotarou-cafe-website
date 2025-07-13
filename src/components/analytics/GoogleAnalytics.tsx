@@ -29,12 +29,14 @@ export const pageview = (url: string) => {
 // Google Analytics コンポーネント
 export default function GoogleAnalytics() {
   const pathname = usePathname();
+  // useSearchParamsはSuspenseでラップされた環境で使用する必要がある
   const searchParams = useSearchParams();
 
   useEffect(() => {
     if (!GA_MEASUREMENT_ID) return;
 
-    const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
+    // searchParamsが存在する場合のみ使用
+    const url = pathname + (searchParams?.toString ? `?${searchParams.toString()}` : '');
     pageview(url);
   }, [pathname, searchParams]);
 
