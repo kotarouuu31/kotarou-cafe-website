@@ -1,6 +1,6 @@
 'use client';
 
-import { TrackInfo } from '@/types/serato';
+import { TrackInfo } from '@/types/recordbox';
 
 interface TrackHistoryProps {
   tracks: TrackInfo[];
@@ -37,12 +37,6 @@ const TrackHistory = ({ tracks }: TrackHistoryProps) => {
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               アーティスト
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              BPM
-            </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              キー
-            </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -56,12 +50,6 @@ const TrackHistory = ({ tracks }: TrackHistoryProps) => {
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {track.artist}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {track.bpm || '-'}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {track.key || '-'}
               </td>
             </tr>
           ))}

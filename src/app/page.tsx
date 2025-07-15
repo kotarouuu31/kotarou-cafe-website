@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from 'react';
-import { generateMockHistoryData } from '@/lib/serato';
+import { generateMockHistoryData } from '@/lib/recordbox';
 import NowPlaying from '@/components/NowPlaying';
-import { NowPlaying as NowPlayingType } from '@/types/serato';
+import { NowPlaying as NowPlayingType } from '@/types/recordbox';
 import { Button } from '@/components/ui/Button';
 import { Section, SectionTitle } from '@/components/ui/Section';
 import { Card, CardContent, CardImage, CardTitle, CardDescription } from '@/components/ui/Card';

@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { NowPlaying as NowPlayingType } from '@/types/serato';
-import { formatTime, getElapsedTime } from '@/lib/serato';
+import { NowPlaying as NowPlayingType } from '@/types/recordbox';
+import { formatTime, getElapsedTime } from '@/lib/recordbox';
 
 type NowPlayingProps = {
   nowPlaying: NowPlayingType;
@@ -14,6 +14,11 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
   const isPlaying = !!track && !!startedAt;
   const [progress, setProgress] = useState(0);
   
+  // トラックが変わったらプログレスをリセット
+  useEffect(() => {
+    setProgress(0);
+  }, [track?.id]);
+  
   // 再生中は進行状況を更新
   useEffect(() => {
     if (!isPlaying) {
@@ -21,8 +26,8 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
     }
     
     const timer = setInterval(() => {
-      // トラックの長さをパースして秒数に変換
-      const trackLength = track?.length ? parseTrackLength(track.length) : 180;
+      // 固定の長さ（3分）を使用
+      const trackLength = 180;
       const elapsedSeconds = getElapsedTime(startedAt);
       const progressPercent = Math.min((elapsedSeconds / trackLength) * 100, 100);
       
@@ -31,17 +36,6 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
     
     return () => clearInterval(timer);
   }, [isPlaying, track, startedAt]);
-  
-  // トラックが変わったらプログレスをリセット
-  useEffect(() => {
-    setProgress(0);
-  }, [track?.id]);
-  
-  // 「3:45」形式の時間を秒数に変換
-  const parseTrackLength = (length: string): number => {
-    const [minutes, seconds] = length.split(':').map(Number);
-    return (minutes * 60) + seconds;
-  };
   
   return (
     <div className="bg-gradient-to-r from-primary-dark/90 to-primary/90 text-white rounded-lg shadow-lg p-4 backdrop-blur-sm">
@@ -94,23 +88,6 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
             <>
               <h3 className="font-bold text-lg md:text-xl mt-1 line-clamp-1">{track.title}</h3>
               <p className="text-sm md:text-base text-white/80">{track.artist}</p>
-              {track.album && (
-                <p className="text-xs text-white/60">{track.album}</p>
-              )}
-              
-              {/* BPMとキー情報 */}
-              <div className="flex space-x-3 mt-1">
-                {track.bpm && (
-                  <span className="text-xs bg-white/20 px-2 py-0.5 rounded">
-                    {track.bpm} BPM
-                  </span>
-                )}
-                {track.key && (
-                  <span className="text-xs bg-white/20 px-2 py-0.5 rounded">
-                    {track.key}
-                  </span>
-                )}
-              </div>
               
               {/* プログレスバー */}
               <div className="mt-2">
@@ -120,12 +97,10 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
                     style={{ width: `${progress}%` }}
                   ></div>
                 </div>
-                {track.length && (
-                  <div className="flex justify-between text-xs mt-1 text-white/60">
-                    <span>{formatTime(getElapsedTime(startedAt))}</span>
-                    <span>{track.length}</span>
-                  </div>
-                )}
+                <div className="flex justify-between text-xs mt-1 text-white/60">
+                  <span>{formatTime(getElapsedTime(startedAt))}</span>
+                  <span>3:00</span>
+                </div>
               </div>
             </>
           ) : (

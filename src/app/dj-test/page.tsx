@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { HistoryData, NowPlaying, TrackInfo } from '@/types/serato';
-import { generateMockHistoryData, getTrackHistory } from '@/lib/serato';
+import { HistoryData, NowPlaying, TrackInfo } from '@/types/recordbox';
+import { generateMockHistoryData, getTrackHistory } from '@/lib/recordbox';
 import NowPlayingComponent from '@/components/NowPlaying';
 import TrackHistory from '@/components/TrackHistory';
 import Link from 'next/link';
@@ -161,16 +161,11 @@ export default function DJTestPage() {
           if (values.length >= headers.length) {
             const titleIndex = headers.findIndex(h => h.includes('Title'));
             const artistIndex = headers.findIndex(h => h.includes('Artist'));
-            const bpmIndex = headers.findIndex(h => h.includes('BPM'));
-            const keyIndex = headers.findIndex(h => h.includes('Key'));
             
             tracks.push({
               id: `parsed-${i}`,
               title: values[titleIndex]?.replace(/"/g, '') || 'Unknown',
               artist: values[artistIndex]?.replace(/"/g, '') || 'Unknown Artist',
-              bpm: values[bpmIndex] ? parseFloat(values[bpmIndex]) : undefined,
-              key: values[keyIndex] || undefined,
-              length: '3:30', // ダミー値
               playedAt: new Date(Date.now() - (i * 60000)) // 1分ごとに過去の時間を設定
             });
           }

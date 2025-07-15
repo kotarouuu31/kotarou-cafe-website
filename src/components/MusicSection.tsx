@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import NowPlaying from './NowPlaying';
 import DJSchedule from './DJSchedule';
 import Link from 'next/link';
-import { generateMockHistoryData } from '@/lib/serato';
-import { NowPlaying as NowPlayingType } from '@/types/serato';
+import { generateMockHistoryData } from '@/lib/recordbox';
+import { NowPlaying as NowPlayingType } from '@/types/recordbox';
 
 const MusicSection: React.FC = () => {
   const [showDJSchedule, setShowDJSchedule] = useState(false);

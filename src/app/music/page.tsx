@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import NowPlaying from '@/components/NowPlaying';
 import TrackHistory from '@/components/TrackHistory';
-import { generateMockHistoryData, getTrackHistory } from '@/lib/serato';
-import { HistoryData } from '@/types/serato';
+import { generateMockHistoryData, getTrackHistory } from '@/lib/recordbox';
+import { HistoryData } from '@/types/recordbox';
 
 export default function MusicPage() {
   const [historyData, setHistoryData] = useState<HistoryData | null>(null);
