@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import NowPlaying from '@/components/NowPlaying';
+import { AutoUpdatingNowPlaying } from '@/components/NowPlaying';
 import TrackHistory from '@/components/TrackHistory';
 import { generateMockHistoryData, getTrackHistory } from '@/lib/recordbox';
 import { HistoryData } from '@/types/recordbox';
@@ -86,7 +86,7 @@ export default function MusicPage() {
               <div className="lg:col-span-1">
                 <div className="bg-white rounded-lg shadow-md p-6">
                   <h2 className="text-2xl font-heading font-semibold mb-4 text-primary">Now Playing</h2>
-                  <NowPlaying nowPlaying={historyData.nowPlaying} />
+                  <AutoUpdatingNowPlaying />
                 </div>
               </div>
               

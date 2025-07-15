@@ -1,18 +1,72 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { NowPlaying as NowPlayingType } from '@/types/recordbox';
-import { formatTime, getElapsedTime } from '@/lib/recordbox';
+import { getElapsedTime } from '@/lib/recordbox';
 
 type NowPlayingProps = {
-  nowPlaying: NowPlayingType;
+  nowPlaying?: NowPlayingType;
+  autoUpdate?: boolean;
 };
 
-const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
+const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying: initialNowPlaying, autoUpdate = false }) => {
+  const [nowPlaying, setNowPlaying] = useState<NowPlayingType>(initialNowPlaying || { track: null, startedAt: null });
   const { track, startedAt } = nowPlaying;
   const isPlaying = !!track && !!startedAt;
   const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [fadeIn, setFadeIn] = useState(false);
+  
+  // APIから最新の曲情報を取得
+  const fetchLatestTrackInfo = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await fetch('/api/now-playing');
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // 新しいトラックが来た場合のみアニメーション
+      if (data.track && (!track || data.track.id !== track.id)) {
+        setFadeIn(true);
+        setTimeout(() => setFadeIn(false), 1000);
+      }
+      
+      setNowPlaying(data);
+    } catch (err) {
+      console.error('Failed to fetch track info:', err);
+      setError('曲情報の取得に失敗しました');
+    } finally {
+      setLoading(false);
+    }
+  }, [track]);
+  
+  // 自動更新の設定
+  useEffect(() => {
+    if (autoUpdate) {
+      // 初回読み込み
+      fetchLatestTrackInfo();
+      
+      // 30秒ごとに更新
+      const intervalId = setInterval(fetchLatestTrackInfo, 30000);
+      
+      return () => clearInterval(intervalId);
+    }
+  }, [autoUpdate, fetchLatestTrackInfo]);
+  
+  // 外部からpropsが更新された場合
+  useEffect(() => {
+    if (initialNowPlaying) {
+      setNowPlaying(initialNowPlaying);
+    }
+  }, [initialNowPlaying]);
   
   // トラックが変わったらプログレスをリセット
   useEffect(() => {
@@ -38,7 +92,7 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
   }, [isPlaying, track, startedAt]);
   
   return (
-    <div className="bg-gradient-to-r from-primary-dark/90 to-primary/90 text-white rounded-lg shadow-lg p-4 backdrop-blur-sm">
+    <div className={`bg-gradient-to-r from-primary-dark/90 to-primary/90 text-white rounded-lg shadow-lg p-4 backdrop-blur-sm transition-opacity duration-500 ${fadeIn ? 'opacity-0' : 'opacity-100'}`}>
       <div className="flex items-center">
         <div className="mr-4 relative">
           {/* 音楽ジャケット画像 */}
@@ -78,11 +132,17 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
                 </span>
               ) : (
                 <span className="inline-flex items-center text-xs font-medium px-2 py-1 rounded-full bg-gray-600 text-white">
-                  準備中...
+                  {loading ? '更新中...' : '準備中...'}
                 </span>
               )}
             </div>
           </div>
+          
+          {error && (
+            <div className="mt-2 text-red-300 text-sm">
+              <p>{error}</p>
+            </div>
+          )}
           
           {track ? (
             <>
@@ -98,21 +158,25 @@ const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
                   ></div>
                 </div>
                 <div className="flex justify-between text-xs mt-1 text-white/60">
-                  <span>{formatTime(getElapsedTime(startedAt))}</span>
+                  <span>0:00</span>
                   <span>3:00</span>
                 </div>
               </div>
             </>
           ) : (
-            <>
-              <h3 className="font-bold text-lg md:text-xl mt-1">🎵 曲情報がありません</h3>
-              <p className="text-sm md:text-base text-white/80">DJ タイムをお待ちください</p>
-            </>
+            <div className="py-2">
+              <p className="text-white/80">現在再生中の曲はありません</p>
+            </div>
           )}
         </div>
       </div>
     </div>
   );
+};
+
+// APIから自動更新するバージョンのエクスポート
+export const AutoUpdatingNowPlaying: React.FC = () => {
+  return <NowPlaying autoUpdate={true} />;
 };
 
 export default NowPlaying;

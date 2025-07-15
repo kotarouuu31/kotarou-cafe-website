@@ -2,31 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from 'react';
-import { generateMockHistoryData } from '@/lib/recordbox';
-import NowPlaying from '@/components/NowPlaying';
-import { NowPlaying as NowPlayingType } from '@/types/recordbox';
+import { AutoUpdatingNowPlaying } from '@/components/NowPlaying';
 import { Button } from '@/components/ui/Button';
 import { Section, SectionTitle } from '@/components/ui/Section';
 import { Card, CardContent, CardImage, CardTitle, CardDescription } from '@/components/ui/Card';
 
 export default function Home() {
-  const [nowPlaying, setNowPlaying] = useState<NowPlayingType>({ track: null, startedAt: null });
-  
-  // デモ用：30秒ごとに曲を切り替える
-  useEffect(() => {
-    // 初期データをセット
-    const mockData = generateMockHistoryData(5);
-    setNowPlaying(mockData.nowPlaying);
-    
-    // 定期的に更新
-    const switchTrackInterval = setInterval(() => {
-      const mockData = generateMockHistoryData(5);
-      setNowPlaying(mockData.nowPlaying);
-    }, 30000);
-    
-    return () => clearInterval(switchTrackInterval);
-  }, []);
+  // APIから曲情報を取得するコンポーネントを使用
 
   return (
     <>
@@ -181,7 +163,7 @@ export default function Home() {
                   <span className="inline-block animate-bounce-slow mr-2">🎧</span>
                   Now Playing
                 </h3>
-                <NowPlaying nowPlaying={nowPlaying} />
+                <AutoUpdatingNowPlaying />
               </div>
               
               {/* DJ Schedule Preview */}
@@ -297,7 +279,7 @@ export default function Home() {
                   <span className="inline-block animate-bounce-slow mr-2">🎧</span>
                   Now Playing
                 </h3>
-                <NowPlaying nowPlaying={nowPlaying} />
+                <AutoUpdatingNowPlaying />
               </div>
               
               {/* DJ Schedule Preview */}

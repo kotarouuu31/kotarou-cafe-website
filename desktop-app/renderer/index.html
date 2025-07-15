@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>コタロウカフェ曲情報管理</title>
+  <style>
+    :root {
+      --primary-color: #6a3e1f;
+      --accent-color: #e67e22;
+      --bg-color: #f9f5f0;
+      --text-color: #333;
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 20px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+    }
+    
+    .subtitle {
+      color: var(--accent-color);
+      font-size: 0.9rem;
+    }
+    
+    .form-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.2);
+    }
+    
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #5a341a;
+    }
+    
+    .btn-secondary {
+      background-color: #ddd;
+      color: #333;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #ccc;
+    }
+    
+    .status-container {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      display: none;
+    }
+    
+    .status-success {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: var(--success-color);
+      border: 1px solid var(--success-color);
+      display: block;
+    }
+    
+    .status-error {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: var(--error-color);
+      border: 1px solid var(--error-color);
+      display: block;
+    }
+    
+    .environment-info {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: #777;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 10px;
+    }
+    
+    .loading.active {
+      display: block;
+    }
+    
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(106, 62, 31, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+    
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    footer {
+      margin-top: auto;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #777;
+      padding-top: 20px;
+    }
+    
+    /* レスポンシブ対応 */
+    @media (max-width: 480px) {
+      .container {
+        width: 100%;
+      }
+      
+      h1 {
+        font-size: 1.3rem;
+      }
+      
+      .button-group {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>コタロウカフェ曲情報管理</h1>
+      <p class="subtitle">現在再生中の曲情報を入力してください</p>
+    </header>
+    
+    <div class="form-container">
+      <form id="track-form">
+        <div class="form-group">
+          <label for="title">曲名</label>
+          <input type="text" id="title" name="title" placeholder="例: Autumn Leaves" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="artist">アーティスト名</label>
+          <input type="text" id="artist" name="artist" placeholder="例: Bill Evans" required>
+        </div>
+        
+        <div class="button-group">
+          <button type="button" id="cancel-btn" class="btn-secondary">キャンセル</button>
+          <button type="submit" id="submit-btn" class="btn-primary">送信</button>
+        </div>
+      </form>
+      
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <span>送信中...</span>
+      </div>
+      
+      <div class="status-container" id="status-container"></div>
+    </div>
+    
+    <div class="environment-info" id="environment-info"></div>
+  </div>
+  
+  <footer>
+    <p>&copy; 2025 コタロウカフェ</p>
+  </footer>
+  
+  <script>
+    // DOMが読み込まれたら実行
+    document.addEventListener('DOMContentLoaded', () => {
+      // 要素の取得
+      const trackForm = document.getElementById('track-form');
+      const titleInput = document.getElementById('title');
+      const artistInput = document.getElementById('artist');
+      const submitBtn = document.getElementById('submit-btn');
+      const cancelBtn = document.getElementById('cancel-btn');
+      const loadingEl = document.getElementById('loading');
+      const statusContainer = document.getElementById('status-container');
+      const environmentInfo = document.getElementById('environment-info');
+      
+      // 環境情報の取得と表示
+      async function loadEnvironmentInfo() {
+        try {
+          const envInfo = await window.ipcRenderer.invoke('get-environment');
+          environmentInfo.textContent = `環境: ${envInfo.current === 'production' ? '本番' : '開発'} | API: ${envInfo.apiUrl}`;
+        } catch (error) {
+          console.error('環境情報の取得に失敗:', error);
+        }
+      }
+      
+      // ステータスメッセージの表示
+      function showStatus(message, isError = false) {
+        statusContainer.textContent = message;
+        statusContainer.className = 'status-container';
+        
+        if (isError) {
+          statusContainer.classList.add('status-error');
+        } else {
+          statusContainer.classList.add('status-success');
+        }
+        
+        // 5秒後に非表示
+        setTimeout(() => {
+          statusContainer.style.display = 'none';
+        }, 5000);
+      }
+      
+      // 送信中の表示切替
+      function setLoading(isLoading) {
+        if (isLoading) {
+          loadingEl.classList.add('active');
+          submitBtn.disabled = true;
+        } else {
+          loadingEl.classList.remove('active');
+          submitBtn.disabled = false;
+        }
+      }
+      
+      // フォーム送信処理
+      trackForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const title = titleInput.value.trim();
+        const artist = artistInput.value.trim();
+        
+        if (!title || !artist) {
+          showStatus('曲名とアーティスト名を入力してください', true);
+          return;
+        }
+        
+        // 送信データの作成
+        const trackInfo = {
+          title,
+          artist,
+          playedAt: new Date().toISOString()
+        };
+        
+        try {
+          setLoading(true);
+          
+          // メインプロセスを通じてAPIに送信
+          const result = await window.ipcRenderer.invoke('send-track-info', trackInfo);
+          
+          if (result.success) {
+            showStatus(`送信成功: ${title} - ${artist}`);
+            // フォームをリセット
+            trackForm.reset();
+          } else {
+            showStatus(`送信失敗: ${result.error}`, true);
+          }
+        } catch (error) {
+          console.error('送信エラー:', error);
+          showStatus(`エラーが発生しました: ${error.message}`, true);
+        } finally {
+          setLoading(false);
+        }
+      });
+      
+      // キャンセルボタン
+      cancelBtn.addEventListener('click', () => {
+        trackForm.reset();
+        statusContainer.style.display = 'none';
+      });
+      
+      // 初期化
+      loadEnvironmentInfo();
+    });
+  </script>
+</body>
+</html>
