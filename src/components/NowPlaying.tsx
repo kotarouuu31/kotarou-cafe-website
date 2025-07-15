@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { NowPlaying as NowPlayingType, TrackInfo } from '@/types/recordbox';
 import { getElapsedTime } from '@/lib/recordbox';
-import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
 
 type NowPlayingProps = {
   nowPlaying?: NowPlayingType;
@@ -27,8 +27,6 @@ const NowPlaying: React.FC<NowPlayingProps> = ({
   const { track, startedAt } = nowPlaying;
   const isPlaying = !!track && !!startedAt;
   const [progress, setProgress] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [fadeIn, setFadeIn] = useState(false);
   const [nextTrack, setNextTrack] = useState<TrackInfo | null>(null);
   const [retryCount, setRetryCount] = useState(0);
@@ -36,70 +34,6 @@ const NowPlaying: React.FC<NowPlayingProps> = ({
   const isOnline = useOnlineStatus();
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const offlineMode = !isOnline && track;
-  
-  // APIから最新の曲情報を取得
-  const fetchLatestTrackInfo = useCallback(async () => {
-    // オフライン時は取得をスキップ
-    if (!isOnline) {
-      setError('オフラインモード - 最新の曲情報を取得できません');
-      return;
-    }
-    
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await fetch('/api/now-playing');
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.track) {
-        // 新しい曲が再生開始された場合はフェードインアニメーションを表示
-        if (!track || data.track.id !== track.id) {
-          setFadeIn(true);
-          setTimeout(() => setFadeIn(false), 1000);
-
-          // ローカルストレージに保存（オフライン時用）
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('lastNowPlaying', JSON.stringify(data));
-            localStorage.setItem('lastUpdated', new Date().toISOString());
-          }
-        }
-
-        setNowPlaying(data);
-        setLastUpdated(new Date());
-
-        // 次の曲情報を取得（有効な場合のみ）
-        if (showNextTrack) {
-          fetchNextTrack();
-        }
-      }
-    } catch (err) {
-      console.error('Failed to fetch now playing:', err);
-      setError('曲情報の取得に失敗しました');
-
-      // リトライロジック
-      if (retryCount < 3) {
-        const delay = Math.pow(2, retryCount) * 1000; // 指数関数的バックオフ
-        console.log(`Retrying in ${delay}ms...`);
-
-        if (retryTimeoutRef.current) {
-          clearTimeout(retryTimeoutRef.current);
-        }
-
-        retryTimeoutRef.current = setTimeout(() => {
-          setRetryCount(prev => prev + 1);
-          fetchLatestTrackInfo();
-        }, delay);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [track, retryCount, isOnline, showNextTrack]);
 
   // 次の曲情報を取得
   const fetchNextTrack = useCallback(async () => {
@@ -118,18 +52,48 @@ const NowPlaying: React.FC<NowPlayingProps> = ({
       }
 
       const data = await response.json();
-
-      if (data.track) {
-        setNextTrack(data.track);
-      } else {
-        setNextTrack(null);
-      }
+      setNextTrack(data);
     } catch (err) {
       console.error('Failed to fetch next track:', err);
-      // 次の曲取得失敗はユーザーに表示しない
       setNextTrack(null);
     }
-  }, [isOnline]);
+  }, [isOnline, setNextTrack]);
+  
+  // APIから最新の曲情報を取得
+  const fetchLatestTrackInfo = useCallback(async () => {
+    if (!isOnline) return;
+    
+    try {
+      const response = await fetch('/api/now-playing');
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // 新しい曲が来たらフェードイン効果を適用
+      if (data.track && (!track || data.track.id !== track.id)) {
+        setFadeIn(true);
+        setTimeout(() => setFadeIn(false), 1000);
+      }
+      
+      setNowPlaying(data);
+      setLastUpdated(new Date());
+      
+      // ローカルストレージに保存（オフライン時用）
+      if (typeof window !== 'undefined' && data.track) {
+        localStorage.setItem('lastNowPlaying', JSON.stringify(data));
+        localStorage.setItem('lastUpdated', new Date().toISOString());
+      }
+      
+      // 次の曲情報を取得（有効な場合）
+      if (showNextTrack) {
+        fetchNextTrack();
+      }
+    } catch (err) {
+      console.error('Failed to fetch now playing:', err);
+    }
+  }, [track, isOnline, showNextTrack, fetchNextTrack]);
 
   // オフライン時の曲情報を取得
   useEffect(() => {
