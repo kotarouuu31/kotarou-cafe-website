@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/desktop-app/node_modules
+/desktop-app/package-lock.json
 /.pnp
 .pnp.*
 .yarn/*

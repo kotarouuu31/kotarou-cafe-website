@@ -3,6 +3,10 @@ export interface TrackInfo {
   title: string;
   artist: string;
   playedAt: Date;
+  genre?: string;
+  bpm?: number;
+  dj?: string;
+  albumArt?: string;
 }
 
 export interface NowPlaying {
