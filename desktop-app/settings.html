@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>設定 - コタロウカフェ曲情報管理</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #333;
+      margin-top: 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    input[type="text"], input[type="url"], select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .button-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    .hotkey-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hotkey-input input {
+      flex: 1;
+    }
+    .hotkey-input button {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    .status-message {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>設定</h1>
+    
+    <div class="section">
+      <h2>一般設定</h2>
+      <div class="form-group">
+        <label for="apiUrl">API URL</label>
+        <input type="url" id="apiUrl" placeholder="https://example.com/api">
+      </div>
+      
+      <div class="form-group">
+        <label for="apiKey">API キー</label>
+        <input type="text" id="apiKey" placeholder="APIキーを入力">
+      </div>
+      
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="startWithSystem">
+          システム起動時に自動的に起動する
+        </label>
+      </div>
+      
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="minimizeToTray">
+          閉じるボタンでトレイに最小化する
+        </label>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>ホットキー設定</h2>
+      <div class="form-group">
+        <label for="showWindowHotkey">ウィンドウを表示するホットキー</label>
+        <div class="hotkey-input">
+          <input type="text" id="showWindowHotkey" placeholder="例: CommandOrControl+Shift+P" readonly>
+          <button id="recordShowWindowHotkey">設定</button>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="sendTrackHotkey">曲情報を送信するホットキー</label>
+        <div class="hotkey-input">
+          <input type="text" id="sendTrackHotkey" placeholder="例: CommandOrControl+Shift+S" readonly>
+          <button id="recordSendTrackHotkey">設定</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>表示設定</h2>
+      <div class="form-group">
+        <label for="theme">テーマ</label>
+        <select id="theme">
+          <option value="system">システム設定に従う</option>
+          <option value="light">ライト</option>
+          <option value="dark">ダーク</option>
+        </select>
+      </div>
+    </div>
+    
+    <div id="statusMessage" class="status-message" style="display: none;"></div>
+    
+    <div class="button-group">
+      <button id="resetButton">デフォルトに戻す</button>
+      <button id="saveButton">保存</button>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>

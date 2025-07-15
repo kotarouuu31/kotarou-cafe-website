@@ -6,8 +6,12 @@
   "scripts": {
     "start": "electron main.js",
     "build": "electron-builder",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "postinstall": "electron-builder install-app-deps"
   },
   "author": "Kotarou Cafe",
   "license": "MIT",
@@ -19,19 +23,59 @@
     "auto-launch": "^5.0.6",
     "axios": "^1.6.2",
     "electron-log": "^5.4.1",
+    "electron-settings": "^4.0.2",
+    "electron-store": "^8.1.0",
     "electron-updater": "^6.6.2"
   },
   "build": {
     "appId": "com.kotaroucafe.desktop",
     "productName": "Kotarou Cafe Manager",
+    "files": [
+      "**/*",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/*.d.ts",
+      "!**/node_modules/.bin",
+      "!**/.{idea,git,cache,DS_Store,vscode}"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
     "mac": {
-      "category": "public.app-category.music"
+      "category": "public.app-category.music",
+      "target": ["dmg", "zip"],
+      "icon": "assets/icon.icns",
+      "darkModeSupport": true
     },
     "win": {
-      "target": "nsis"
+      "target": ["nsis"],
+      "icon": "assets/icon.ico"
     },
     "linux": {
-      "target": "AppImage"
+      "target": ["AppImage", "deb"],
+      "icon": "assets/icon.png",
+      "category": "Audio"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Kotarou Cafe Manager"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     }
   }
 }

@@ -2,9 +2,12 @@ const { app, BrowserWindow, globalShortcut, ipcMain, Notification, Menu, Tray, d
 const path = require('path');
 const axios = require('axios');
 const fs = require('fs');
+const os = require('os');
 const config = require('./config');
 const log = require('electron-log');
 const { autoUpdater } = require('electron-updater');
+const { getSettings, saveSettings, resetSettings, saveWindowBounds, getWindowBounds } = require('./store');
+const { updateAutoLaunch, isAutoLaunchEnabled } = require('./auto-launch');
 
 // ログ設定
 log.transports.file.level = 'info';
@@ -13,10 +16,12 @@ log.info('アプリケーション起動 - ' + new Date().toLocaleString());
 
 // アプリケーションのグローバル参照
 let mainWindow = null;
+let settingsWindow = null;
 let tray = null;
 let isQuitting = false;
 let registeredHotkey = null;
 let trackHistory = [];
+let isRecordingHotkey = false;
 const MAX_HISTORY_SIZE = 50;
 
 // データ保存用のパス
@@ -24,19 +29,28 @@ const USER_DATA_PATH = app.getPath('userData');
 const HISTORY_FILE_PATH = path.join(USER_DATA_PATH, 'track-history.json');
 const LOG_FILE_PATH = path.join(USER_DATA_PATH, 'logs');
 
+// 設定を取得
+let settings = getSettings();
+
 // 現在の環境設定を取得
 const environment = config.currentEnvironment;
 const apiConfig = config.api[environment];
-const apiUrl = `${apiConfig.baseUrl}${apiConfig.nowPlayingEndpoint}`;
+// 設定からAPIURLを取得するか、デフォルト値を使用
+const apiUrl = settings.apiUrl || `${apiConfig.baseUrl}${apiConfig.nowPlayingEndpoint}`;
 
 /**
  * メインウィンドウを作成
  */
 function createWindow() {
+  // 保存されたウィンドウの位置とサイズを取得
+  const windowBounds = getWindowBounds();
+  
   // ブラウザウィンドウを作成
   mainWindow = new BrowserWindow({
-    width: config.app.window.width,
-    height: config.app.window.height,
+    width: windowBounds.width || config.app.window.width,
+    height: windowBounds.height || config.app.window.height,
+    x: windowBounds.x,
+    y: windowBounds.y,
     minWidth: config.app.window.minWidth,
     minHeight: config.app.window.minHeight,
     webPreferences: {
@@ -129,7 +143,13 @@ function updateTrayMenu(currentTrack = null) {
     { 
       label: '管理ページを開く', 
       click: () => {
-        shell.openExternal('http://localhost:3000/admin/music');
+        shell.openExternal(settings.apiUrl ? settings.apiUrl.replace('/api/now-playing', '/admin/music') : 'http://localhost:3000/admin/music');
+      } 
+    },
+    { 
+      label: '設定', 
+      click: () => {
+        createSettingsWindow();
       } 
     },
     { type: 'separator' },
@@ -194,6 +214,47 @@ function showNotification(title, body) {
 }
 
 /**
+ * 設定画面を作成
+ */
+function createSettingsWindow() {
+  // 既に開いている場合はフォーカスするだけ
+  if (settingsWindow) {
+    settingsWindow.focus();
+    return;
+  }
+  
+  // 設定ウィンドウを作成
+  settingsWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    minWidth: 600,
+    minHeight: 500,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    },
+    icon: path.join(__dirname, 'assets/icon.png'),
+    title: '設定 - コタロウカフェ曲情報管理',
+    autoHideMenuBar: true,
+    parent: mainWindow,
+    modal: false
+  });
+  
+  // 設定ページを読み込む
+  settingsWindow.loadFile('settings.html');
+  
+  // デバッグ用に開発者ツールを開く
+  if (process.env.NODE_ENV === 'development') {
+    settingsWindow.webContents.openDevTools();
+  }
+  
+  // ウィンドウが閉じられたときの処理
+  settingsWindow.on('closed', () => {
+    settingsWindow = null;
+  });
+}
+
+/**
  * ホットキーダイアログを表示
  */
 function showHotkeyDialog() {
@@ -206,7 +267,7 @@ function showHotkeyDialog() {
     type: 'info',
     title: 'ホットキー設定',
     message: '新しいホットキーを設定します',
-    detail: '現在のホットキー: ' + (registeredHotkey || config.app.hotkey) + '\n\n新しいホットキーを入力してください。\n例: Ctrl+Shift+P, Command+Option+P',
+    detail: '現在のホットキー: ' + (registeredHotkey || settings.showWindowHotkey || config.app.hotkey) + '\n\n新しいホットキーを入力してください。\n例: Ctrl+Shift+P, Command+Option+P',
     buttons: ['設定', 'キャンセル'],
     defaultId: 0
   }).then(result => {
@@ -234,6 +295,9 @@ function registerHotkey(hotkey) {
     });
     
     if (success) {
+      // 設定に保存
+      settings.showWindowHotkey = hotkey;
+      saveSettings({ showWindowHotkey: hotkey });
       registeredHotkey = hotkey;
       log.info(`ホットキー登録成功: ${hotkey}`);
       showNotification('ホットキー設定完了', `新しいホットキー: ${hotkey}`);
@@ -367,25 +431,59 @@ async function sendTrackInfo(trackInfo) {
 }
 
 // アプリケーションの準備ができたら実行
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // 再生履歴を読み込み
   loadTrackHistory();
   
+  // 自動起動設定を適用
+  try {
+    await updateAutoLaunch(settings.startWithSystem);
+    log.info(`自動起動設定: ${settings.startWithSystem ? '有効' : '無効'}`);
+  } catch (error) {
+    log.error('自動起動設定エラー:', error);
+  }
+  
+  // メインウィンドウを作成
   createWindow();
+  
+  // トレイアイコンを作成
   createTray();
   
-  // グローバルショートカットの登録
-  const hotkey = config.app.hotkey;
-  registeredHotkey = hotkey;
-  registerHotkey(hotkey);
+  // グローバルショートカットを登録
+  registerHotkey(settings.showWindowHotkey || config.app.hotkey);
   
-  // macOSでのドックアイコンクリック時の処理
+  // 曲情報送信用のホットキーを登録
+  if (settings.sendTrackHotkey) {
+    try {
+      globalShortcut.register(settings.sendTrackHotkey, () => {
+        if (mainWindow) {
+          mainWindow.webContents.send('request-send-track');
+        }
+      });
+      log.info(`送信ホットキー登録成功: ${settings.sendTrackHotkey}`);
+    } catch (error) {
+      log.error('送信ホットキー登録エラー:', error);
+    }
+  }
+  
+  // macOSの場合、アプリケーションがアクティブになったときにウィンドウを再作成
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     } else {
       mainWindow.show();
     }
+  });
+  
+  // ウィンドウの位置とサイズを保存
+  mainWindow.on('close', () => {
+    if (!isQuitting && settings.minimizeToTray) {
+      mainWindow.hide();
+      return false;
+    }
+    
+    // ウィンドウの位置とサイズを保存
+    saveWindowBounds(mainWindow.getBounds());
   });
   
   // IPC通信の設定
@@ -406,6 +504,106 @@ app.whenReady().then(() => {
   
   ipcMain.handle('set-hotkey', (event, hotkey) => {
     return registerHotkey(hotkey);
+  });
+  
+  // 設定関連のIPC通信
+  ipcMain.on('get-settings', (event) => {
+    event.sender.send('settings', settings);
+  });
+  
+  ipcMain.on('save-settings', async (event, newSettings) => {
+    try {
+      // 自動起動設定が変更された場合
+      if (newSettings.startWithSystem !== settings.startWithSystem) {
+        await updateAutoLaunch(newSettings.startWithSystem);
+      }
+      
+      // ホットキーが変更された場合
+      if (newSettings.showWindowHotkey !== settings.showWindowHotkey) {
+        registerHotkey(newSettings.showWindowHotkey);
+      }
+      
+      // 送信ホットキーが変更された場合
+      if (newSettings.sendTrackHotkey !== settings.sendTrackHotkey) {
+        if (settings.sendTrackHotkey) {
+          globalShortcut.unregister(settings.sendTrackHotkey);
+        }
+        
+        if (newSettings.sendTrackHotkey) {
+          globalShortcut.register(newSettings.sendTrackHotkey, () => {
+            if (mainWindow) {
+              mainWindow.webContents.send('request-send-track');
+            }
+          });
+        }
+      }
+      
+      // 設定を保存
+      saveSettings(newSettings);
+      settings = { ...settings, ...newSettings };
+      
+      // API URLが変更された場合は反映
+      if (newSettings.apiUrl) {
+        apiUrl = newSettings.apiUrl;
+      }
+      
+      event.sender.send('settings-saved');
+    } catch (error) {
+      log.error('設定保存エラー:', error);
+      event.sender.send('settings-error', error.message);
+    }
+  });
+  
+  ipcMain.on('reset-settings', (event) => {
+    try {
+      resetSettings();
+      settings = getSettings();
+      event.sender.send('settings', settings);
+      event.sender.send('settings-saved');
+    } catch (error) {
+      log.error('設定リセットエラー:', error);
+      event.sender.send('settings-error', error.message);
+    }
+  });
+  
+  ipcMain.on('start-hotkey-recording', (event) => {
+    isRecordingHotkey = true;
+    
+    // キーボードイベントを監視
+    const recordKeyboardEvent = (e) => {
+      if (!isRecordingHotkey) return;
+      
+      // キーの組み合わせを作成
+      const modifiers = [];
+      if (e.ctrlKey) modifiers.push('Control');
+      if (e.metaKey) modifiers.push('Command');
+      if (e.altKey) modifiers.push('Alt');
+      if (e.shiftKey) modifiers.push('Shift');
+      
+      // キーコードを取得
+      const key = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+      
+      // アクセラレーターを作成
+      const accelerator = [...modifiers, key].join('+');
+      
+      // イベントを送信
+      event.sender.send('hotkey-recorded', accelerator);
+      
+      // 記録終了
+      isRecordingHotkey = false;
+      
+      // イベントを防止
+      e.preventDefault();
+    };
+    
+    // イベントリスナーを追加
+    if (settingsWindow) {
+      settingsWindow.webContents.once('before-input-event', recordKeyboardEvent);
+    }
+  });
+  
+  ipcMain.on('cancel-hotkey-recording', () => {
+    isRecordingHotkey = false;
   });
   
   // 自動アップデートの設定
