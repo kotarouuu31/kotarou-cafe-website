@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { TrackInfo } from '@/types/recordbox';
-import { headers } from 'next/headers';
 
 // データ保存用のファイルパス
 const DATA_DIR = path.join(process.cwd(), 'data');
