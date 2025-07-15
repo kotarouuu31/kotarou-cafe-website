@@ -95,8 +95,8 @@ export async function POST(request: Request) {
     // 新しい曲情報の作成
     const newTrack: TrackInfo = {
       id: `track-${Date.now()}`,
-      title: data.title,
-      artist: data.artist,
+      title: data.title as string,
+      artist: data.artist as string,
       playedAt: new Date()
     };
     
