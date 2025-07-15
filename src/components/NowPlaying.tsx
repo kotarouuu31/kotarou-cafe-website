@@ -29,10 +29,8 @@ const NowPlaying: React.FC<NowPlayingProps> = ({
   const [progress, setProgress] = useState(0);
   const [fadeIn, setFadeIn] = useState(false);
   const [nextTrack, setNextTrack] = useState<TrackInfo | null>(null);
-  const [retryCount, setRetryCount] = useState(0);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const isOnline = useOnlineStatus();
-  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const offlineMode = !isOnline && track;
 
   // 次の曲情報を取得

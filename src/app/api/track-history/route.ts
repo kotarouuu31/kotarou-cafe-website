@@ -20,7 +20,7 @@ function getTrackHistory(): TrackInfo[] {
       const history = JSON.parse(data);
       
       // 日付文字列をDateオブジェクトに変換
-      return history.map((track: any) => ({
+      return history.map((track: TrackInfo) => ({
         ...track,
         playedAt: new Date(track.playedAt)
       }));
@@ -59,10 +59,6 @@ export async function OPTIONS() {
 // GET リクエストハンドラ
 export async function GET(request: Request) {
   try {
-    // クライアントIPの取得（実際の環境に合わせて調整が必要）
-    const forwardedFor = request.headers.get('x-forwarded-for') || 'unknown';
-    const clientIp = forwardedFor.split(',')[0].trim();
-    
     // クエリパラメータの取得
     const url = new URL(request.url);
     const limit = parseInt(url.searchParams.get('limit') || '100');
@@ -176,7 +172,7 @@ export async function POST(request: Request) {
     }
     
     // 履歴を取得
-    let history = getTrackHistory();
+    const history = getTrackHistory();
     const trackIndex = history.findIndex(track => track.id === data.id);
     
     if (trackIndex === -1) {
