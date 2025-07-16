@@ -40,6 +40,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${playfair.variable} ${poppins.variable} antialiased`}
+        suppressHydrationWarning
       >
         <Header />
         {children}
