@@ -260,7 +260,7 @@
       // 環境情報の取得と表示
       async function loadEnvironmentInfo() {
         try {
-          const envInfo = await window.ipcRenderer.invoke('get-environment');
+          const envInfo = await window.electronAPI.invoke('get-environment');
           environmentInfo.textContent = `環境: ${envInfo.current === 'production' ? '本番' : '開発'} | API: ${envInfo.apiUrl}`;
         } catch (error) {
           console.error('環境情報の取得に失敗:', error);
@@ -318,7 +318,7 @@
           setLoading(true);
           
           // メインプロセスを通じてAPIに送信
-          const result = await window.ipcRenderer.invoke('send-track-info', trackInfo);
+          const result = await window.electronAPI.invoke('send-track-info', trackInfo);
           
           if (result.success) {
             showStatus(`送信成功: ${title} - ${artist}`);
@@ -339,6 +339,16 @@
       cancelBtn.addEventListener('click', () => {
         trackForm.reset();
         statusContainer.style.display = 'none';
+      });
+      
+      // メインプロセスからのリクエストを処理
+      window.electronAPI.on('request-send-track', () => {
+        // 現在の入力値で送信を実行
+        if (titleInput.value.trim() && artistInput.value.trim()) {
+          submitBtn.click();
+        } else {
+          showStatus('曲名とアーティスト名を入力してから送信してください', true);
+        }
       });
       
       // 初期化

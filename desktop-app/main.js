@@ -54,9 +54,10 @@ function createWindow() {
     minWidth: config.app.window.minWidth,
     minHeight: config.app.window.minHeight,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      preload: path.join(__dirname, 'preload.js')
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+      sandbox: true
     },
     icon: path.join(__dirname, 'assets/icon.png'),
     show: false, // 初期状態では非表示
