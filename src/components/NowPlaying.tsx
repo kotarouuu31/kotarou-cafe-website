@@ -57,17 +57,51 @@ const NowPlaying: React.FC<NowPlayingProps> = ({
     }
   }, [isOnline, setNextTrack]);
   
+  // リトライカウンタとバックオフ時間を管理するリファレンス
+  const [retryCount, setRetryCount] = useState(0);
+  const [backoffUntil, setBackoffUntil] = useState<number | null>(null);
+  
   // APIから最新の曲情報を取得
   const fetchLatestTrackInfo = useCallback(async () => {
     if (!isOnline) return;
     
+    // バックオフ期間中ならスキップ
+    const now = Date.now();
+    if (backoffUntil && now < backoffUntil) {
+      console.log(`レート制限中: 次のリクエストまであと${Math.ceil((backoffUntil - now) / 1000)}秒`);
+      return;
+    }
+    
     try {
       const response = await fetch('/api/now-playing');
-      if (!response.ok) {
+      
+      // レート制限の場合はバックオフ
+      if (response.status === 429) {
+        const retryAfter = response.headers.get('Retry-After');
+        const waitTime = retryAfter ? parseInt(retryAfter, 10) * 1000 : Math.min(60000 * Math.pow(2, retryCount), 300000);
+        
+        console.warn(`レート制限検出 (429): ${waitTime / 1000}秒待機します`);
+        setBackoffUntil(now + waitTime);
+        setRetryCount(prev => prev + 1);
+        return;
+      }
+      
+      // 成功した場合はリトライカウンタをリセット
+      if (response.ok) {
+        setRetryCount(0);
+        setBackoffUntil(null);
+      } else {
         throw new Error(`Error: ${response.status}`);
       }
       
       const data = await response.json();
+      
+      // 現在の曲と同じ場合は更新しない（無限ループ防止）
+      if (track && data.track && track.id === data.track.id) {
+        // 同じ曲の場合は最終更新時間だけ更新
+        setLastUpdated(new Date());
+        return;
+      }
       
       // 新しい曲が来たらフェードイン効果を適用
       if (data.track && (!track || data.track.id !== track.id)) {
@@ -91,7 +125,7 @@ const NowPlaying: React.FC<NowPlayingProps> = ({
     } catch (err) {
       console.error('Failed to fetch now playing:', err);
     }
-  }, [track, isOnline, showNextTrack, fetchNextTrack]);
+  }, [isOnline, showNextTrack, fetchNextTrack, track, retryCount, backoffUntil]);
 
   // オフライン時の曲情報を取得
   useEffect(() => {
@@ -117,13 +151,24 @@ const NowPlaying: React.FC<NowPlayingProps> = ({
   // 自動更新の設定
   useEffect(() => {
     if (!autoUpdate || !isOnline) return;
-
+    
+    // 最後のリクエスト時間を追跡するリファレンス
+    let lastRequestTime = 0;
+    
     // 初回読み込み
     fetchLatestTrackInfo();
+    lastRequestTime = Date.now();
 
-    // 定期的に更新
+    // 定期的に更新、デバウンス処理を追加
     const intervalId = setInterval(() => {
-      fetchLatestTrackInfo();
+      const now = Date.now();
+      // 前回のリクエストから最低30秒経過しているか確認
+      if (now - lastRequestTime >= 30000) {
+        fetchLatestTrackInfo();
+        lastRequestTime = now;
+      } else {
+        console.log(`リクエスト間隔が短すぎます。スキップします。次のリクエストまであと${Math.ceil((30000 - (now - lastRequestTime)) / 1000)}秒`);
+      }
     }, updateInterval);
 
     return () => clearInterval(intervalId);

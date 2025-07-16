@@ -1,13 +1,13 @@
-const { app, BrowserWindow, globalShortcut, ipcMain, Notification, Menu, Tray, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, Menu, Tray, globalShortcut, nativeImage, Notification } = require('electron');
 const path = require('path');
-const axios = require('axios');
-const fs = require('fs');
 const os = require('os');
-const config = require('./config');
+const fs = require('fs');
 const log = require('electron-log');
+const axios = require('axios');
 const { autoUpdater } = require('electron-updater');
 const { getSettings, saveSettings, resetSettings, saveWindowBounds, getWindowBounds } = require('./store');
 const { updateAutoLaunch, isAutoLaunchEnabled } = require('./auto-launch');
+const config = require('./config');
 
 // ログ設定
 log.transports.file.level = 'info';
@@ -37,6 +37,12 @@ const environment = config.currentEnvironment;
 const apiConfig = config.api[environment];
 // 設定からAPIURLを取得するか、デフォルト値を使用
 const apiUrl = settings.apiUrl || `${apiConfig.baseUrl}${apiConfig.nowPlayingEndpoint}`;
+// API_URL定数を定義（IPC通信ハンドラー用）
+const API_URL = apiConfig.baseUrl;
+const API_ENDPOINT = apiConfig.nowPlayingEndpoint;
+
+// Node.js 18+でfetchが使用可能かチェック
+const nodeFetch = globalThis.fetch || require('node-fetch');
 
 /**
  * メインウィンドウを作成
@@ -102,16 +108,50 @@ function createWindow() {
  * トレイアイコンを作成
  */
 function createTray() {
-  tray = new Tray(path.join(__dirname, 'assets/tray-icon.png'));
-  updateTrayMenu();
-  
-  tray.setToolTip('コタロウカフェ曲情報管理');
-  
-  tray.on('click', () => {
-    if (mainWindow) {
-      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+  try {
+    // 空のネイティブ画像を作成
+    const emptyIcon = nativeImage.createEmpty();
+    
+    // トレイを作成
+    tray = new Tray(emptyIcon);
+    
+    // トレイアイコンのパス
+    const trayIconPath = path.join(__dirname, 'assets/tray-icon.png');
+    
+    // ファイルが存在するか確認して読み込み
+    if (fs.existsSync(trayIconPath)) {
+      try {
+        // ファイルを直接読み込んでネイティブ画像を作成
+        const iconData = fs.readFileSync(trayIconPath);
+        const iconImage = nativeImage.createFromBuffer(iconData);
+        if (!iconImage.isEmpty()) {
+          tray.setImage(iconImage);
+          log.info('トレイアイコン設定成功');
+        } else {
+          log.warn('トレイアイコンが空です');
+        }
+      } catch (iconError) {
+        log.warn(`トレイアイコン読み込みエラー: ${iconError.message}`);
+      }
+    } else {
+      log.warn(`トレイアイコンが見つかりません: ${trayIconPath}`);
     }
-  });
+    
+    // メニュー更新
+    updateTrayMenu();
+    
+    // ツールチップ設定
+    tray.setToolTip('コタロウカフェ曲情報管理');
+    
+    // クリックイベント
+    tray.on('click', () => {
+      if (mainWindow) {
+        mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+      }
+    });
+  } catch (error) {
+    log.error('トレイアイコン作成エラー:', error);
+  }
 }
 
 /**
@@ -180,7 +220,7 @@ function updateTrayMenu(currentTrack = null) {
     { 
       label: '自動起動を設定', 
       type: 'checkbox',
-      checked: autoLaunchEnabled,
+      checked: settings.startWithSystem,
       click: (menuItem) => {
         toggleAutoLaunch(menuItem.checked);
       } 
@@ -324,25 +364,27 @@ function registerHotkey(hotkey) {
 
 /**
  * 自動起動の設定を切り替え
+ * @param {boolean} enable - trueなら有効化、falseなら無効化
  */
-function toggleAutoLaunch() {
+function toggleAutoLaunch(enable) {
   try {
-    const AutoLaunch = require('auto-launch');
+    // 設定を更新
+    settings.startWithSystem = enable;
+    saveSettings(settings);
     
-    const appAutoLauncher = new AutoLaunch({
-      name: 'コタロウカフェ曲情報管理',
-      path: app.getPath('exe'),
-    });
-    
-    appAutoLauncher.isEnabled().then((isEnabled) => {
-      if (isEnabled) {
-        appAutoLauncher.disable();
-        showNotification('自動起動を無効化', 'システム起動時に自動的に起動しなくなりました');
-      } else {
-        appAutoLauncher.enable();
-        showNotification('自動起動を有効化', 'システム起動時に自動的に起動するようになりました');
-      }
-    });
+    // auto-launchを更新
+    updateAutoLaunch(enable)
+      .then(() => {
+        if (enable) {
+          showNotification('自動起動を有効化', 'システム起動時に自動的に起動するようになりました');
+        } else {
+          showNotification('自動起動を無効化', 'システム起動時に自動的に起動しなくなりました');
+        }
+        log.info(`自動起動設定更新: ${enable ? '有効' : '無効'}`);
+      })
+      .catch((error) => {
+        log.error('自動起動設定エラー:', error);
+      });
   } catch (error) {
     log.error('自動起動設定エラー:', error);
     showNotification('エラー', '自動起動の設定に失敗しました');
@@ -431,6 +473,102 @@ async function sendTrackInfo(trackInfo) {
   }
 }
 
+// IPC通信ハンドラーの登録
+
+// 環境情報取得ハンドラー
+ipcMain.handle('get-environment', async () => {
+  return {
+    apiUrl: API_URL,
+    environment: process.env.NODE_ENV || 'production'
+  };
+});
+
+// 曲情報送信ハンドラー  
+ipcMain.handle('send-track-info', async (event, trackData) => {
+  try {
+    // APIキーの設定
+    const apiKey = 'kotarou-cafe-api-key';
+    
+    // デバッグ情報を表示
+    log.info(`送信先URL: ${API_URL}${API_ENDPOINT}`);
+    log.info(`送信データ: ${JSON.stringify(trackData)}`);
+    log.info(`認証ヘッダー: Bearer ${apiKey}`);
+    
+    const response = await nodeFetch(`${API_URL}${API_ENDPOINT}`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(trackData)
+    });
+    
+    // レスポンスのデバッグ情報
+    log.info(`レスポンスステータス: ${response.status} ${response.statusText}`);
+    const responseHeaders = {};
+    response.headers.forEach((value, name) => {
+      responseHeaders[name] = value;
+    });
+    log.info(`レスポンスヘッダー: ${JSON.stringify(responseHeaders)}`);
+    
+    
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // 履歴に追加
+    const historyItem = {
+      ...trackData,
+      timestamp: new Date().toISOString(),
+      success: true
+    };
+    
+    trackHistory.unshift(historyItem);
+    
+    // 履歴が多すぎる場合は古いものを削除
+    if (trackHistory.length > MAX_HISTORY_SIZE) {
+      trackHistory = trackHistory.slice(0, MAX_HISTORY_SIZE);
+    }
+    
+    // 履歴を保存
+    saveTrackHistory();
+    
+    // トレイメニューを更新
+    updateTrayMenu(trackData);
+    
+    showNotification('送信成功', `${trackData.title} - ${trackData.artist} の情報を送信しました`);
+    return { success: true, data };
+  } catch (error) {
+    log.error('API送信エラー:', error);
+    
+    // エラー情報も履歴に追加
+    const historyItem = {
+      ...trackData,
+      timestamp: new Date().toISOString(),
+      success: false,
+      error: error.message
+    };
+    
+    trackHistory.unshift(historyItem);
+    saveTrackHistory();
+    
+    showNotification('送信失敗', `曲情報の送信に失敗しました: ${error.message}`);
+    throw new Error(`送信失敗: ${error.message}`);
+  }
+});
+
+// 曲履歴取得ハンドラー
+ipcMain.handle('get-track-history', () => {
+  return trackHistory;
+});
+
+// ホットキー設定ハンドラー
+ipcMain.handle('set-hotkey', (event, hotkey) => {
+  return registerHotkey(hotkey);
+});
+
 // アプリケーションの準備ができたら実行
 app.whenReady().then(async () => {
   // 再生履歴を読み込み
@@ -487,25 +625,7 @@ app.whenReady().then(async () => {
     saveWindowBounds(mainWindow.getBounds());
   });
   
-  // IPC通信の設定
-  ipcMain.handle('send-track-info', async (event, trackInfo) => {
-    return await sendTrackInfo(trackInfo);
-  });
-  
-  ipcMain.handle('get-environment', () => {
-    return {
-      current: environment,
-      apiUrl: apiUrl
-    };
-  });
-  
-  ipcMain.handle('get-track-history', () => {
-    return trackHistory;
-  });
-  
-  ipcMain.handle('set-hotkey', (event, hotkey) => {
-    return registerHotkey(hotkey);
-  });
+  // 設定関連のIPC通信はここに記述
   
   // 設定関連のIPC通信
   ipcMain.on('get-settings', (event) => {

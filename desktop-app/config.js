@@ -11,7 +11,7 @@ module.exports = {
     },
     // 開発環境URL
     development: {
-      baseUrl: 'http://localhost:3000',
+      baseUrl: 'http://localhost:3001',
       nowPlayingEndpoint: '/api/now-playing'
     }
   },

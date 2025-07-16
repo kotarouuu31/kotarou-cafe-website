@@ -67,11 +67,32 @@ export const getHistoryDataFromFiles = async (): Promise<HistoryData> => {
 };
 
 // 曲の再生経過時間を計算（秒）
-export const getElapsedTime = (startedAt: Date | null): number => {
+export const getElapsedTime = (startedAt: Date | string | null): number => {
   if (!startedAt) return 0;
   
+  // startedAtがDate型でない場合は変換する
+  let startDate: Date;
+  if (startedAt instanceof Date) {
+    startDate = startedAt;
+  } else if (typeof startedAt === 'string') {
+    try {
+      startDate = new Date(startedAt);
+      // 無効な日付文字列の場合は現在時刻を使用
+      if (isNaN(startDate.getTime())) {
+        console.warn('無効な日付文字列です:', startedAt);
+        return 0;
+      }
+    } catch (err) {
+      console.error('日付の変換に失敗しました:', err);
+      return 0;
+    }
+  } else {
+    console.error('不正なstartedAt型:', typeof startedAt);
+    return 0;
+  }
+  
   const now = new Date();
-  return Math.floor((now.getTime() - startedAt.getTime()) / 1000);
+  return Math.floor((now.getTime() - startDate.getTime()) / 1000);
 };
 
 // 秒を「mm:ss」形式に変換

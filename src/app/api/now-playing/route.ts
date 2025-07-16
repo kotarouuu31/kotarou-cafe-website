@@ -4,6 +4,62 @@ import fs from 'fs';
 import path from 'path';
 import { TrackInfo } from '@/types/recordbox';
 
+// リクエストレート制限用のメモリストア
+// 本番環境ではRedisやデータベースを使用すべき
+type RequestData = { count: number, lastRequest: number };
+const requestStore = new Map<string, RequestData>();
+
+// レート制限の設定
+const RATE_LIMIT_CONFIG = {
+  windowMs: 60000, // 1分間
+  maxRequests: 10, // 1分間に10リクエストまで
+  standardWaitTime: 60 // 標準待機時間（秒）
+};
+
+// クライアントIPを取得する関数
+function getClientIp(request: Request): string {
+  const forwardedFor = request.headers.get('x-forwarded-for') || 'unknown';
+  return forwardedFor.split(',')[0].trim();
+}
+
+// レート制限をチェックする関数
+function checkRateLimit(request: Request): { limited: boolean, retryAfter?: number } {
+  const clientIp = getClientIp(request);
+  const now = Date.now();
+  
+  // クライアントのリクエスト情報を取得または初期化
+  if (!requestStore.has(clientIp)) {
+    requestStore.set(clientIp, { count: 1, lastRequest: now });
+    return { limited: false };
+  }
+  
+  const clientData = requestStore.get(clientIp)!;
+  
+  // 時間枠をリセットする必要があるかチェック
+  if (now - clientData.lastRequest > RATE_LIMIT_CONFIG.windowMs) {
+    clientData.count = 1;
+    clientData.lastRequest = now;
+    requestStore.set(clientIp, clientData);
+    return { limited: false };
+  }
+  
+  // リクエスト数が制限を超えているかチェック
+  if (clientData.count >= RATE_LIMIT_CONFIG.maxRequests) {
+    // 次の時間枠までの待機時間を計算
+    const timeElapsed = now - clientData.lastRequest;
+    const timeRemaining = RATE_LIMIT_CONFIG.windowMs - timeElapsed;
+    const retryAfter = Math.ceil(timeRemaining / 1000) || RATE_LIMIT_CONFIG.standardWaitTime;
+    
+    return { limited: true, retryAfter };
+  }
+  
+  // リクエストカウントを増やす
+  clientData.count += 1;
+  requestStore.set(clientIp, clientData);
+  
+  return { limited: false };
+}
+
 // データ保存用のファイルパス
 const DATA_DIR = path.join(process.cwd(), 'data');
 const NOW_PLAYING_FILE = path.join(DATA_DIR, 'now-playing.json');
@@ -81,50 +137,28 @@ function validateTrackInfo(data: Record<string, unknown>): { valid: boolean; err
 
 // APIキーの検証
 function validateApiKey(request: Request): boolean {
+  // 開発環境では認証を無効化する
+  if (process.env.NODE_ENV === 'development') {
+    console.log('開発環境での認証をスキップします');
+    return true;
+  }
+  
   // 本番環境ではより強固な認証を実装する
   const apiKey = process.env.API_KEY || 'kotarou-cafe-api-key';
   const authHeader = request.headers.get('Authorization') || '';
+  console.log(`受信した認証ヘッダー: ${authHeader}`);
   
   // Bearer トークン形式のチェック
   if (authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7);
+    console.log(`受信したトークン: ${token}, 期待するトークン: ${apiKey}`);
     return token === apiKey;
   }
   
   return false;
 }
 
-// レート制限のチェック（簡易版）
-const requestCounts = new Map<string, { count: number, timestamp: number }>();
-const RATE_LIMIT = 10; // 1分間に10リクエストまで
-const RATE_WINDOW = 60 * 1000; // 1分間（ミリ秒）
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const record = requestCounts.get(ip);
-  
-  if (!record) {
-    // 初回リクエスト
-    requestCounts.set(ip, { count: 1, timestamp: now });
-    return true;
-  }
-  
-  if (now - record.timestamp > RATE_WINDOW) {
-    // 時間枠をリセット
-    requestCounts.set(ip, { count: 1, timestamp: now });
-    return true;
-  }
-  
-  if (record.count >= RATE_LIMIT) {
-    // レート制限超過
-    return false;
-  }
-  
-  // カウントを増やす
-  record.count += 1;
-  requestCounts.set(ip, record);
-  return true;
-}
+// 既存のレート制限コードは上部に統合済み
 
 // CORS設定
 const corsHeaders = {
@@ -144,34 +178,46 @@ export async function OPTIONS() {
 // GET リクエストハンドラ
 export async function GET(request: Request) {
   try {
-    // クライアントIPの取得（実際の環境に合わせて調整が必要）
-    const forwardedFor = request.headers.get('x-forwarded-for') || 'unknown';
-    const clientIp = forwardedFor.split(',')[0].trim();
-    
-    // レート制限のチェック
-    if (!checkRateLimit(clientIp)) {
+    // レート制限をチェック
+    const rateLimitResult = checkRateLimit(request);
+    if (rateLimitResult.limited) {
+      console.warn(`レート制限が適用されました: IP=${getClientIp(request)}, 待機時間=${rateLimitResult.retryAfter}秒`);
+      
+      // レート制限ヘッダーを追加
+      const headers = {
+        ...corsHeaders,
+        'Retry-After': `${rateLimitResult.retryAfter}`,
+        'X-RateLimit-Limit': `${RATE_LIMIT_CONFIG.maxRequests}`,
+        'X-RateLimit-Reset': `${Math.ceil(RATE_LIMIT_CONFIG.windowMs / 1000)}`
+      };
+      
       return NextResponse.json(
-        { success: false, error: 'レート制限を超過しました。しばらく待ってから再試行してください。' },
-        { status: 429, headers: corsHeaders }
+        { success: false, error: 'リクエスト間隔が短すぎます。しばらく待ってから再試行してください。' },
+        { status: 429, headers }
       );
     }
     
+    // 現在再生中の曲情報を取得
     const currentTrack = getCurrentTrack();
     
-    // 曲情報をローカルストレージにキャッシュするためのスクリプトを含める
-    const responseData = {
-      ...currentTrack,
-      timestamp: new Date().toISOString(),
-      success: true
+    // レート制限情報をヘッダーに追加
+    const clientIp = getClientIp(request);
+    const clientData = requestStore.get(clientIp);
+    const headers = {
+      ...corsHeaders,
+      'X-RateLimit-Limit': `${RATE_LIMIT_CONFIG.maxRequests}`,
+      'X-RateLimit-Remaining': `${RATE_LIMIT_CONFIG.maxRequests - (clientData?.count || 0)}`,
+      'X-RateLimit-Reset': `${Math.ceil(RATE_LIMIT_CONFIG.windowMs / 1000)}`
     };
     
-    return NextResponse.json(responseData, {
-      headers: corsHeaders
-    });
-  } catch (error) {
-    console.error('GET request error:', error);
     return NextResponse.json(
-      { success: false, error: 'サーバーエラーが発生しました' },
+      { ...currentTrack, timestamp: new Date().toISOString(), success: true },
+      { headers }
+    );
+  } catch (error) {
+    console.error('Error in GET /api/now-playing:', error);
+    return NextResponse.json(
+      { success: false, error: '曲情報の取得に失敗しました' },
       { status: 500, headers: corsHeaders }
     );
   }
@@ -180,25 +226,41 @@ export async function GET(request: Request) {
 // POST リクエストハンドラ
 export async function POST(request: Request) {
   try {
+    // リクエストヘッダーのデバッグ表示
+    console.log('受信したリクエストヘッダー:');
+    request.headers.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+    
+    // レート制限をチェック
+    const rateLimitResult = checkRateLimit(request);
+    if (rateLimitResult.limited) {
+      console.warn(`レート制限が適用されました: IP=${getClientIp(request)}, 待機時間=${rateLimitResult.retryAfter}秒`);
+      
+      // レート制限ヘッダーを追加
+      const headers = {
+        ...corsHeaders,
+        'Retry-After': `${rateLimitResult.retryAfter}`,
+        'X-RateLimit-Limit': `${RATE_LIMIT_CONFIG.maxRequests}`,
+        'X-RateLimit-Reset': `${Math.ceil(RATE_LIMIT_CONFIG.windowMs / 1000)}`
+      };
+      
+      return NextResponse.json(
+        { success: false, error: 'リクエスト間隔が短すぎます。しばらく待ってから再試行してください。' },
+        { status: 429, headers }
+      );
+    }
+    
     // APIキーの検証（デスクトップアプリからのリクエストのみ許可）
     if (!validateApiKey(request)) {
+      console.log('認証失敗: 無効なAPIキー');
       return NextResponse.json(
         { success: false, error: '認証エラー: 無効なAPIキーです' },
         { status: 401, headers: corsHeaders }
       );
     }
     
-    // クライアントIPの取得（実際の環境に合わせて調整が必要）
-    const forwardedFor = request.headers.get('x-forwarded-for') || 'unknown';
-    const clientIp = forwardedFor.split(',')[0].trim();
-    
-    // レート制限のチェック
-    if (!checkRateLimit(clientIp)) {
-      return NextResponse.json(
-        { success: false, error: 'レート制限を超過しました。しばらく待ってから再試行してください。' },
-        { status: 429, headers: corsHeaders }
-      );
-    }
+    console.log('認証成功: 有効なAPIキー');
     
     const data = await request.json();
     const validation = validateTrackInfo(data);
@@ -228,15 +290,24 @@ export async function POST(request: Request) {
     // 履歴に追加（別ファイルに保存）
     addToHistory(newTrack);
     
-    return NextResponse.json(
-      { success: true, track: newTrack },
-      { headers: corsHeaders }
-    );
-  } catch (error) {
-    console.error('Error processing request:', error);
+    // レート制限情報をヘッダーに追加
+    const clientIp = getClientIp(request);
+    const clientData = requestStore.get(clientIp);
+    const headers = {
+      ...corsHeaders,
+      'X-RateLimit-Limit': `${RATE_LIMIT_CONFIG.maxRequests}`,
+      'X-RateLimit-Remaining': `${RATE_LIMIT_CONFIG.maxRequests - (clientData?.count || 0)}`,
+      'X-RateLimit-Reset': `${Math.ceil(RATE_LIMIT_CONFIG.windowMs / 1000)}`
+    };
     
     return NextResponse.json(
-      { success: false, error: 'リクエストの処理中にエラーが発生しました' },
+      { success: true, message: '曲情報が正常に更新されました', track: newTrack },
+      { headers }
+    );
+  } catch (error) {
+    console.error('POST request error:', error);
+    return NextResponse.json(
+      { success: false, error: 'サーバーエラーが発生しました' },
       { status: 500, headers: corsHeaders }
     );
   }
