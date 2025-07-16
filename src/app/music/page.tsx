@@ -48,17 +48,8 @@ export default function MusicPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6">
         <h1 className="text-3xl font-heading font-bold text-primary">DJ Music Corner</h1>
-        <Link 
-          href="/dj-test" 
-          className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-secondary/80 transition-colors flex items-center gap-2"
-        >
-          <span>DJテストページ</span>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-4 h-4">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </Link>
       </div>
       
       <div className="mb-6 flex justify-between items-center">

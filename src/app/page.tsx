@@ -147,53 +147,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Music Section */}
-      <section className="py-16 bg-primary-light/10">
-        <div className="container mx-auto px-4">
-          <h2 className="font-heading text-3xl font-bold text-center mb-4 text-primary">Music Corner</h2>
-          <p className="text-center mb-8 max-w-2xl mx-auto">
-            Enjoy the perfect soundtrack to your coffee experience. Our carefully curated music selection enhances your time at Kotarou Cafe.
-          </p>
-          
-          <div className="bg-gradient-to-br from-primary-dark to-primary-light/80 text-white py-8 px-4 rounded-lg shadow-xl mb-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Now Playing */}
-              <div className="lg:col-span-2">
-                <h3 className="font-heading text-2xl font-bold mb-4">
-                  <span className="inline-block animate-bounce-slow mr-2">🎧</span>
-                  Now Playing
-                </h3>
-                <AutoUpdatingNowPlaying />
-              </div>
-              
-              {/* DJ Schedule Preview */}
-              <div>
-                <h3 className="font-heading text-2xl font-bold mb-4">DJ Schedule</h3>
-                <div className="bg-white/10 p-4 rounded-md">
-                  <div className="mb-3">
-                    <p className="text-sm text-white/80">Friday</p>
-                    <p className="font-medium">DJ Kotarou - House Vibes</p>
-                  </div>
-                  <div className="mb-3">
-                    <p className="text-sm text-white/80">Saturday</p>
-                    <p className="font-medium">Guest DJ - Jazz Fusion</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-6 text-center">
-              <Link 
-                href="/music"
-                className="inline-block py-3 px-6 rounded-md transition-all bg-white/20 hover:bg-white/30 font-medium"
-              >
-                Explore Our Music
-                <span className="ml-2">▶</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* Events Preview Section */}
       {/* 重複しているイベントセクションを削除 */}

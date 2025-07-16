@@ -228,7 +228,7 @@ export default function SocialPage() {
                 <li><Link href="/events" className="hover:text-accent transition-colors">イベント</Link></li>
                 <li><Link href="/latte-art" className="hover:text-accent transition-colors">ラテアート</Link></li>
                 <li><Link href="/music" className="hover:text-accent transition-colors">ミュージック</Link></li>
-                <li><Link href="/dj-test" className="hover:text-accent transition-colors">DJテスト</Link></li>
+
               </ul>
             </div>
             <div>

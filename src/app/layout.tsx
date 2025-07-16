@@ -5,6 +5,8 @@ import "./globals.css";
 import { ChatWidgetWrapper } from "@/components/chat/ChatWidgetWrapper";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { CookieConsent } from "@/components/analytics/CookieConsent";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -39,7 +41,9 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${poppins.variable} antialiased`}
       >
+        <Header />
         {children}
+        <Footer />
         <ChatWidgetWrapper />
         <CookieConsent />
       </body>
