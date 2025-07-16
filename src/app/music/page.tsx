@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
 import { AutoUpdatingNowPlaying } from '@/components/NowPlaying';
 import TrackHistory from '@/components/TrackHistory';
 import { generateMockHistoryData, getTrackHistory } from '@/lib/recordbox';
