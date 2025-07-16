@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { AutoUpdatingNowPlaying } from '@/components/NowPlaying';
 import { Button } from '@/components/ui/Button';
 import { Section, SectionTitle } from '@/components/ui/Section';
