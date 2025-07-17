@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import SocialFeed, { InstagramPost } from '@/components/SocialFeed';
 import LivePost, { LivePostData } from '@/components/LivePost';

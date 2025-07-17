@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { NowPlaying as NowPlayingType } from '@/types/recordbox';
-import { getElapsedTime } from '@/lib/recordbox';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 
 type RecordPlayerProps = {
@@ -22,14 +21,13 @@ const RecordPlayer: React.FC<RecordPlayerProps> = ({
   const [nowPlaying, setNowPlaying] = useState<NowPlayingType>(initialNowPlaying || { track: null, startedAt: null });
   const { track, startedAt } = nowPlaying;
   const isPlaying = !!track && !!startedAt;
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const isOnline = useOnlineStatus();
   const offlineMode = !isOnline && track;
   const [retryCount, setRetryCount] = useState(0);
   const [backoffUntil, setBackoffUntil] = useState<number | null>(null);
 
   // APIから最新の曲情報を取得
-  const fetchLatestTrackInfo = async () => {
+  const fetchLatestTrackInfo = useCallback(async () => {
     if (!isOnline) return;
     
     // バックオフ期間中ならスキップ
@@ -67,7 +65,6 @@ const RecordPlayer: React.FC<RecordPlayerProps> = ({
       }
       
       setNowPlaying(data);
-      setLastUpdated(new Date());
       
       // オフライン用にローカルストレージに保存
       if (typeof window !== 'undefined' && data.track) {
@@ -83,14 +80,13 @@ const RecordPlayer: React.FC<RecordPlayerProps> = ({
           if (savedData) {
             const parsedData = JSON.parse(savedData);
             setNowPlaying(parsedData);
-            setLastUpdated(new Date());
           }
         } catch (e) {
           console.error('Failed to load offline data:', e);
         }
       }
     }
-  };
+  }, [isOnline, setNowPlaying, setRetryCount, setBackoffUntil, retryCount]);
 
   // 自動更新の設定
   useEffect(() => {
@@ -112,7 +108,7 @@ const RecordPlayer: React.FC<RecordPlayerProps> = ({
     }, updateInterval);
 
     return () => clearInterval(intervalId);
-  }, [autoUpdate, updateInterval, isOnline]);
+  }, [autoUpdate, updateInterval, isOnline, fetchLatestTrackInfo]);
 
   // 外部からpropsが更新された場合
   useEffect(() => {
@@ -127,7 +123,7 @@ const RecordPlayer: React.FC<RecordPlayerProps> = ({
       // オンラインに戻ったら即時更新
       fetchLatestTrackInfo();
     }
-  }, [isOnline, autoUpdate]);
+  }, [isOnline, autoUpdate, fetchLatestTrackInfo]);
 
   return (
     <div className={`relative ${className}`}>
