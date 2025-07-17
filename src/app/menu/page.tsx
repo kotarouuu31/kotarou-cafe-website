@@ -91,35 +91,6 @@ export default function Menu() {
 
   return (
     <div className="min-h-screen">
-      {/* Header/Navigation */}
-      <header className="sticky top-0 z-10 bg-background/90 backdrop-blur-sm border-b border-secondary/20">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Link href="/" className="font-heading text-2xl font-bold text-primary">
-              Kotarou Cafe
-            </Link>
-          </div>
-          <nav className="hidden md:flex space-x-8">
-            <Link href="/" className="font-medium text-foreground hover:text-accent transition-colors">
-              ホーム
-            </Link>
-            <Link href="/menu" className="font-medium text-primary hover:text-accent transition-colors">
-              メニュー
-            </Link>
-            <Link href="/about" className="font-medium text-foreground hover:text-accent transition-colors">
-              お店について
-            </Link>
-            <Link href="/contact" className="font-medium text-foreground hover:text-accent transition-colors">
-              お問い合わせ
-            </Link>
-          </nav>
-          <button className="md:hidden text-foreground">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-      </header>
 
       {/* Menu Hero */}
       <section className="relative py-20 bg-secondary/10">

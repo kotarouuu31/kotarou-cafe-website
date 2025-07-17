@@ -9,9 +9,9 @@ export default function Footer() {
   return (
     <footer className="bg-primary text-white">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* ロゴとカフェ情報 */}
-          <div className="col-span-1 md:col-span-1 lg:col-span-1">
+          <div className="col-span-1">
             <div className="flex items-center mb-4">
               <div className="relative w-12 h-12 mr-3">
                 <Image 
@@ -31,6 +31,11 @@ export default function Footer() {
             <p className="text-sm text-white/80 mb-4">
               猫をモチーフにしたカフェで、美味しいコーヒーと心地よい音楽をお楽しみください。
             </p>
+          </div>
+
+          {/* SNSリンク */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-semibold mb-4 font-heading">フォローする</h3>
             <div className="flex space-x-4">
               <a 
                 href="https://twitter.com/kotaroucafe" 
@@ -68,60 +73,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* クイックリンク */}
-          <div className="col-span-1">
-            <h3 className="text-lg font-semibold mb-4 font-heading">クイックリンク</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="text-white/80 hover:text-white transition-colors">
-                  ホーム
-                </Link>
-              </li>
-              <li>
-                <Link href="/menu" className="text-white/80 hover:text-white transition-colors">
-                  メニュー
-                </Link>
-              </li>
-              <li>
-                <Link href="/events" className="text-white/80 hover:text-white transition-colors">
-                  イベント
-                </Link>
-              </li>
-              <li>
-                <Link href="/music" className="text-white/80 hover:text-white transition-colors">
-                  ミュージック
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-white/80 hover:text-white transition-colors">
-                  お問い合わせ
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* 営業時間 */}
-          <div className="col-span-1">
-            <h3 className="text-lg font-semibold mb-4 font-heading">営業時間</h3>
-            <ul className="space-y-2 text-white/80">
-              <li className="flex justify-between">
-                <span>月曜日 - 金曜日:</span>
-                <span>10:00 - 21:00</span>
-              </li>
-              <li className="flex justify-between">
-                <span>土曜日:</span>
-                <span>09:00 - 22:00</span>
-              </li>
-              <li className="flex justify-between">
-                <span>日曜日:</span>
-                <span>09:00 - 20:00</span>
-              </li>
-              <li className="mt-4 text-sm italic">
-                ※祝日は営業時間が変更になる場合があります
-              </li>
-            </ul>
-          </div>
-
           {/* お問い合わせ */}
           <div className="col-span-1">
             <h3 className="text-lg font-semibold mb-4 font-heading">お問い合わせ</h3>
@@ -151,18 +102,10 @@ export default function Footer() {
 
         {/* 区切り線 */}
         <div className="border-t border-white/20 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
+          <div className="text-center">
             <p className="text-sm text-white/70">
               &copy; {currentYear} Kotarou Cafe. All rights reserved.
             </p>
-            <div className="mt-4 md:mt-0 flex space-x-4 text-sm text-white/70">
-              <Link href="/privacy-policy" className="hover:text-white transition-colors">
-                プライバシーポリシー
-              </Link>
-              <Link href="/terms" className="hover:text-white transition-colors">
-                利用規約
-              </Link>
-            </div>
           </div>
         </div>
       </div>

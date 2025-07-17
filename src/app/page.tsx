@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { AutoUpdatingNowPlaying } from '@/components/NowPlaying';
+import { AutoUpdatingRecordPlayer } from '@/components/RecordPlayer';
 import { Button } from '@/components/ui/Button';
 import { Section, SectionTitle } from '@/components/ui/Section';
 import { Card, CardContent, CardImage, CardTitle, CardDescription } from '@/components/ui/Card';
@@ -151,50 +151,47 @@ export default function Home() {
       </Section>
       
       {/* Music Section */}
-      <section className="py-16 bg-primary-dark text-white">
+      <section className="py-12 bg-primary-dark text-white">
         <div className="container mx-auto px-4">
           <SectionTitle 
             title="Music Corner"
-            subtitle="Enjoy our carefully curated playlists and live DJ sessions while you relax with your coffee."
+            subtitle="Enjoy our carefully curated playlists while you relax with your coffee."
             centered
-            className="text-white"
+            className="text-white mb-6"
           />
         
-          <div className="bg-gradient-to-br from-primary-dark to-primary-light/80 text-white py-8 px-4 rounded-lg shadow-xl mb-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Now Playing */}
-              <div className="lg:col-span-2">
-                <h3 className="font-heading text-2xl font-bold mb-4">
-                  <span className="inline-block animate-bounce-slow mr-2">🎧</span>
-                  Now Playing
-                </h3>
-                <AutoUpdatingNowPlaying />
+          <div className="max-w-3xl mx-auto bg-gradient-to-br from-primary-dark to-primary-light/80 text-white py-6 px-6 rounded-lg shadow-xl mb-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              {/* レコードプレーヤー */}
+              <div className="w-full md:w-2/3">
+                <AutoUpdatingRecordPlayer />
               </div>
               
-              {/* DJ Schedule Preview */}
-              <div>
-                <h3 className="font-heading text-2xl font-bold mb-4">DJ Schedule</h3>
-                <div className="bg-white/10 p-4 rounded-md">
-                  <div className="mb-3">
-                    <p className="text-sm text-white/80">Friday</p>
-                    <p className="font-medium">DJ Kotarou - House Vibes</p>
+              {/* DJ Schedule Preview - コンパクト版 */}
+              <div className="w-full md:w-1/3 bg-white/10 p-3 rounded-md text-sm">
+                <h3 className="font-heading text-lg font-bold mb-2">DJ Schedule</h3>
+                <div className="space-y-2">
+                  <div>
+                    <p className="text-xs text-white/80">Friday</p>
+                    <p className="font-medium">DJ Kotarou - House</p>
                   </div>
-                  <div className="mb-3">
-                    <p className="text-sm text-white/80">Saturday</p>
-                    <p className="font-medium">Guest DJ - Jazz Fusion</p>
+                  <div>
+                    <p className="text-xs text-white/80">Saturday</p>
+                    <p className="font-medium">Guest DJ - Jazz</p>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="mt-6 text-center">
+            <div className="mt-4 text-center">
               <Button 
                 href="/music"
                 variant="outline"
+                size="sm"
                 className="bg-white/20 hover:bg-white/30 border-white/50"
               >
                 Explore Our Music
-                <span className="ml-2">▶</span>
+                <span className="ml-1">▶</span>
               </Button>
             </div>
           </div>
