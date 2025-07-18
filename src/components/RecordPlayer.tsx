@@ -127,19 +127,18 @@ const RecordPlayer: React.FC<RecordPlayerProps> = ({
 
   return (
     <div className={`relative ${className}`}>
-      {/* レコード盤 */}
-      <div className="flex items-center">
-        <div className="relative">
+      {/* レコード盤とプレーヤー */}
+      <div className="flex flex-col sm:flex-row items-center">
+        <div className="relative mb-4 sm:mb-0">
           {/* レコード盤 */}
-          <div className={`relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-gray-900 to-black shadow-lg ${isPlaying ? 'animate-spin-slow' : ''}`}>
+          <div className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-gray-900 to-black shadow-lg ${isPlaying ? 'animate-spin-slow' : ''}`}>
             {/* レコード溝 */}
-            <div className="absolute inset-2 rounded-full border-4 border-gray-800"></div>
-            <div className="absolute inset-6 rounded-full border-2 border-gray-800"></div>
-            <div className="absolute inset-10 rounded-full border border-gray-800"></div>
-            <div className="absolute inset-14 rounded-full border border-gray-800"></div>
+            <div className="absolute inset-2 rounded-full border-2 border-gray-800"></div>
+            <div className="absolute inset-5 rounded-full border border-gray-800"></div>
+            <div className="absolute inset-8 rounded-full border border-gray-800"></div>
             
             {/* レコード中央のジャケット画像 */}
-            <div className="absolute inset-0 m-auto w-10 h-10 md:w-14 md:h-14 rounded-full bg-primary overflow-hidden shadow-inner">
+            <div className="absolute inset-0 m-auto w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary overflow-hidden shadow-inner">
               {track?.albumArt ? (
                 <Image 
                   src={track.albumArt} 
@@ -149,34 +148,34 @@ const RecordPlayer: React.FC<RecordPlayerProps> = ({
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary to-primary-dark text-white">
-                  <span className="text-xs md:text-sm font-bold">KOTAROU</span>
+                  <span className="text-[8px] sm:text-xs font-bold">KOTAROU</span>
                 </div>
               )}
             </div>
             
             {/* レコード中央の穴 */}
-            <div className="absolute inset-0 m-auto w-2 h-2 md:w-3 md:h-3 rounded-full bg-white shadow-inner"></div>
+            <div className="absolute inset-0 m-auto w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white shadow-inner"></div>
           </div>
           
           {/* トーンアーム（再生中のみ表示） */}
           {isPlaying && (
-            <div className="absolute top-3 -right-6 w-16 h-3 bg-gradient-to-r from-gray-400 to-gray-300 rounded-r-full origin-left transform rotate-30 shadow-md"></div>
+            <div className="absolute top-2 -right-4 sm:top-3 sm:-right-6 w-12 sm:w-16 h-2 sm:h-3 bg-gradient-to-r from-gray-400 to-gray-300 rounded-r-full origin-left transform rotate-30 shadow-md"></div>
           )}
         </div>
         
         {/* 曲情報 */}
-        <div className="ml-4 flex-1">
+        <div className="w-full sm:ml-4 sm:flex-1 text-center sm:text-left">
           {isPlaying ? (
             <>
-              <div className="font-medium text-base md:text-lg truncate">{track.title}</div>
-              <div className="text-sm md:text-base text-gray-200/80 truncate">{track.artist}</div>
-              {track.genre && <div className="text-xs text-gray-200/60 mt-1">{track.genre}</div>}
+              <div className="font-medium text-sm sm:text-base truncate">{track.title}</div>
+              <div className="text-xs sm:text-sm text-gray-200/80 truncate">{track.artist}</div>
+              {track.genre && <div className="text-[10px] sm:text-xs text-gray-200/60 mt-0.5 sm:mt-1">{track.genre}</div>}
               {offlineMode && (
-                <span className="text-xs text-amber-400 mt-1 block">オフラインモード</span>
+                <span className="text-[10px] sm:text-xs text-amber-400 mt-0.5 sm:mt-1 block">オフラインモード</span>
               )}
             </>
           ) : (
-            <div className="text-sm text-gray-200/80">再生中の曲はありません</div>
+            <div className="text-xs sm:text-sm text-gray-200/80">再生中の曲はありません</div>
           )}
         </div>
       </div>

@@ -3,268 +3,173 @@
 import Image from "next/image";
 import { AutoUpdatingRecordPlayer } from '@/components/RecordPlayer';
 import { Button } from '@/components/ui/Button';
-import { Section, SectionTitle } from '@/components/ui/Section';
-import { Card, CardContent, CardImage, CardTitle, CardDescription } from '@/components/ui/Card';
+import Link from 'next/link';
 
 export default function Home() {
-  // APIから曲情報を取得するコンポーネントを使用
-
   return (
-    <>
+    <div className="flex flex-col items-center max-w-[400px] mx-auto pb-16">
       {/* Hero Section */}
-      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="relative w-full h-full">
+      <section className="w-full pt-24 pb-8 px-4 text-center">
+        <h1 className="font-heading text-3xl font-bold mb-3">
+          自然とつながり、心を解き放つ。
+        </h1>
+        <p className="text-sm text-foreground/80 mb-6 leading-relaxed">
+          Kotarou Cafeは、コーヒーと音楽を通じて、自然と人、人と人をつなぐ場を目指しています。
+          特別な味と空間で、特別なひとときをお過ごしください。
+        </p>
+      </section>
+
+      {/* News Section */}
+      <section className="w-full px-4 mb-12">
+        <h2 className="text-sm font-medium mb-4">News</h2>
+        <div className="border-t border-gray-200 pt-4">
+          <Link href="/news/1" className="block mb-6">
+            <div className="flex flex-col">
+              <span className="text-xs text-gray-500 mb-1">2025/07/15</span>
+              <span className="text-xs text-accent mb-1">Information</span>
+              <h3 className="text-sm font-medium">ホームページをリニューアルしました</h3>
+            </div>
+          </Link>
+          <Link href="/news" className="text-xs text-accent flex items-center">
+            News All
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+      </section>
+
+      {/* Experience Section */}
+      <section className="w-full px-4 mb-12">
+        <h2 className="text-sm font-medium mb-4">Experience</h2>
+        <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
+          「豆」「焙煎」「抽出」「空間」が調和する、コーヒーと音楽の空間。
+          厳選された豆と丁寧な焙煎、そして熟練のバリスタによる抽出。
+          心地よい音楽とともに、感覚がふっとひらく。
+          「あぁ」と自然にこぼれる、そのひとときが、記憶に、やさしく残る。
+        </p>
+        <div className="relative w-full h-[250px] mb-4">
+          <Image 
+            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085" 
+            alt="Cafe interior" 
+            fill 
+            style={{objectFit: 'cover'}} 
+            className="rounded-md"
+            priority
+          />
+        </div>
+      </section>
+
+      {/* Three Concepts */}
+      <section className="w-full px-4 mb-12">
+        <div className="mb-12">
+          <h2 className="text-xl font-heading font-bold mb-4">豆と焙煎が、香りを育てる</h2>
+          <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
+            世界中から厳選された豆を、丁寧に焙煎。それぞれの豆が持つ個性を最大限に引き出します。
+            この一杯のために、最高の瞬間を追求しています。
+          </p>
+          <div className="relative w-full h-[250px]">
             <Image 
-              src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085" 
-              alt="Cafe interior" 
+              src="https://images.unsplash.com/photo-1580933073521-dc51f22c5c31" 
+              alt="Coffee beans" 
               fill 
               style={{objectFit: 'cover'}} 
-              priority
-              className="brightness-[0.85]"
+              className="rounded-md"
             />
           </div>
         </div>
-        <div className="container mx-auto px-4 z-10 text-center">
-          <h1 className="font-heading text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
-            Kotarou Cafe
-          </h1>
-          <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto drop-shadow-md">
-            Enjoy delicious coffee and a relaxing atmosphere
+
+        <div className="mb-12">
+          <h2 className="text-xl font-heading font-bold mb-4">ラテアートが、目を楽しませる</h2>
+          <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
+            バリスタの技術と感性が生み出す一期一会のアート。
+            飲む前の一瞬の喜びが、コーヒータイムをより特別なものに変えます。
           </p>
-          <Button href="/menu" size="lg" variant="accent">
-            View Menu
-          </Button>
+          <div className="relative w-full h-[250px]">
+            <Image 
+              src="https://images.unsplash.com/photo-1541167760496-1628856ab772" 
+              alt="Latte Art" 
+              fill 
+              style={{objectFit: 'cover'}} 
+              className="rounded-md"
+            />
+          </div>
+          <div className="mt-4 text-center">
+            <Button href="/latte-art" variant="secondary" size="sm">
+              View Gallery
+            </Button>
+          </div>
         </div>
-      </section>
 
-      {/* Features Section */}
-      <Section bgColor="default" spacing="lg">
-        <SectionTitle 
-          title="Our Features"
-          subtitle=""
-          centered
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card>
-            <CardContent className="text-center">
-              <div className="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-8 h-8 text-primary">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <CardTitle>Specialty Coffee</CardTitle>
-              <CardDescription>We carefully select and roast our beans to bring you the perfect cup.</CardDescription>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="text-center">
-              <div className="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-8 h-8 text-primary">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <CardTitle>Relaxing Space</CardTitle>
-              <CardDescription>A comfortable environment where you can unwind and enjoy your time.</CardDescription>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="text-center">
-              <div className="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-8 h-8 text-primary">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
-                </svg>
-              </div>
-              <CardTitle>Homemade Sweets</CardTitle>
-              <CardDescription>Our chef prepares delicious treats daily with care and attention to detail.</CardDescription>
-            </CardContent>
-          </Card>
-        </div>
-      </Section>
-
-
-
-      {/* Events Preview Section */}
-      {/* 重複しているイベントセクションを削除 */}
-
-      {/* Latte Art Section */}
-      <Section bgColor="muted" spacing="lg">
-        <SectionTitle 
-          title="Latte Art Gallery"
-          subtitle="Discover our evolving latte art creations. Experience coffee that delights not only your taste buds but also your eyes."
-          centered
-        />
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Latte Art Preview Images */}
-          <Card className="transition-transform hover:scale-105">
-            <CardImage>
-              <Image 
-                src="https://images.unsplash.com/photo-1541167760496-1628856ab772" 
-                alt="Heart Latte Art" 
-                fill 
-                style={{objectFit: 'cover'}} 
-              />
-            </CardImage>
-            <CardContent>
-              <CardTitle>Heart</CardTitle>
-              <CardDescription>Free Pour</CardDescription>
-            </CardContent>
-          </Card>
-          
-          <Card className="transition-transform hover:scale-105">
-            <CardImage>
-              <Image 
-                src="https://images.unsplash.com/photo-1534805539898-da7c4915c75f" 
-                alt="Swan Latte Art" 
-                fill 
-                style={{objectFit: 'cover'}} 
-              />
-            </CardImage>
-            <CardContent>
-              <CardTitle>Swan</CardTitle>
-              <CardDescription>Free Pour & Etching</CardDescription>
-            </CardContent>
-          </Card>
-          
-          <Card className="transition-transform hover:scale-105">
-            <CardImage>
-              <Image 
-                src="https://images.unsplash.com/photo-1442512595331-e89e73853f31" 
-                alt="Autumn Leaf Latte Art" 
-                fill 
-                style={{objectFit: 'cover'}} 
-              />
-            </CardImage>
-            <CardContent>
-              <CardTitle>Autumn Leaf</CardTitle>
-              <CardDescription>Etching & Color Art</CardDescription>
-            </CardContent>
-          </Card>
-        </div>
-      
-        <div className="text-center">
-          <Button href="/latte-art" variant="secondary">
-            View Gallery
-          </Button>
-        </div>
-      </Section>
-      
-      {/* Music Section */}
-      <section className="py-12 bg-primary-dark text-white">
-        <div className="container mx-auto px-4">
-          <SectionTitle 
-            title="Music Corner"
-            subtitle="Enjoy our carefully curated playlists while you relax with your coffee."
-            centered
-            className="text-white mb-6"
-          />
-        
-          <div className="max-w-3xl mx-auto bg-gradient-to-br from-primary-dark to-primary-light/80 text-white py-6 px-6 rounded-lg shadow-xl mb-6">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              {/* レコードプレーヤー */}
-              <div className="w-full md:w-2/3">
-                <AutoUpdatingRecordPlayer />
-              </div>
-              
-              {/* DJ Schedule Preview - コンパクト版 */}
-              <div className="w-full md:w-1/3 bg-white/10 p-3 rounded-md text-sm">
-                <h3 className="font-heading text-lg font-bold mb-2">DJ Schedule</h3>
-                <div className="space-y-2">
-                  <div>
-                    <p className="text-xs text-white/80">Friday</p>
-                    <p className="font-medium">DJ Kotarou - House</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-white/80">Saturday</p>
-                    <p className="font-medium">Guest DJ - Jazz</p>
-                  </div>
+        <div className="mb-12">
+          <h2 className="text-xl font-heading font-bold mb-4">音楽が、空間を包み込む</h2>
+          <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
+            厳選された音楽が流れる空間で、コーヒーの味わいがより深まります。
+            週末のDJイベントでは、さらに特別な体験を。
+          </p>
+          <div className="bg-primary-dark text-white p-6 rounded-md">
+            <div className="mb-4">
+              <AutoUpdatingRecordPlayer />
+            </div>
+            <div className="bg-white/10 p-3 rounded-md text-sm mb-4">
+              <h3 className="font-heading text-base font-bold mb-2">DJ Schedule</h3>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-white/80">Friday</p>
+                  <p className="font-medium text-sm">DJ Kotarou - House</p>
+                </div>
+                <div>
+                  <p className="text-xs text-white/80">Saturday</p>
+                  <p className="font-medium text-sm">Guest DJ - Jazz</p>
                 </div>
               </div>
-            </div>
-            
-            <div className="mt-4 text-center">
-              <Button 
-                href="/music"
-                variant="outline"
-                size="sm"
-                className="bg-white/20 hover:bg-white/30 border-white/50"
-              >
-                Explore Our Music
-                <span className="ml-1">▶</span>
-              </Button>
             </div>
           </div>
         </div>
       </section>
-      
-      {/* Events Preview Section */}
-      <Section bgColor="default" spacing="lg">
-        <SectionTitle 
-          title="Events"
-          subtitle="Join us for various events at Kotarou Cafe. From live performances and DJ nights to workshops, there's always something exciting happening."
-          centered
-        />
-      
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Event 1 */}
-          <Card>
-            <CardImage>
+
+      {/* Events Preview */}
+      <section className="w-full px-4 mb-12">
+        <h2 className="text-sm font-medium mb-4">Events</h2>
+        <div className="space-y-6">
+          <div>
+            <div className="relative w-full h-[180px] mb-3">
               <Image
                 src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
                 alt="Jazz Night"
                 fill
                 style={{ objectFit: 'cover' }}
+                className="rounded-md"
               />
-            </CardImage>
-            <CardContent>
-              <CardTitle>Jazz Night</CardTitle>
-              <p className="text-sm text-blue-600 mb-2">Every other Saturday 19:00-21:00</p>
-              <CardDescription>Enjoy a relaxing evening of jazz by local musicians while sipping on our delicious coffee.</CardDescription>
-            </CardContent>
-          </Card>
-          
-          {/* Event 2 */}
-          <Card>
-            <CardImage>
-              <Image
-                src="https://images.unsplash.com/photo-1513829596324-4bb2800c5efb"
-                alt="Coffee Workshop"
-                fill
-                style={{ objectFit: 'cover' }}
-              />
-            </CardImage>
-            <CardContent>
-              <CardTitle>Coffee Workshop</CardTitle>
-              <p className="text-sm text-blue-600 mb-2">Monthly on Sunday 14:00-16:00</p>
-              <CardDescription>Learn the art of brewing the perfect cup of coffee from our expert baristas.</CardDescription>
-            </CardContent>
-          </Card>
-          
-          {/* Event 3 */}
-          <Card>
-            <CardImage>
-              <Image
-                src="https://images.unsplash.com/photo-1505236858219-8359eb29e329"
-                alt="Acoustic Live"
-                fill
-                style={{ objectFit: 'cover' }}
-              />
-            </CardImage>
-            <CardContent>
-              <CardTitle>Acoustic Live</CardTitle>
-              <p className="text-sm text-blue-600 mb-2">Every Friday 18:00-20:00</p>
-              <CardDescription>Enjoy soothing acoustic performances by talented local artists in our cozy atmosphere.</CardDescription>
-            </CardContent>
-          </Card>
+            </div>
+            <h3 className="font-medium text-base mb-1">Jazz Night</h3>
+            <p className="text-xs text-accent mb-2">Every other Saturday 19:00-21:00</p>
+            <p className="text-xs text-foreground/80">
+              Enjoy a relaxing evening of jazz by local musicians while sipping on our delicious coffee.
+            </p>
+          </div>
+
+          <div className="text-center mt-6">
+            <Button href="/events" variant="secondary" size="sm">
+              View All Events
+            </Button>
+          </div>
         </div>
-        
-        <div className="text-center">
-          <Button href="/events" variant="secondary">
-            View All Events
+      </section>
+
+      {/* Chat with DJ Nyanko */}
+      <section className="w-full px-4 mb-12">
+        <div className="bg-gradient-to-br from-accent/20 to-primary/20 p-6 rounded-md text-center">
+          <h2 className="text-lg font-heading font-bold mb-3">DJ Nyanko AI</h2>
+          <p className="text-xs text-foreground/80 mb-4">
+            音楽のことならなんでも知っている、Kotarou Cafeの看板猫DJ。
+            好きな音楽や気分を伝えれば、ぴったりの一曲をおすすめしてくれます。
+          </p>
+          <Button href="/chat" variant="accent" size="sm">
+            Chat with DJ Nyanko
           </Button>
         </div>
-      </Section>
-    </>
+      </section>
+    </div>
   );
 }
