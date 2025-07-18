@@ -71,17 +71,17 @@ export default function SocialPage() {
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-primary/5">
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+      <div className="max-w-[400px] mx-auto px-4 py-6">
+        <div className="flex flex-col mb-4">
           <div>
-            <h1 className="font-heading text-3xl font-bold text-primary mb-2">SNS</h1>
-            <p className="text-foreground/80 max-w-2xl">
+            <h1 className="font-heading text-2xl font-bold text-primary mb-2">SNS</h1>
+            <p className="text-foreground/80 text-sm">
               Kotarou Cafeの最新情報をSNSでチェック。店内の様子、DJイベント、ラテアートなど、リアルタイムで更新中。
             </p>
           </div>
           
           {/* シェアボタン */}
-          <div className="mt-4 md:mt-0">
+          <div className="mt-3">
             <ShareButtons 
               url={typeof window !== 'undefined' ? window.location.href : 'https://kotarou-cafe.com/social'}
               title="Kotarou Cafe | SNS"
@@ -91,10 +91,10 @@ export default function SocialPage() {
         </div>
         
         {/* タブナビゲーション */}
-        <div className="flex space-x-2 overflow-x-auto pb-2">
+        <div className="flex space-x-1 overflow-x-auto pb-2">
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-4 py-2 rounded-md transition-colors ${
+            className={`px-3 py-1 text-xs rounded-md transition-colors ${
               activeTab === 'all' 
                 ? 'bg-primary text-white' 
                 : 'bg-secondary/10 hover:bg-secondary/20 text-foreground'
@@ -104,7 +104,7 @@ export default function SocialPage() {
           </button>
           <button
             onClick={() => setActiveTab('cafe')}
-            className={`px-4 py-2 rounded-md transition-colors ${
+            className={`px-3 py-1 text-xs rounded-md transition-colors ${
               activeTab === 'cafe' 
                 ? 'bg-primary text-white' 
                 : 'bg-secondary/10 hover:bg-secondary/20 text-foreground'
@@ -114,7 +114,7 @@ export default function SocialPage() {
           </button>
           <button
             onClick={() => setActiveTab('dj')}
-            className={`px-4 py-2 rounded-md transition-colors ${
+            className={`px-3 py-1 text-xs rounded-md transition-colors ${
               activeTab === 'dj' 
                 ? 'bg-primary text-white' 
                 : 'bg-secondary/10 hover:bg-secondary/20 text-foreground'
@@ -124,7 +124,7 @@ export default function SocialPage() {
           </button>
           <button
             onClick={() => setActiveTab('latteart')}
-            className={`px-4 py-2 rounded-md transition-colors ${
+            className={`px-3 py-1 text-xs rounded-md transition-colors ${
               activeTab === 'latteart' 
                 ? 'bg-primary text-white' 
                 : 'bg-secondary/10 hover:bg-secondary/20 text-foreground'
@@ -135,12 +135,12 @@ export default function SocialPage() {
         </div>
       </div>
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="max-w-[400px] mx-auto px-4 py-6">
         {/* 管理者モード切り替えボタン（デモ用） */}
-        <div className="mb-6 flex justify-end">
+        <div className="mb-4 flex justify-end">
           <button
             onClick={toggleAdminMode}
-            className="text-sm px-3 py-1 rounded-md bg-gray-200 hover:bg-gray-300 transition-colors"
+            className="text-xs px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300 transition-colors"
           >
             {isAdmin ? '管理者モードをオフ' : '管理者モードをオン'}
           </button>
@@ -150,7 +150,7 @@ export default function SocialPage() {
         <LivePost isAdmin={isAdmin} onPost={handleNewPost} />
         
         {/* Instagram Feed */}
-        <div className="mb-12">
+        <div className="mb-8">
           <SocialFeed 
             posts={posts} 
             loading={loading} 
@@ -161,25 +161,25 @@ export default function SocialPage() {
         
         {/* リアルタイム投稿表示（未実装） */}
         {livePosts.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-2xl font-heading font-bold text-primary mb-4">最新の投稿</h2>
+          <div className="mt-6">
+            <h2 className="text-xl font-heading font-bold text-primary mb-3">最新の投稿</h2>
             <div className="space-y-4">
               {livePosts.map(post => (
-                <div key={post.id} className="bg-white rounded-lg shadow-md p-4">
-                  <p className="mb-2">{post.content}</p>
+                <div key={post.id} className="bg-white rounded-lg shadow-md p-3">
+                  <p className="mb-2 text-sm">{post.content}</p>
                   {post.imageUrl && (
-                    <div className="relative w-full h-64 mb-3">
+                    <div className="relative w-full h-52 mb-2">
                       <Image
                         src={post.imageUrl}
                         alt="投稿画像"
-                        width={800}
-                        height={600}
+                        width={400}
+                        height={300}
                         className="object-contain rounded-lg"
                         style={{ width: '100%', height: '100%' }}
                       />
                     </div>
                   )}
-                  <div className="flex justify-between items-center text-sm text-gray-500">
+                  <div className="flex justify-between items-center text-xs text-gray-500">
                     <span>{post.createdAt.toLocaleString()}</span>
                     <div className="flex space-x-1">
                       {post.hashtags.map((tag, i) => (
