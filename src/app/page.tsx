@@ -209,6 +209,27 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ニュースセクション */}
+      <section className="w-full px-4 mb-12">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-sm font-medium">News</h2>
+          <Link href="/news" className="text-xs text-accent flex items-center">
+            News All
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+        
+        <div className="border-l-2 border-primary-light pl-3 mb-6">
+          <div className="mb-1">
+            <span className="text-[10px] text-foreground/60 mr-2">2025/07/15</span>
+            <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-sm">Information</span>
+          </div>
+          <h3 className="text-sm font-medium">ホームページをリニューアルしました</h3>
+        </div>
+      </section>
+
       {/* 4. 既存機能 - Music Corner */}
       <section className="w-full px-4 mb-12">
         <h2 className="text-xl font-heading font-bold mb-4">音楽が、空間を包み込む</h2>
