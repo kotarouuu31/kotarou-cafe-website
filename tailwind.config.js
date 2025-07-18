@@ -96,6 +96,25 @@ module.exports = {
         '3xl': '1.5rem',
         'full': '9999px',
       },
+      keyframes: {
+        'float-slow': {
+          '0%, 100%': { transform: 'translateY(0) translateX(0)' },
+          '50%': { transform: 'translateY(-20px) translateX(10px)' },
+        },
+        'float-medium': {
+          '0%, 100%': { transform: 'translateY(0) translateX(0)' },
+          '50%': { transform: 'translateY(-15px) translateX(-10px)' },
+        },
+        'float-fast': {
+          '0%, 100%': { transform: 'translateY(0) translateX(0)' },
+          '50%': { transform: 'translateY(-25px) translateX(5px)' },
+        },
+      },
+      animation: {
+        'float-slow': 'float-slow 8s ease-in-out infinite',
+        'float-medium': 'float-medium 6s ease-in-out infinite',
+        'float-fast': 'float-fast 4s ease-in-out infinite',
+      },
       transitionDuration: {
         '0': '0ms',
         '75': '75ms',

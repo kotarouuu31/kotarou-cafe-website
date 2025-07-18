@@ -4,26 +4,73 @@ import Image from "next/image";
 import { AutoUpdatingRecordPlayer } from '@/components/RecordPlayer';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 export default function Home() {
+  // 音符のような装飾エフェクトのアニメーション用
+  useEffect(() => {
+    // アニメーションの実装はクライアントサイドでのみ実行
+  }, []);
+
   return (
-    <div className="flex flex-col items-center max-w-[400px] mx-auto pb-16">
-      {/* Hero Section */}
-      <section className="w-full pt-24 pb-8 px-4 text-center">
-        <h1 className="font-heading text-3xl font-bold mb-3">
-          自然とつながり、心を解き放つ。
-        </h1>
-        <p className="text-sm text-foreground/80 mb-6 leading-relaxed">
-          Kotarou Cafeは、コーヒーと音楽を通じて、自然と人、人と人をつなぐ場を目指しています。
-          特別な味と空間で、特別なひとときをお過ごしください。
-        </p>
+    <div className="flex flex-col items-center">
+      {/* 1. ファーストビュー - 全画面背景 */}
+      <section className="relative w-full h-screen flex flex-col justify-end items-center pb-16">
+        {/* 背景画像 */}
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb" 
+            alt="Kotarou Cafe Background" 
+            fill 
+            style={{objectFit: 'cover'}} 
+            priority
+            className="brightness-[0.85]"
+          />
+        </div>
+        
+        {/* 浮遊する音符のような装飾エフェクト */}
+        <div className="absolute inset-0 z-10 overflow-hidden">
+          <div className="music-note absolute top-1/4 left-1/4 text-white text-4xl opacity-70 animate-float-slow">
+            ♪
+          </div>
+          <div className="music-note absolute top-1/3 right-1/3 text-white text-3xl opacity-60 animate-float-medium">
+            ♫
+          </div>
+          <div className="music-note absolute bottom-1/2 right-1/4 text-white text-5xl opacity-50 animate-float-fast">
+            ♩
+          </div>
+          <div className="music-note absolute bottom-1/3 left-1/3 text-white text-4xl opacity-40 animate-float-slow">
+            ♬
+          </div>
+        </div>
+        
+        {/* ロゴとサブタイトル */}
+        <div className="relative z-20 text-center px-4 mb-8">
+          <h1 className="font-heading text-4xl font-bold mb-2 text-white drop-shadow-lg">
+            Kotarou Cafe
+          </h1>
+          <p className="text-white/90 text-sm font-medium tracking-wider drop-shadow-md">
+            東京のコーヒー & カフェ
+          </p>
+        </div>
       </section>
 
-      {/* News Section */}
-      <section className="w-full px-4 mb-12">
-        <h2 className="text-sm font-medium mb-4">News</h2>
-        <div className="border-t border-gray-200 pt-4">
-          <Link href="/news/1" className="block mb-6">
+      {/* 2. キャッチコピーセクション */}
+      <section className="w-full max-w-[400px] mx-auto pt-16 pb-12 px-4 text-center">
+        <h1 className="font-heading text-2xl font-bold mb-6 text-primary">
+          コーヒーとつながり、心を解き放つ。
+        </h1>
+        <p className="text-sm text-foreground/80 mb-8 leading-relaxed">
+          Kotarou Cafeは、コーヒーと音楽を通じて、自然と人、人と人をつなぐ場を目指しています。
+          厳選された豆と丁寧な焙煎、そして熟練のバリスタによる抽出。
+          心地よい音楽とともに、感覚がふっとひらく。
+          「あぁ」と自然にこぼれる、そのひとときが、記憶に、やさしく残る。
+        </p>
+
+        {/* News */}
+        <div className="border-t border-gray-200 pt-4 mb-8 text-left">
+          <h2 className="text-sm font-medium mb-4">News</h2>
+          <Link href="/news/1" className="block mb-4">
             <div className="flex flex-col">
               <span className="text-xs text-gray-500 mb-1">2025/07/15</span>
               <span className="text-xs text-accent mb-1">Information</span>
@@ -39,36 +86,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Experience Section */}
-      <section className="w-full px-4 mb-12">
+      {/* 3. 2列グリッド画像セクション */}
+      <section className="w-full max-w-[400px] mx-auto px-4 mb-12">
         <h2 className="text-sm font-medium mb-4">Experience</h2>
-        <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
-          「豆」「焙煎」「抽出」「空間」が調和する、コーヒーと音楽の空間。
-          厳選された豆と丁寧な焙煎、そして熟練のバリスタによる抽出。
-          心地よい音楽とともに、感覚がふっとひらく。
-          「あぁ」と自然にこぼれる、そのひとときが、記憶に、やさしく残る。
-        </p>
-        <div className="relative w-full h-[250px] mb-4">
-          <Image 
-            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085" 
-            alt="Cafe interior" 
-            fill 
-            style={{objectFit: 'cover'}} 
-            className="rounded-md"
-            priority
-          />
-        </div>
-      </section>
-
-      {/* Three Concepts */}
-      <section className="w-full px-4 mb-12">
-        <div className="mb-12">
-          <h2 className="text-xl font-heading font-bold mb-4">豆と焙煎が、香りを育てる</h2>
-          <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
-            世界中から厳選された豆を、丁寧に焙煎。それぞれの豆が持つ個性を最大限に引き出します。
-            この一杯のために、最高の瞬間を追求しています。
-          </p>
-          <div className="relative w-full h-[250px]">
+        
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <div className="relative aspect-square">
+            <Image 
+              src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085" 
+              alt="Cafe interior" 
+              fill 
+              style={{objectFit: 'cover'}} 
+              className="rounded-md"
+            />
+          </div>
+          <div className="relative aspect-square">
             <Image 
               src="https://images.unsplash.com/photo-1580933073521-dc51f22c5c31" 
               alt="Coffee beans" 
@@ -77,15 +109,7 @@ export default function Home() {
               className="rounded-md"
             />
           </div>
-        </div>
-
-        <div className="mb-12">
-          <h2 className="text-xl font-heading font-bold mb-4">ラテアートが、目を楽しませる</h2>
-          <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
-            バリスタの技術と感性が生み出す一期一会のアート。
-            飲む前の一瞬の喜びが、コーヒータイムをより特別なものに変えます。
-          </p>
-          <div className="relative w-full h-[250px]">
+          <div className="relative aspect-square">
             <Image 
               src="https://images.unsplash.com/photo-1541167760496-1628856ab772" 
               alt="Latte Art" 
@@ -94,34 +118,39 @@ export default function Home() {
               className="rounded-md"
             />
           </div>
-          <div className="mt-4 text-center">
-            <Button href="/latte-art" variant="secondary" size="sm">
-              View Gallery
-            </Button>
+          <div className="relative aspect-square">
+            <Image 
+              src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819" 
+              alt="Music Event" 
+              fill 
+              style={{objectFit: 'cover'}} 
+              className="rounded-md"
+            />
           </div>
         </div>
+      </section>
 
-        <div className="mb-12">
-          <h2 className="text-xl font-heading font-bold mb-4">音楽が、空間を包み込む</h2>
-          <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
-            厳選された音楽が流れる空間で、コーヒーの味わいがより深まります。
-            週末のDJイベントでは、さらに特別な体験を。
-          </p>
-          <div className="bg-primary-dark text-white p-6 rounded-md">
-            <div className="mb-4">
-              <AutoUpdatingRecordPlayer />
-            </div>
-            <div className="bg-white/10 p-3 rounded-md text-sm mb-4">
-              <h3 className="font-heading text-base font-bold mb-2">DJ Schedule</h3>
-              <div className="space-y-2">
-                <div>
-                  <p className="text-xs text-white/80">Friday</p>
-                  <p className="font-medium text-sm">DJ Kotarou - House</p>
-                </div>
-                <div>
-                  <p className="text-xs text-white/80">Saturday</p>
-                  <p className="font-medium text-sm">Guest DJ - Jazz</p>
-                </div>
+      {/* 4. 既存機能 - Music Corner */}
+      <section className="w-full max-w-[400px] mx-auto px-4 mb-12">
+        <h2 className="text-xl font-heading font-bold mb-4">音楽が、空間を包み込む</h2>
+        <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
+          厳選された音楽が流れる空間で、コーヒーの味わいがより深まります。
+          週末のDJイベントでは、さらに特別な体験を。
+        </p>
+        <div className="bg-primary-dark text-white p-6 rounded-md">
+          <div className="mb-4">
+            <AutoUpdatingRecordPlayer />
+          </div>
+          <div className="bg-white/10 p-3 rounded-md text-sm mb-4">
+            <h3 className="font-heading text-base font-bold mb-2">DJ Schedule</h3>
+            <div className="space-y-2">
+              <div>
+                <p className="text-xs text-white/80">Friday</p>
+                <p className="font-medium text-sm">DJ Kotarou - House</p>
+              </div>
+              <div>
+                <p className="text-xs text-white/80">Saturday</p>
+                <p className="font-medium text-sm">Guest DJ - Jazz</p>
               </div>
             </div>
           </div>
@@ -129,7 +158,7 @@ export default function Home() {
       </section>
 
       {/* Events Preview */}
-      <section className="w-full px-4 mb-12">
+      <section className="w-full max-w-[400px] mx-auto px-4 mb-12">
         <h2 className="text-sm font-medium mb-4">Events</h2>
         <div className="space-y-6">
           <div>
@@ -158,7 +187,7 @@ export default function Home() {
       </section>
 
       {/* Chat with DJ Nyanko */}
-      <section className="w-full px-4 mb-12">
+      <section className="w-full max-w-[400px] mx-auto px-4 mb-12">
         <div className="bg-gradient-to-br from-accent/20 to-primary/20 p-6 rounded-md text-center">
           <h2 className="text-lg font-heading font-bold mb-3">DJ Nyanko AI</h2>
           <p className="text-xs text-foreground/80 mb-4">
