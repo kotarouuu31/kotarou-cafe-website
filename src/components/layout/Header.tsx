@@ -32,10 +32,7 @@ export default function Header() {
 
   return (
     <>
-      {/* ヘッダー用の空白スペース */}
-      <div className="h-16"></div>
-      
-      <header className="fixed top-0 z-50 w-full flex justify-center transition-all duration-300">
+      <header className="flex flex-col items-center w-full transition-all duration-300">
         <div 
           className={`max-w-[400px] w-full px-4 py-3 ${
             isScrolled || isMobileMenuOpen
