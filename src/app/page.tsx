@@ -67,23 +67,7 @@ export default function Home() {
           「あぁ」と自然にこぼれる、そのひとときが、記憶に、やさしく残る。
         </p>
 
-        {/* News */}
-        <div className="border-t border-gray-200 pt-4 mb-8 text-left">
-          <h2 className="text-sm font-medium mb-4">News</h2>
-          <Link href="/news/1" className="block mb-4">
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-500 mb-1">2025/07/15</span>
-              <span className="text-xs text-accent mb-1">Information</span>
-              <h3 className="text-sm font-medium">ホームページをリニューアルしました</h3>
-            </div>
-          </Link>
-          <Link href="/news" className="text-xs text-accent flex items-center">
-            News All
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
+
       </section>
 
       {/* 3. 2列グリッド画像ギャラリーセクション */}
