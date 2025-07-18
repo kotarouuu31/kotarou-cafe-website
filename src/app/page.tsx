@@ -70,13 +70,11 @@ export default function Home() {
 
       </section>
 
-      {/* 3. 2列グリッド画像ギャラリーセクション */}
+      {/* 2列グリッド画像ギャラリー */}
       <section className="w-full px-4 mb-12">
-        <h2 className="text-sm font-medium mb-6">Gallery</h2>
-        
         <div className="grid grid-cols-2 gap-3 mb-8">
           {/* 1. カフェの内装 */}
-          <div className="relative aspect-square mb-1 shadow-sm">
+          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085" 
               alt="カフェの内装" 
@@ -87,7 +85,7 @@ export default function Home() {
           </div>
           
           {/* 2. コーヒー豆焙煎 */}
-          <div className="relative aspect-square mb-1 shadow-sm">
+          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1580933073521-dc51f22c5c31" 
               alt="コーヒー豆焙煎" 
@@ -98,7 +96,7 @@ export default function Home() {
           </div>
           
           {/* 3. ラテアート作品 */}
-          <div className="relative aspect-square mb-1 shadow-sm">
+          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1541167760496-1628856ab772" 
               alt="ラテアート作品" 
@@ -109,7 +107,7 @@ export default function Home() {
           </div>
           
           {/* 4. 店内の雰囲気 */}
-          <div className="relative aspect-square mb-1 shadow-sm">
+          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1554118811-1e0d58224f24" 
               alt="店内の雰囲気" 
@@ -120,7 +118,7 @@ export default function Home() {
           </div>
           
           {/* 5. DJブース */}
-          <div className="relative aspect-square mb-1 shadow-sm">
+          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819" 
               alt="DJブース" 
@@ -131,7 +129,7 @@ export default function Home() {
           </div>
           
           {/* 6. カウンター席 */}
-          <div className="relative aspect-square mb-1 shadow-sm">
+          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb" 
               alt="カウンター席" 
@@ -142,7 +140,7 @@ export default function Home() {
           </div>
           
           {/* 7. 外観 */}
-          <div className="relative aspect-square mb-1 shadow-sm">
+          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1453614512568-c4024d13c247" 
               alt="外観" 
@@ -153,7 +151,7 @@ export default function Home() {
           </div>
           
           {/* 8. イベント風景 */}
-          <div className="relative aspect-square mb-1 shadow-sm">
+          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1543007630-9710e4a00a20" 
               alt="イベント風景" 
@@ -164,7 +162,7 @@ export default function Home() {
           </div>
           
           {/* 9. 季節のメニュー */}
-          <div className="relative aspect-square mb-1 shadow-sm">
+          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1579954115545-a95591f28bfc" 
               alt="季節のメニュー" 
@@ -175,7 +173,7 @@ export default function Home() {
           </div>
           
           {/* 10. お客様の笑顔 */}
-          <div className="relative aspect-square mb-1 shadow-sm">
+          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1511920170033-f8396924c348" 
               alt="お客様の笑顔" 
@@ -184,12 +182,6 @@ export default function Home() {
               className="rounded-lg"
             />
           </div>
-        </div>
-        
-        <div className="text-center">
-          <Button href="/gallery" variant="secondary" size="sm">
-            View Full Gallery
-          </Button>
         </div>
       </section>
 
