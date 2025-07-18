@@ -38,7 +38,7 @@ export default function Header() {
           : 'bg-transparent'
       }`}
     >
-      <div className="max-w-[400px] mx-auto px-4 py-4">
+      <div className="w-full px-4 py-4">
         <div className="flex items-center justify-between">
           {/* ロゴ */}
           <Link href="/" className="flex items-center space-x-2">

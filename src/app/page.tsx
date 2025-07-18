@@ -13,7 +13,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       {/* 1. ファーストビュー - 全画面背景 */}
       <section className="relative w-full h-screen flex flex-col justify-end items-center pb-16">
         {/* 背景画像 */}
@@ -56,7 +56,7 @@ export default function Home() {
       </section>
 
       {/* 2. キャッチコピーセクション */}
-      <section className="w-full max-w-[400px] mx-auto pt-16 pb-12 px-4 text-center">
+      <section className="w-full pt-16 pb-12 px-4 text-center">
         <h1 className="font-heading text-2xl font-bold mb-6 text-primary">
           コーヒーとつながり、心を解き放つ。
         </h1>
@@ -87,7 +87,7 @@ export default function Home() {
       </section>
 
       {/* 3. 2列グリッド画像セクション */}
-      <section className="w-full max-w-[400px] mx-auto px-4 mb-12">
+      <section className="w-full px-4 mb-12">
         <h2 className="text-sm font-medium mb-4">Experience</h2>
         
         <div className="grid grid-cols-2 gap-2 mb-4">
@@ -131,7 +131,7 @@ export default function Home() {
       </section>
 
       {/* 4. 既存機能 - Music Corner */}
-      <section className="w-full max-w-[400px] mx-auto px-4 mb-12">
+      <section className="w-full px-4 mb-12">
         <h2 className="text-xl font-heading font-bold mb-4">音楽が、空間を包み込む</h2>
         <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
           厳選された音楽が流れる空間で、コーヒーの味わいがより深まります。
@@ -158,7 +158,7 @@ export default function Home() {
       </section>
 
       {/* Events Preview */}
-      <section className="w-full max-w-[400px] mx-auto px-4 mb-12">
+      <section className="w-full px-4 mb-12">
         <h2 className="text-sm font-medium mb-4">Events</h2>
         <div className="space-y-6">
           <div>
@@ -187,7 +187,7 @@ export default function Home() {
       </section>
 
       {/* Chat with DJ Nyanko */}
-      <section className="w-full max-w-[400px] mx-auto px-4 mb-12">
+      <section className="w-full px-4 mb-12">
         <div className="bg-gradient-to-br from-accent/20 to-primary/20 p-6 rounded-md text-center">
           <h2 className="text-lg font-heading font-bold mb-3">DJ Nyanko AI</h2>
           <p className="text-xs text-foreground/80 mb-4">

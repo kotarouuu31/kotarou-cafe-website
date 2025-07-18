@@ -39,14 +39,18 @@ export default function RootLayout({
         </Suspense>
       </head>
       <body
-        className={`${playfair.variable} ${poppins.variable} antialiased`}
+        className={`${playfair.variable} ${poppins.variable} antialiased bg-gray-100 flex justify-center`}
         suppressHydrationWarning
       >
-        <Header />
-        {children}
-        <Footer />
-        <ChatWidgetWrapper />
-        <CookieConsent />
+        <div className="w-full max-w-[400px] bg-white min-h-screen shadow-md relative overflow-hidden">
+          <Header />
+          <main className="w-full">
+            {children}
+          </main>
+          <Footer />
+          <ChatWidgetWrapper />
+          <CookieConsent />
+        </div>
       </body>
     </html>
   );

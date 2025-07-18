@@ -6,8 +6,8 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-primary text-white">
-      <div className="max-w-[400px] mx-auto px-4 py-8">
+    <footer className="bg-primary text-white w-full">
+      <div className="w-full px-4 py-8">
         {/* ロゴとカフェ情報 */}
         <div className="mb-8">
           <div className="flex items-center mb-4">
