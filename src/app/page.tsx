@@ -86,47 +86,126 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. 2列グリッド画像セクション */}
+      {/* 3. 2列グリッド画像ギャラリーセクション */}
       <section className="w-full px-4 mb-12">
-        <h2 className="text-sm font-medium mb-4">Experience</h2>
+        <h2 className="text-sm font-medium mb-6">Gallery</h2>
         
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          <div className="relative aspect-square">
+        <div className="grid grid-cols-2 gap-3 mb-8">
+          {/* 1. カフェの内装 */}
+          <div className="relative aspect-square mb-1 shadow-sm">
             <Image 
               src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085" 
-              alt="Cafe interior" 
+              alt="カフェの内装" 
               fill 
               style={{objectFit: 'cover'}} 
-              className="rounded-md"
+              className="rounded-lg"
             />
           </div>
-          <div className="relative aspect-square">
+          
+          {/* 2. コーヒー豆焙煎 */}
+          <div className="relative aspect-square mb-1 shadow-sm">
             <Image 
               src="https://images.unsplash.com/photo-1580933073521-dc51f22c5c31" 
-              alt="Coffee beans" 
+              alt="コーヒー豆焙煎" 
               fill 
               style={{objectFit: 'cover'}} 
-              className="rounded-md"
+              className="rounded-lg"
             />
           </div>
-          <div className="relative aspect-square">
+          
+          {/* 3. ラテアート作品 */}
+          <div className="relative aspect-square mb-1 shadow-sm">
             <Image 
               src="https://images.unsplash.com/photo-1541167760496-1628856ab772" 
-              alt="Latte Art" 
+              alt="ラテアート作品" 
               fill 
               style={{objectFit: 'cover'}} 
-              className="rounded-md"
+              className="rounded-lg"
             />
           </div>
-          <div className="relative aspect-square">
+          
+          {/* 4. 店内の雰囲気 */}
+          <div className="relative aspect-square mb-1 shadow-sm">
+            <Image 
+              src="https://images.unsplash.com/photo-1554118811-1e0d58224f24" 
+              alt="店内の雰囲気" 
+              fill 
+              style={{objectFit: 'cover'}} 
+              className="rounded-lg"
+            />
+          </div>
+          
+          {/* 5. DJブース */}
+          <div className="relative aspect-square mb-1 shadow-sm">
             <Image 
               src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819" 
-              alt="Music Event" 
+              alt="DJブース" 
               fill 
               style={{objectFit: 'cover'}} 
-              className="rounded-md"
+              className="rounded-lg"
             />
           </div>
+          
+          {/* 6. カウンター席 */}
+          <div className="relative aspect-square mb-1 shadow-sm">
+            <Image 
+              src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb" 
+              alt="カウンター席" 
+              fill 
+              style={{objectFit: 'cover'}} 
+              className="rounded-lg"
+            />
+          </div>
+          
+          {/* 7. 外観 */}
+          <div className="relative aspect-square mb-1 shadow-sm">
+            <Image 
+              src="https://images.unsplash.com/photo-1453614512568-c4024d13c247" 
+              alt="外観" 
+              fill 
+              style={{objectFit: 'cover'}} 
+              className="rounded-lg"
+            />
+          </div>
+          
+          {/* 8. イベント風景 */}
+          <div className="relative aspect-square mb-1 shadow-sm">
+            <Image 
+              src="https://images.unsplash.com/photo-1543007630-9710e4a00a20" 
+              alt="イベント風景" 
+              fill 
+              style={{objectFit: 'cover'}} 
+              className="rounded-lg"
+            />
+          </div>
+          
+          {/* 9. 季節のメニュー */}
+          <div className="relative aspect-square mb-1 shadow-sm">
+            <Image 
+              src="https://images.unsplash.com/photo-1579954115545-a95591f28bfc" 
+              alt="季節のメニュー" 
+              fill 
+              style={{objectFit: 'cover'}} 
+              className="rounded-lg"
+            />
+          </div>
+          
+          {/* 10. お客様の笑顔 */}
+          <div className="relative aspect-square mb-1 shadow-sm">
+            <Image 
+              src="https://images.unsplash.com/photo-1511920170033-f8396924c348" 
+              alt="お客様の笑顔" 
+              fill 
+              style={{objectFit: 'cover'}} 
+              className="rounded-lg"
+            />
+          </div>
+        </div>
+        
+        <div className="text-center">
+          <Button href="/gallery" variant="secondary" size="sm">
+            View Full Gallery
+          </Button>
         </div>
       </section>
 
@@ -159,29 +238,75 @@ export default function Home() {
 
       {/* Events Preview */}
       <section className="w-full px-4 mb-12">
-        <h2 className="text-sm font-medium mb-4">Events</h2>
-        <div className="space-y-6">
-          <div>
-            <div className="relative w-full h-[180px] mb-3">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-sm font-medium">Events & News</h2>
+          <Link href="/events" className="text-xs text-accent flex items-center">
+            View All
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          {/* イベント1 */}
+          <div className="mb-2">
+            <div className="relative aspect-square mb-2 shadow-sm">
               <Image
                 src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
                 alt="Jazz Night"
                 fill
                 style={{ objectFit: 'cover' }}
-                className="rounded-md"
+                className="rounded-lg"
               />
             </div>
-            <h3 className="font-medium text-base mb-1">Jazz Night</h3>
-            <p className="text-xs text-accent mb-2">Every other Saturday 19:00-21:00</p>
-            <p className="text-xs text-foreground/80">
-              Enjoy a relaxing evening of jazz by local musicians while sipping on our delicious coffee.
-            </p>
+            <h3 className="font-medium text-xs mb-1">Jazz Night</h3>
+            <p className="text-[10px] text-accent">7/20 19:00-21:00</p>
           </div>
-
-          <div className="text-center mt-6">
-            <Button href="/events" variant="secondary" size="sm">
-              View All Events
-            </Button>
+          
+          {/* イベント2 */}
+          <div className="mb-2">
+            <div className="relative aspect-square mb-2 shadow-sm">
+              <Image
+                src="https://images.unsplash.com/photo-1505236858219-8359eb29e329"
+                alt="Coffee Workshop"
+                fill
+                style={{ objectFit: 'cover' }}
+                className="rounded-lg"
+              />
+            </div>
+            <h3 className="font-medium text-xs mb-1">コーヒー教室</h3>
+            <p className="text-[10px] text-accent">7/25 14:00-16:00</p>
+          </div>
+          
+          {/* イベント3 */}
+          <div className="mb-2">
+            <div className="relative aspect-square mb-2 shadow-sm">
+              <Image
+                src="https://images.unsplash.com/photo-1511379938547-c1f69419868d"
+                alt="Music Night"
+                fill
+                style={{ objectFit: 'cover' }}
+                className="rounded-lg"
+              />
+            </div>
+            <h3 className="font-medium text-xs mb-1">アコースティックライブ</h3>
+            <p className="text-[10px] text-accent">7/27 18:00-20:00</p>
+          </div>
+          
+          {/* イベント4 */}
+          <div className="mb-2">
+            <div className="relative aspect-square mb-2 shadow-sm">
+              <Image
+                src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39"
+                alt="Art Exhibition"
+                fill
+                style={{ objectFit: 'cover' }}
+                className="rounded-lg"
+              />
+            </div>
+            <h3 className="font-medium text-xs mb-1">猫アート展</h3>
+            <p className="text-[10px] text-accent">8/1-8/15</p>
           </div>
         </div>
       </section>
