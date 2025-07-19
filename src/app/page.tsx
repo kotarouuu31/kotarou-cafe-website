@@ -185,6 +185,132 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ニュースセクション */}
+      <section className="w-full px-4 mb-12">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-sm font-medium">News</h2>
+          <Link href="/news" className="text-xs text-accent flex items-center">
+            News All
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+        
+        <div className="border-l-2 border-primary-light pl-3 mb-6">
+          <div className="mb-1">
+            <span className="text-[10px] text-foreground/60 mr-2">2025/07/15</span>
+            <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-sm">Information</span>
+          </div>
+          <h3 className="text-sm font-medium">ホームページをリニューアルしました</h3>
+        </div>
+      </section>
+
+      {/* 4. 既存機能 - Music Corner */}
+      <section className="w-full px-4 mb-12">
+        <h2 className="text-xl font-heading font-bold mb-4">音楽が、空間を包み込む</h2>
+        <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
+          厳選された音楽が流れる空間で、コーヒーの味わいがより深まります。
+          週末のDJイベントでは、さらに特別な体験を。
+        </p>
+        <div className="bg-primary-dark text-white p-6 rounded-md">
+          <div className="mb-4">
+            <AutoUpdatingRecordPlayer />
+          </div>
+          <div className="bg-white/10 p-3 rounded-md text-sm mb-4">
+            <h3 className="font-heading text-base font-bold mb-2">DJ Schedule</h3>
+            <div className="space-y-2">
+              <div>
+                <p className="text-xs text-white/80">Friday</p>
+                <p className="font-medium text-sm">DJ Kotarou - House</p>
+              </div>
+              <div>
+                <p className="text-xs text-white/80">Saturday</p>
+                <p className="font-medium text-sm">Guest DJ - Jazz</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Events Preview */}
+      <section className="w-full px-4 mb-16">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-sm font-medium">Events & News</h2>
+          <Link href="/events" className="text-xs text-accent flex items-center">
+            View All
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+        
+        {/* 横スクロールコンテナ */}
+        <div className="relative mb-6 overflow-hidden">
+          <div className="flex overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent snap-x snap-mandatory">
+            {/* イベント1 */}
+            <div className="flex-none w-[160px] mr-3 snap-start">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
+                  alt="Jazz Night"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">Jazz Night</h3>
+              <p className="text-[10px] text-accent">7/20 19:00-21:00</p>
+            </div>
+            
+            {/* イベント2 */}
+            <div className="flex-none w-[160px] mr-3 snap-start">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1505236858219-8359eb29e329"
+                  alt="Coffee Workshop"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">コーヒー教室</h3>
+              <p className="text-[10px] text-accent">7/25 14:00-16:00</p>
+            </div>
+            
+            {/* イベント3 */}
+            <div className="flex-none w-[160px] mr-3 snap-start">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1511379938547-c1f69419868d"
+                  alt="Music Night"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">アコースティックライブ</h3>
+              <p className="text-[10px] text-accent">7/27 18:00-20:00</p>
+            </div>
+            
+            {/* イベント4 */}
+            <div className="flex-none w-[160px] mr-3 snap-start">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39"
+                  alt="Art Exhibition"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">猫アート展</h3>
+              <p className="text-[10px] text-accent">8/1-8/15</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ラテアートギャラリー - 自動スクロール */}
       <section className="w-full px-4 mb-12">
         <div className="flex items-center justify-between mb-6">
@@ -363,132 +489,6 @@ export default function Home() {
               </div>
               <h3 className="font-medium text-xs mb-1">猫ラテ</h3>
               <p className="text-[10px] text-accent">Etching Technique</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ニュースセクション */}
-      <section className="w-full px-4 mb-12">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm font-medium">News</h2>
-          <Link href="/news" className="text-xs text-accent flex items-center">
-            News All
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
-        
-        <div className="border-l-2 border-primary-light pl-3 mb-6">
-          <div className="mb-1">
-            <span className="text-[10px] text-foreground/60 mr-2">2025/07/15</span>
-            <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-sm">Information</span>
-          </div>
-          <h3 className="text-sm font-medium">ホームページをリニューアルしました</h3>
-        </div>
-      </section>
-
-      {/* 4. 既存機能 - Music Corner */}
-      <section className="w-full px-4 mb-12">
-        <h2 className="text-xl font-heading font-bold mb-4">音楽が、空間を包み込む</h2>
-        <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
-          厳選された音楽が流れる空間で、コーヒーの味わいがより深まります。
-          週末のDJイベントでは、さらに特別な体験を。
-        </p>
-        <div className="bg-primary-dark text-white p-6 rounded-md">
-          <div className="mb-4">
-            <AutoUpdatingRecordPlayer />
-          </div>
-          <div className="bg-white/10 p-3 rounded-md text-sm mb-4">
-            <h3 className="font-heading text-base font-bold mb-2">DJ Schedule</h3>
-            <div className="space-y-2">
-              <div>
-                <p className="text-xs text-white/80">Friday</p>
-                <p className="font-medium text-sm">DJ Kotarou - House</p>
-              </div>
-              <div>
-                <p className="text-xs text-white/80">Saturday</p>
-                <p className="font-medium text-sm">Guest DJ - Jazz</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Events Preview */}
-      <section className="w-full px-4 mb-12">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm font-medium">Events & News</h2>
-          <Link href="/events" className="text-xs text-accent flex items-center">
-            View All
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
-        
-        {/* 横スクロールコンテナ */}
-        <div className="relative mb-6 overflow-hidden">
-          <div className="flex overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent snap-x snap-mandatory">
-            {/* イベント1 */}
-            <div className="flex-none w-[160px] mr-3 snap-start">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
-                  alt="Jazz Night"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">Jazz Night</h3>
-              <p className="text-[10px] text-accent">7/20 19:00-21:00</p>
-            </div>
-            
-            {/* イベント2 */}
-            <div className="flex-none w-[160px] mr-3 snap-start">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1505236858219-8359eb29e329"
-                  alt="Coffee Workshop"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">コーヒー教室</h3>
-              <p className="text-[10px] text-accent">7/25 14:00-16:00</p>
-            </div>
-            
-            {/* イベント3 */}
-            <div className="flex-none w-[160px] mr-3 snap-start">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1511379938547-c1f69419868d"
-                  alt="Music Night"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">アコースティックライブ</h3>
-              <p className="text-[10px] text-accent">7/27 18:00-20:00</p>
-            </div>
-            
-            {/* イベント4 */}
-            <div className="flex-none w-[160px] mr-3 snap-start">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39"
-                  alt="Art Exhibition"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">猫アート展</h3>
-              <p className="text-[10px] text-accent">8/1-8/15</p>
             </div>
           </div>
         </div>
