@@ -202,11 +202,16 @@ export default function Home() {
         {/* 自動スクロールギャラリー */}
         <div className="relative mb-6 overflow-hidden">
           <div 
-            className="flex animate-marquee hover:pause pb-4"
+            className="flex pb-4 latte-art-scroll"
             aria-label="ラテアートギャラリー"
             role="region"
             aria-roledescription="carousel"
             aria-live="polite"
+            style={{
+              animation: 'marquee 30s linear infinite',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.animationPlayState = 'paused'}
+            onMouseLeave={(e) => e.currentTarget.style.animationPlayState = 'running'}
           >
             <span className="sr-only">自動スクロールするラテアートギャラリーです。ホバーするとスクロールが一時停止します。</span>
             {/* ラテアート1 - Free Pour */}
