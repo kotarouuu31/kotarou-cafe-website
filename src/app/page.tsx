@@ -245,65 +245,68 @@ export default function Home() {
           </Link>
         </div>
         
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          {/* イベント1 */}
-          <div className="mb-2">
-            <div className="relative aspect-square mb-2 shadow-sm">
-              <Image
-                src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
-                alt="Jazz Night"
-                fill
-                style={{ objectFit: 'cover' }}
-                className="rounded-lg"
-              />
+        {/* 横スクロールコンテナ */}
+        <div className="relative mb-6 overflow-hidden">
+          <div className="flex overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent snap-x snap-mandatory">
+            {/* イベント1 */}
+            <div className="flex-none w-[160px] mr-3 snap-start">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
+                  alt="Jazz Night"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">Jazz Night</h3>
+              <p className="text-[10px] text-accent">7/20 19:00-21:00</p>
             </div>
-            <h3 className="font-medium text-xs mb-1">Jazz Night</h3>
-            <p className="text-[10px] text-accent">7/20 19:00-21:00</p>
-          </div>
-          
-          {/* イベント2 */}
-          <div className="mb-2">
-            <div className="relative aspect-square mb-2 shadow-sm">
-              <Image
-                src="https://images.unsplash.com/photo-1505236858219-8359eb29e329"
-                alt="Coffee Workshop"
-                fill
-                style={{ objectFit: 'cover' }}
-                className="rounded-lg"
-              />
+            
+            {/* イベント2 */}
+            <div className="flex-none w-[160px] mr-3 snap-start">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1505236858219-8359eb29e329"
+                  alt="Coffee Workshop"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">コーヒー教室</h3>
+              <p className="text-[10px] text-accent">7/25 14:00-16:00</p>
             </div>
-            <h3 className="font-medium text-xs mb-1">コーヒー教室</h3>
-            <p className="text-[10px] text-accent">7/25 14:00-16:00</p>
-          </div>
-          
-          {/* イベント3 */}
-          <div className="mb-2">
-            <div className="relative aspect-square mb-2 shadow-sm">
-              <Image
-                src="https://images.unsplash.com/photo-1511379938547-c1f69419868d"
-                alt="Music Night"
-                fill
-                style={{ objectFit: 'cover' }}
-                className="rounded-lg"
-              />
+            
+            {/* イベント3 */}
+            <div className="flex-none w-[160px] mr-3 snap-start">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1511379938547-c1f69419868d"
+                  alt="Music Night"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">アコースティックライブ</h3>
+              <p className="text-[10px] text-accent">7/27 18:00-20:00</p>
             </div>
-            <h3 className="font-medium text-xs mb-1">アコースティックライブ</h3>
-            <p className="text-[10px] text-accent">7/27 18:00-20:00</p>
-          </div>
-          
-          {/* イベント4 */}
-          <div className="mb-2">
-            <div className="relative aspect-square mb-2 shadow-sm">
-              <Image
-                src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39"
-                alt="Art Exhibition"
-                fill
-                style={{ objectFit: 'cover' }}
-                className="rounded-lg"
-              />
+            
+            {/* イベント4 */}
+            <div className="flex-none w-[160px] mr-3 snap-start">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39"
+                  alt="Art Exhibition"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">猫アート展</h3>
+              <p className="text-[10px] text-accent">8/1-8/15</p>
             </div>
-            <h3 className="font-medium text-xs mb-1">猫アート展</h3>
-            <p className="text-[10px] text-accent">8/1-8/15</p>
           </div>
         </div>
       </section>
