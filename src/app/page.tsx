@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { AutoUpdatingRecordPlayer } from '@/components/RecordPlayer';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { useEffect } from 'react';

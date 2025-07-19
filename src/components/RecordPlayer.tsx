@@ -86,7 +86,7 @@ const RecordPlayer: React.FC<RecordPlayerProps> = ({
         }
       }
     }
-  }, [isOnline, setNowPlaying, setRetryCount, setBackoffUntil, retryCount]);
+  }, [isOnline, setNowPlaying, setRetryCount, setBackoffUntil, retryCount, backoffUntil, track]);
 
   // 自動更新の設定
   useEffect(() => {

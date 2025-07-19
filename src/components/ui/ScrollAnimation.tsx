@@ -5,7 +5,6 @@ interface ScrollAnimationProps {
   className?: string;
   threshold?: number;
   rootMargin?: string;
-  staggerChildren?: boolean;
   delay?: number;
 }
 
@@ -18,7 +17,6 @@ export function ScrollAnimation({
   className = '',
   threshold = 0.1,
   rootMargin = '0px',
-  staggerChildren = false,
   delay = 0
 }: ScrollAnimationProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
