@@ -119,7 +119,7 @@ export default function Home() {
           </div>
           
           {/* 5. DJブース */}
-          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
+          <div className="relative mb-1 shadow-sm stagger-item delay-100" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819" 
               alt="DJブース" 
@@ -130,7 +130,7 @@ export default function Home() {
           </div>
           
           {/* 6. カウンター席 */}
-          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
+          <div className="relative mb-1 shadow-sm stagger-item delay-200" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb" 
               alt="カウンター席" 
@@ -141,7 +141,7 @@ export default function Home() {
           </div>
           
           {/* 7. 外観 */}
-          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
+          <div className="relative mb-1 shadow-sm stagger-item delay-300" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1453614512568-c4024d13c247" 
               alt="外観" 
@@ -152,7 +152,7 @@ export default function Home() {
           </div>
           
           {/* 8. イベント風景 */}
-          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
+          <div className="relative mb-1 shadow-sm stagger-item delay-400" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1543007630-9710e4a00a20" 
               alt="イベント風景" 
@@ -163,7 +163,7 @@ export default function Home() {
           </div>
           
           {/* 9. 季節のメニュー */}
-          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
+          <div className="relative mb-1 shadow-sm stagger-item delay-100" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1579954115545-a95591f28bfc" 
               alt="季節のメニュー" 
@@ -174,7 +174,7 @@ export default function Home() {
           </div>
           
           {/* 10. お客様の笑顔 */}
-          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
+          <div className="relative mb-1 shadow-sm stagger-item delay-200" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1511920170033-f8396924c348" 
               alt="お客様の笑顔" 
@@ -184,7 +184,7 @@ export default function Home() {
             />
           </div>
         </div>
-      </section>
+      </ScrollAnimation>
 
       {/* メニューボタン */}
       <ScrollAnimation className="w-full px-4 mb-12 flex justify-center" rootMargin="-30px" delay={100}>
@@ -210,54 +210,6 @@ export default function Home() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-sm font-medium">News</h2>
           <Link href="/news" className="text-xs text-accent flex items-center">
-            News All
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
-        
-        <div className="border-l-2 border-primary-light pl-3 mb-6">
-          <div className="mb-1">
-            <span className="text-[10px] text-foreground/60 mr-2">2025/07/15</span>
-            <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-sm">Information</span>
-          </div>
-          <h3 className="text-sm font-medium">ホームページをリニューアルしました</h3>
-        </div>
-      </section>
-
-      {/* 4. 既存機能 - Music Corner */}
-      <section className="w-full px-4 mb-12">
-        <h2 className="text-xl font-heading font-bold mb-4">音楽が、空間を包み込む</h2>
-        <p className="text-xs text-foreground/80 mb-6 leading-relaxed">
-          厳選された音楽が流れる空間で、コーヒーの味わいがより深まります。
-          週末のDJイベントでは、さらに特別な体験を。
-        </p>
-        <div className="bg-primary-dark text-white p-6 rounded-md">
-          <div className="mb-4">
-            <AutoUpdatingRecordPlayer />
-          </div>
-          <div className="bg-white/10 p-3 rounded-md text-sm mb-4">
-            <h3 className="font-heading text-base font-bold mb-2">DJ Schedule</h3>
-            <div className="space-y-2">
-              <div>
-                <p className="text-xs text-white/80">Friday</p>
-                <p className="font-medium text-sm">DJ Kotarou - House</p>
-              </div>
-              <div>
-                <p className="text-xs text-white/80">Saturday</p>
-                <p className="font-medium text-sm">Guest DJ - Jazz</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Events Preview */}
-      <section className="w-full px-4 mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm font-medium">Events & News</h2>
-          <Link href="/events" className="text-xs text-accent flex items-center">
             View All
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -265,8 +217,48 @@ export default function Home() {
           </Link>
         </div>
         
-        {/* 横スクロールコンテナ */}
-        <div className="relative mb-6 overflow-hidden">
+        <div className="grid grid-cols-1 gap-4 mb-6">
+          {/* ニュース1 */}
+          <div className="bg-white/5 p-4 rounded-md shadow-sm">
+            <div className="flex items-center mb-2">
+              <span className="text-xs text-accent mr-2">2023.07.15</span>
+              <span className="text-xs px-2 py-0.5 bg-primary/20 rounded-full">イベント</span>
+            </div>
+            <h3 className="font-medium text-sm mb-1 line-clamp-1">7月のJazz Night開催のお知らせ</h3>
+            <p className="text-xs text-foreground/70 line-clamp-2">
+              毎月恒例のJazz Nightを7月20日(金)に開催します。今回は特別ゲストとして、ジャズピアニストの山田太郎氏をお迎えします。
+            </p>
+          </div>
+          
+          {/* ニュース2 */}
+          <div className="bg-white/5 p-4 rounded-md shadow-sm">
+            <div className="flex items-center mb-2">
+              <span className="text-xs text-accent mr-2">2023.07.10</span>
+              <span className="text-xs px-2 py-0.5 bg-secondary/20 rounded-full">メニュー</span>
+            </div>
+            <h3 className="font-medium text-sm mb-1 line-clamp-1">夏季限定ドリンク登場</h3>
+            <p className="text-xs text-foreground/70 line-clamp-2">
+              暑い夏にぴったりの冷たいドリンク「サマーベリーフラッペ」と「マンゴーコールドブリュー」が登場しました。
+              フレッシュなフルーツを使用した爽やかな一杯をお楽しみください。
+            </p>
+          </div>
+          
+          {/* ニュース3 */}
+          <div className="bg-white/5 p-4 rounded-md shadow-sm">
+            <div className="flex items-center mb-2">
+              <span className="text-xs text-accent mr-2">2023.07.05</span>
+              <span className="text-xs px-2 py-0.5 bg-accent/20 rounded-full">お知らせ</span>
+            </div>
+            <h3 className="font-medium text-sm mb-1 line-clamp-1">営業時間変更のお知らせ</h3>
+            <p className="text-xs text-foreground/70 line-clamp-2">
+              7月15日より、平日の営業時間を8:00〜22:00に拡大いたします。
+              モーニングメニューも充実させ、早朝からご利用いただけるようになりました。
+            </p>
+          </div>
+        </div>
+        
+        <div className="mb-8">
+          <h3 className="text-sm font-medium mb-4">Upcoming Events</h3>
           <div className="flex overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent snap-x snap-mandatory">
             {/* イベント1 */}
             <div className="flex-none w-[160px] mr-3 snap-start">
@@ -302,21 +294,6 @@ export default function Home() {
             <div className="flex-none w-[160px] mr-3 snap-start">
               <div className="relative aspect-square mb-2 shadow-sm">
                 <Image
-                  src="https://images.unsplash.com/photo-1511379938547-c1f69419868d"
-                  alt="Music Night"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">アコースティックライブ</h3>
-              <p className="text-[10px] text-accent">7/27 18:00-20:00</p>
-            </div>
-            
-            {/* イベント4 */}
-            <div className="flex-none w-[160px] mr-3 snap-start">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
                   src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39"
                   alt="Art Exhibition"
                   fill
@@ -329,10 +306,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </ScrollAnimation>
 
       {/* ラテアートギャラリー - 自動スクロール */}
-      <section className="w-full px-4 mb-12">
+      <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-40px" delay={200}>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-sm font-medium">Latte Art Gallery</h2>
           <Link href="/latte-art" className="text-xs text-accent flex items-center">
@@ -348,159 +325,78 @@ export default function Home() {
         {/* 自動スクロールギャラリー */}
         <div className="relative mb-6 overflow-hidden">
           <div 
-            className="flex pb-4 latte-art-scroll"
-            aria-label="ラテアートギャラリー"
-            role="region"
-            aria-roledescription="carousel"
-            aria-live="polite"
-            style={{
-              animation: 'marquee 30s linear infinite',
-              width: 'fit-content',
-              transform: 'translateX(0)'
+            className="flex space-x-4" 
+            style={{ 
+              width: 'max-content', 
+              transform: 'translateX(0)', 
+              animation: 'marquee 30s linear infinite' 
             }}
           >
-            <span className="sr-only">自動スクロールするラテアートギャラリーです。</span>
-            {/* ラテアート1 - Free Pour */}
+            {/* ラテアート1 */}
             <div className="flex-none w-[160px] mr-3">
               <div className="relative aspect-square mb-2 shadow-sm">
                 <Image
                   src="https://images.unsplash.com/photo-1541167760496-1628856ab772"
-                  alt="ハートのラテアート"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">Heart Latte</h3>
-              <p className="text-[10px] text-accent">Free Pour Technique</p>
-            </div>
-            
-            {/* ラテアート2 - Etching */}
-            <div className="flex-none w-[160px] mr-3">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1534805539898-7cdb82d04a85"
-                  alt="猫のラテアート"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">猫ラテ</h3>
-              <p className="text-[10px] text-accent">Etching Technique</p>
-            </div>
-            
-            {/* ラテアート3 - Color Art */}
-            <div className="flex-none w-[160px] mr-3">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1577968897966-3d4325b36b61"
-                  alt="カラフルラテアート"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">カラフルラテ</h3>
-              <p className="text-[10px] text-accent">Color Art Technique</p>
-            </div>
-            
-            {/* ラテアート4 - 3D Art */}
-            <div className="flex-none w-[160px] mr-3">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1572286258217-215cf8445d6e"
-                  alt="3Dラテアート"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">3Dラテアート</h3>
-              <p className="text-[10px] text-accent">Advanced Technique</p>
-            </div>
-            
-            {/* ラテアート5 - Leaf Design */}
-            <div className="flex-none w-[160px] mr-3">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd"
-                  alt="リーフデザイン"
+                  alt="リーフラテアート"
                   fill
                   style={{ objectFit: 'cover' }}
                   className="rounded-lg"
                 />
               </div>
               <h3 className="font-medium text-xs mb-1">リーフデザイン</h3>
-              <p className="text-[10px] text-accent">Free Pour Technique</p>
+              <p className="text-[10px] text-accent">Free Pour</p>
             </div>
             
-            {/* ラテアート6 - Rosetta */}
+            {/* ラテアート2 */}
             <div className="flex-none w-[160px] mr-3">
               <div className="relative aspect-square mb-2 shadow-sm">
                 <Image
-                  src="https://images.unsplash.com/photo-1515283709260-ee29296f1534"
-                  alt="ロゼッタ"
+                  src="https://images.unsplash.com/photo-1577968897966-3d4325b36b61"
+                  alt="ハートラテアート"
                   fill
                   style={{ objectFit: 'cover' }}
                   className="rounded-lg"
                 />
               </div>
-              <h3 className="font-medium text-xs mb-1">ロゼッタ</h3>
-              <p className="text-[10px] text-accent">Classic Technique</p>
+              <h3 className="font-medium text-xs mb-1">ハートデザイン</h3>
+              <p className="text-[10px] text-accent">Free Pour</p>
             </div>
             
-            {/* ラテアート7 - Swan */}
+            {/* ラテアート3 */}
             <div className="flex-none w-[160px] mr-3">
               <div className="relative aspect-square mb-2 shadow-sm">
                 <Image
-                  src="https://images.unsplash.com/photo-1529892485617-25f63cd7b1e9"
-                  alt="白鳥デザイン"
+                  src="https://images.unsplash.com/photo-1534040385115-33dcb3acba5b"
+                  alt="スワンラテアート"
                   fill
                   style={{ objectFit: 'cover' }}
                   className="rounded-lg"
                 />
               </div>
-              <h3 className="font-medium text-xs mb-1">白鳥デザイン</h3>
-              <p className="text-[10px] text-accent">Advanced Pour</p>
+              <h3 className="font-medium text-xs mb-1">スワンデザイン</h3>
+              <p className="text-[10px] text-accent">Etching</p>
             </div>
             
-            {/* ラテアート8 - Seasonal */}
+            {/* ラテアート4 */}
             <div className="flex-none w-[160px] mr-3">
               <div className="relative aspect-square mb-2 shadow-sm">
                 <Image
-                  src="https://images.unsplash.com/photo-1442512595331-e89e73853f31"
-                  alt="季節のデザイン"
+                  src="https://images.unsplash.com/photo-1572286258217-215b98b0d184"
+                  alt="フラワーラテアート"
                   fill
                   style={{ objectFit: 'cover' }}
                   className="rounded-lg"
                 />
               </div>
-              <h3 className="font-medium text-xs mb-1">季節のデザイン</h3>
-              <p className="text-[10px] text-accent">Seasonal Special</p>
+              <h3 className="font-medium text-xs mb-1">フラワーデザイン</h3>
+              <p className="text-[10px] text-accent">Free Pour</p>
             </div>
             
-            {/* 無限ループ用の複製アイテム */}
-            {/* ラテアート1 - Free Pour (複製) */}
+            {/* ラテアート5 */}
             <div className="flex-none w-[160px] mr-3">
               <div className="relative aspect-square mb-2 shadow-sm">
                 <Image
-                  src="https://images.unsplash.com/photo-1541167760496-1628856ab772"
-                  alt="ハートのラテアート"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">Heart Latte</h3>
-              <p className="text-[10px] text-accent">Free Pour Technique</p>
-            </div>
-            
-            {/* ラテアート2 - Etching (複製) */}
-            <div className="flex-none w-[160px] mr-3">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1534805539898-7cdb82d04a85"
+                  src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39"
                   alt="猫のラテアート"
                   fill
                   style={{ objectFit: 'cover' }}
@@ -512,10 +408,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </ScrollAnimation>
 
       {/* Chat with DJ Nyanko */}
-      <section className="w-full px-4 mb-12">
+      <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-40px" delay={250}>
         <div className="bg-gradient-to-br from-accent/20 to-primary/20 p-6 rounded-md text-center">
           <h2 className="text-lg font-heading font-bold mb-3">DJ Nyanko AI</h2>
           <p className="text-xs text-foreground/80 mb-4">
@@ -526,7 +422,7 @@ export default function Home() {
             Chat with DJ Nyanko
           </Button>
         </div>
-      </section>
+      </ScrollAnimation>
     </div>
   );
 }
