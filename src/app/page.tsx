@@ -5,6 +5,7 @@ import { AutoUpdatingRecordPlayer } from '@/components/RecordPlayer';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { ScrollAnimation } from '@/components/ui/ScrollAnimation';
 
 export default function Home() {
   // 音符のような装飾エフェクトのアニメーション用
@@ -71,10 +72,10 @@ export default function Home() {
       </section>
 
       {/* 2列グリッド画像ギャラリー */}
-      <section className="w-full px-4 mb-12">
+      <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-50px">
         <div className="grid grid-cols-2 gap-3 mb-8">
           {/* 1. カフェの内装 */}
-          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
+          <div className="relative mb-1 shadow-sm stagger-item" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085" 
               alt="カフェの内装" 
@@ -84,11 +85,11 @@ export default function Home() {
             />
           </div>
           
-          {/* 2. コーヒー豆焙煎 */}
-          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
+          {/* 2. コーヒー豆焼煎 */}
+          <div className="relative mb-1 shadow-sm stagger-item delay-100" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1580933073521-dc51f22c5c31" 
-              alt="コーヒー豆焙煎" 
+              alt="コーヒー豆焼煎" 
               fill 
               style={{objectFit: 'cover'}} 
               className="rounded-lg"
@@ -96,7 +97,7 @@ export default function Home() {
           </div>
           
           {/* 3. ラテアート作品 */}
-          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
+          <div className="relative mb-1 shadow-sm stagger-item delay-200" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1541167760496-1628856ab772" 
               alt="ラテアート作品" 
@@ -107,7 +108,7 @@ export default function Home() {
           </div>
           
           {/* 4. 店内の雰囲気 */}
-          <div className="relative mb-1 shadow-sm" style={{ aspectRatio: '3/4' }}>
+          <div className="relative mb-1 shadow-sm stagger-item delay-300" style={{ aspectRatio: '3/4' }}>
             <Image 
               src="https://images.unsplash.com/photo-1554118811-1e0d58224f24" 
               alt="店内の雰囲気" 
@@ -186,7 +187,7 @@ export default function Home() {
       </section>
 
       {/* メニューボタン */}
-      <section className="w-full px-4 mb-12 flex justify-center">
+      <ScrollAnimation className="w-full px-4 mb-12 flex justify-center" rootMargin="-30px" delay={100}>
         <Button 
           href="/menu" 
           variant="accent" 
@@ -202,10 +203,10 @@ export default function Home() {
             <span className="font-medium text-base md:text-lg">メニューを見る</span>
           </div>
         </Button>
-      </section>
+      </ScrollAnimation>
 
       {/* ニュースセクション */}
-      <section className="w-full px-4 mb-12">
+      <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-40px" delay={150}>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-sm font-medium">News</h2>
           <Link href="/news" className="text-xs text-accent flex items-center">
