@@ -335,7 +335,8 @@ export default function Home() {
             aria-live="polite"
             style={{
               animation: 'marquee 30s linear infinite',
-              width: 'fit-content'
+              width: 'fit-content',
+              transform: 'translateX(0)'
             }}
           >
             <span className="sr-only">自動スクロールするラテアートギャラリーです。</span>
