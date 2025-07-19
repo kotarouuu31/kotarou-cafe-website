@@ -185,6 +185,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* メニューボタン */}
+      <section className="w-full px-4 mb-12 flex justify-center">
+        <Button 
+          href="/menu" 
+          variant="accent" 
+          size="lg" 
+          className="w-full max-w-[400px] min-h-[56px] bg-gradient-to-r from-accent to-primary shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 group relative overflow-hidden"
+          aria-label="メニューページへ移動"
+        >
+          <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+          <div className="flex items-center justify-center space-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h18M3 16h18M9 10h.01M15 10h.01M21 3v18" />
+            </svg>
+            <span className="font-medium text-base md:text-lg">メニューを見る</span>
+          </div>
+        </Button>
+      </section>
+
       {/* ニュースセクション */}
       <section className="w-full px-4 mb-12">
         <div className="flex items-center justify-between mb-6">
