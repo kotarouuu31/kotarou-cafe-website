@@ -335,6 +335,7 @@ export default function Home() {
             aria-live="polite"
             style={{
               animation: 'marquee 30s linear infinite',
+              width: 'fit-content'
             }}
             onMouseEnter={(e) => e.currentTarget.style.animationPlayState = 'paused'}
             onMouseLeave={(e) => e.currentTarget.style.animationPlayState = 'running'}
