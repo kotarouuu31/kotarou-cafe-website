@@ -337,10 +337,8 @@ export default function Home() {
               animation: 'marquee 30s linear infinite',
               width: 'fit-content'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.animationPlayState = 'paused'}
-            onMouseLeave={(e) => e.currentTarget.style.animationPlayState = 'running'}
           >
-            <span className="sr-only">自動スクロールするラテアートギャラリーです。ホバーするとスクロールが一時停止します。</span>
+            <span className="sr-only">自動スクロールするラテアートギャラリーです。</span>
             {/* ラテアート1 - Free Pour */}
             <div className="flex-none w-[160px] mr-3">
               <div className="relative aspect-square mb-2 shadow-sm">
