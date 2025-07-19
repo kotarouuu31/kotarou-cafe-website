@@ -185,6 +185,184 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ラテアートギャラリー - 自動スクロール */}
+      <section className="w-full px-4 mb-12">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-sm font-medium">Latte Art Gallery</h2>
+          <Link href="/latte-art" className="text-xs text-accent flex items-center">
+            View More
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+        
+        <p className="text-xs text-foreground/80 mb-4">日々進化するラテアート作品</p>
+        
+        {/* 自動スクロールギャラリー */}
+        <div className="relative mb-6 overflow-hidden">
+          <div 
+            className="flex animate-marquee hover:pause pb-4"
+            aria-label="ラテアートギャラリー"
+            role="region"
+            aria-roledescription="carousel"
+            aria-live="polite"
+          >
+            <span className="sr-only">自動スクロールするラテアートギャラリーです。ホバーするとスクロールが一時停止します。</span>
+            {/* ラテアート1 - Free Pour */}
+            <div className="flex-none w-[160px] mr-3">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1541167760496-1628856ab772"
+                  alt="ハートのラテアート"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">Heart Latte</h3>
+              <p className="text-[10px] text-accent">Free Pour Technique</p>
+            </div>
+            
+            {/* ラテアート2 - Etching */}
+            <div className="flex-none w-[160px] mr-3">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1534805539898-7cdb82d04a85"
+                  alt="猫のラテアート"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">猫ラテ</h3>
+              <p className="text-[10px] text-accent">Etching Technique</p>
+            </div>
+            
+            {/* ラテアート3 - Color Art */}
+            <div className="flex-none w-[160px] mr-3">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1577968897966-3d4325b36b61"
+                  alt="カラフルラテアート"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">カラフルラテ</h3>
+              <p className="text-[10px] text-accent">Color Art Technique</p>
+            </div>
+            
+            {/* ラテアート4 - 3D Art */}
+            <div className="flex-none w-[160px] mr-3">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1572286258217-215cf8445d6e"
+                  alt="3Dラテアート"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">3Dラテアート</h3>
+              <p className="text-[10px] text-accent">Advanced Technique</p>
+            </div>
+            
+            {/* ラテアート5 - Leaf Design */}
+            <div className="flex-none w-[160px] mr-3">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd"
+                  alt="リーフデザイン"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">リーフデザイン</h3>
+              <p className="text-[10px] text-accent">Free Pour Technique</p>
+            </div>
+            
+            {/* ラテアート6 - Rosetta */}
+            <div className="flex-none w-[160px] mr-3">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1515283709260-ee29296f1534"
+                  alt="ロゼッタ"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">ロゼッタ</h3>
+              <p className="text-[10px] text-accent">Classic Technique</p>
+            </div>
+            
+            {/* ラテアート7 - Swan */}
+            <div className="flex-none w-[160px] mr-3">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1529892485617-25f63cd7b1e9"
+                  alt="白鳥デザイン"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">白鳥デザイン</h3>
+              <p className="text-[10px] text-accent">Advanced Pour</p>
+            </div>
+            
+            {/* ラテアート8 - Seasonal */}
+            <div className="flex-none w-[160px] mr-3">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1442512595331-e89e73853f31"
+                  alt="季節のデザイン"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">季節のデザイン</h3>
+              <p className="text-[10px] text-accent">Seasonal Special</p>
+            </div>
+            
+            {/* 無限ループ用の複製アイテム */}
+            {/* ラテアート1 - Free Pour (複製) */}
+            <div className="flex-none w-[160px] mr-3">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1541167760496-1628856ab772"
+                  alt="ハートのラテアート"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">Heart Latte</h3>
+              <p className="text-[10px] text-accent">Free Pour Technique</p>
+            </div>
+            
+            {/* ラテアート2 - Etching (複製) */}
+            <div className="flex-none w-[160px] mr-3">
+              <div className="relative aspect-square mb-2 shadow-sm">
+                <Image
+                  src="https://images.unsplash.com/photo-1534805539898-7cdb82d04a85"
+                  alt="猫のラテアート"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="font-medium text-xs mb-1">猫ラテ</h3>
+              <p className="text-[10px] text-accent">Etching Technique</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ニュースセクション */}
       <section className="w-full px-4 mb-12">
         <div className="flex items-center justify-between mb-6">

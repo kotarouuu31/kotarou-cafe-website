@@ -109,11 +109,16 @@ module.exports = {
           '0%, 100%': { transform: 'translateY(0) translateX(0)' },
           '50%': { transform: 'translateY(-25px) translateX(5px)' },
         },
+        'marquee': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(calc(-160px * 8 - 0.75rem * 8))' },
+        },
       },
       animation: {
         'float-slow': 'float-slow 8s ease-in-out infinite',
         'float-medium': 'float-medium 6s ease-in-out infinite',
         'float-fast': 'float-fast 4s ease-in-out infinite',
+        'marquee': 'marquee 30s linear infinite',
       },
       transitionDuration: {
         '0': '0ms',
