@@ -33,13 +33,3 @@ export const MenuTabs = ({
   );
 };
 
-// スクロールバーを非表示にするためのスタイル
-const styles = {
-  noScrollbar: {
-    '&::-webkit-scrollbar': {
-      display: 'none',
-    },
-    '-ms-overflow-style': 'none',
-    'scrollbar-width': 'none',
-  },
-};
