@@ -1,4 +1,5 @@
-import { Metadata } from 'next';
+"use client";
+
 import dynamic from 'next/dynamic';
 
 // クライアントサイドでのみレンダリングするコンポーネントを動的インポート
@@ -11,17 +12,8 @@ const LatteArtGallery = dynamic(() => import('@/components/LatteArtGallery'), {
   ),
 });
 
-export const metadata: Metadata = {
-  title: 'ラテアートギャラリー | Kotarou Cafe',
-  description: 'Kotarou Cafeのラテアート作品をご紹介します。日々の練習の成果や、お客様への特別な一杯を記録しています。',
-  openGraph: {
-    title: 'ラテアートギャラリー | Kotarou Cafe',
-    description: 'Kotarou Cafeのラテアート作品をご紹介します。日々の練習の成果や、お客様への特別な一杯を記録しています。',
-    type: 'website',
-    locale: 'ja_JP',
-    siteName: 'Kotarou Cafe',
-  },
-};
+// メタデータはlayout.tsxで定義することを推奨
+// このファイルはClient Componentのため、メタデータは使用できません
 
 export default function LatteArtPage() {
   return (
