@@ -1,152 +1,136 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import { LatteArtWork } from '../types/latte-art';
-import { latteArtWorks, getTodaysLatteArt, formatDate } from '../data/latte-art';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ScrollReveal } from './latte-art/ScrollReveal';
+import { LatteArtWork, LatteArtCategory, categoryLabels } from '@/types/latte-art';
+import { latteArtWorks, getTodaysLatteArt, getArtworksByCategory, formatDate } from '@/data/latte-art';
+import { CategoryTabs } from './latte-art/CategoryTabs';
+import { LatteArtCard } from './latte-art/LatteArtCard';
+import { LatteArtDetail } from './latte-art/LatteArtDetail';
 
 const LatteArtGallery: React.FC = () => {
   const [selectedArtwork, setSelectedArtwork] = useState<LatteArtWork | null>(null);
+  const [activeCategory, setActiveCategory] = useState<LatteArtCategory | 'all'>('all');
   const todaysArt = getTodaysLatteArt();
   
-  // 時系列順に並べた作品リスト（新しい順）
-  const sortedArtworks = [...latteArtWorks].sort((a, b) => 
-    b.createdAt.getTime() - a.createdAt.getTime()
-  );
-  
+  // 選択されたカテゴリに基づいて作品をフィルタリング
+  const filteredArtworks = getArtworksByCategory(
+    activeCategory === 'all' ? undefined : activeCategory
+  ).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
   return (
-    <div className="bg-gradient-to-br from-[#f9f5f1] to-[#f0e6d8] py-8 px-4 rounded-lg shadow-lg">
-      <div className="max-w-[400px] mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="font-heading text-2xl font-bold text-primary mb-3">
-            Kotarouのラテアート成長記録
-          </h2>
-          <p className="text-sm text-gray-600 max-w-xs mx-auto">
-            日々の練習と成長の記録。一杯一杯、心を込めて。
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      {/* ヘッダー */}
+      <ScrollReveal>
+        <div className="bg-white shadow-sm">
+          <div className="max-w-[400px] mx-auto px-4 py-6">
+            <h1 className="text-2xl font-bold text-center text-gray-900 mb-1">
+              Kotarou's Latte Art
+            </h1>
+            <p className="text-sm text-center text-gray-600">
+              一杯一杯、心を込めて作ったラテアートの記録です
+            </p>
+          </div>
         </div>
-        
-        {/* 今日のラテアート */}
-        {todaysArt && (
-          <div className="mb-10">
-            <h3 className="font-heading text-xl font-bold text-center mb-4 flex items-center justify-center">
-              <span className="inline-block w-6 h-6 bg-accent rounded-full flex items-center justify-center text-white mr-2">
-                ✨
-              </span>
-              最新作
-            </h3>
-            
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="flex flex-col">
-                <div className="relative h-64 w-full">
-                  <Image 
-                    src={`https://source.unsplash.com/${todaysArt.imageUrl}`} 
-                    alt={todaysArt.title} 
-                    className="object-cover"
+      </ScrollReveal>
+      
+      {/* カテゴリタブ */}
+      <ScrollReveal delay={0.2}>
+        <CategoryTabs 
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+        />
+      </ScrollReveal>
+      
+      {/* メインコンテンツ */}
+      <main className="max-w-[400px] mx-auto px-4 py-6">
+        {/* 今日のラテアート（ハイライト） */}
+        {todaysArt && activeCategory === 'all' && (
+          <ScrollReveal delay={0.4}>
+            <section className="mb-10">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-gray-900 flex items-center">
+                  <span className="w-2 h-5 bg-primary mr-2 rounded-full"></span>
+                  今日の1杯
+                </h2>
+                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                  New Arrival
+                </span>
+              </div>
+              
+              <div 
+                className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transform transition-transform hover:scale-[1.01]"
+                onClick={() => setSelectedArtwork(todaysArt)}
+              >
+                <div className="relative aspect-square w-full">
+                  <Image
+                    src={`https://source.unsplash.com/${todaysArt.imageUrl}`}
+                    alt={todaysArt.title}
                     fill
-                    sizes="100vw"
+                    className="object-cover"
+                    sizes="(max-width: 400px) 100vw, 400px"
                     priority
                   />
                 </div>
-                
                 <div className="p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <h4 className="font-heading text-lg font-bold">{todaysArt.title}</h4>
-                    <span className="text-xs text-gray-500">{formatDate(todaysArt.createdAt)}</span>
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-bold text-gray-900">{todaysArt.title}</h3>
+                    <span className="text-xs text-gray-500">
+                      {formatDate(todaysArt.createdAt)}
+                    </span>
                   </div>
-                  
-                  <p className="text-sm text-gray-600 mb-3">{todaysArt.comment}</p>
-                  
-                  <button 
-                    onClick={() => setSelectedArtwork(todaysArt)}
-                    className="w-full mt-2 px-3 py-2 bg-primary text-white text-sm rounded-md hover:bg-primary/90 transition-colors"
-                  >
-                    拡大して見る
-                  </button>
+                  <p className="text-sm text-gray-600 mt-1">{todaysArt.comment}</p>
                 </div>
               </div>
-            </div>
-          </div>
+            </section>
+          </ScrollReveal>
         )}
         
-        {/* 成長の軌跡 - 時系列で並べた作品一覧 */}
-        <div className="mt-10">
-          <h3 className="font-heading text-xl font-bold text-center mb-4">
-            成長の軌跡
-          </h3>
-          
-          <div className="space-y-6">
-            {sortedArtworks.map(artwork => (
-              <div key={artwork.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative h-52 w-full">
-                  <Image 
-                    src={`https://source.unsplash.com/${artwork.imageUrl}`} 
-                    alt={artwork.title} 
-                    className="object-cover"
-                    fill
-                    sizes="100vw"
-                    onClick={() => setSelectedArtwork(artwork)}
-                  />
-                </div>
-                <div className="p-3">
-                  <div className="flex justify-between items-center mb-1">
-                    <h4 className="font-medium text-sm">{artwork.title}</h4>
-                    <span className="text-xs text-gray-500">{formatDate(artwork.createdAt)}</span>
-                  </div>
-                  <p className="text-xs text-gray-600">{artwork.comment}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* リクエスト募集 */}
-        <div className="mt-10 bg-accent/10 rounded-lg p-4">
-          <div className="text-center">
-            <h3 className="font-heading text-lg font-bold mb-2">お客様からのリクエスト受付中</h3>
-            <p className="text-xs text-gray-600 mb-4">
-              特別なラテアートをご希望の方は、ご来店時にスタッフまでお気軽にお申し付けください。
-              できる限りご要望にお応えいたします。
-            </p>
+        {/* 作品一覧 */}
+        <ScrollReveal delay={0.6}>
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-gray-900">
+                {activeCategory === 'all' ? '作品一覧' : `${categoryLabels[activeCategory].label}の作品`}
+              </h2>
+              <span className="text-xs text-gray-500">
+                {filteredArtworks.length}作品
+              </span>
+            </div>
             
-            <button className="bg-accent hover:bg-accent/80 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors">
-              リクエストについて詳しく見る
-            </button>
-          </div>
-        </div>
-      </div>
+            {filteredArtworks.length > 0 ? (
+              <div className="grid grid-cols-2 gap-4">
+                <AnimatePresence>
+                  {filteredArtworks.map((artwork) => (
+                    <motion.div
+                      key={artwork.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{ duration: 0.3 }}
+                      onClick={() => setSelectedArtwork(artwork)}
+                    >
+                      <LatteArtCard artwork={artwork} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <div className="text-center py-10">
+                <p className="text-gray-500">このカテゴリの作品はありません</p>
+              </div>
+            )}
+          </section>
+        </ScrollReveal>
+      </main>
       
-      {/* 詳細モーダル */}
-      {selectedArtwork && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg w-full max-w-[400px] max-h-[90vh] overflow-auto">
-            <div className="p-3 flex justify-between items-center border-b">
-              <h3 className="font-bold text-base">{selectedArtwork?.title}</h3>
-              <button onClick={() => setSelectedArtwork(null)} className="text-gray-500 hover:text-gray-700">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="p-3">
-              <div className="relative w-full h-[50vh] mb-3">
-                <Image 
-                  src={`https://source.unsplash.com/${selectedArtwork?.imageUrl}`} 
-                  alt={selectedArtwork?.title || ''} 
-                  className="object-contain"
-                  fill
-                  sizes="100vw"
-                />
-              </div>
-              <div className="flex justify-between items-center mb-2">
-                <h4 className="font-medium text-base">{selectedArtwork?.title}</h4>
-                <span className="text-xs text-gray-500">{formatDate(selectedArtwork?.createdAt)}</span>
-              </div>
-              <p className="text-sm text-gray-600">{selectedArtwork?.comment}</p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 作品詳細モーダル */}
+      <LatteArtDetail 
+        artwork={selectedArtwork} 
+        onClose={() => setSelectedArtwork(null)} 
+      />
     </div>
   );
 };
