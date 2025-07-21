@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { Event } from '@/types/events';
 import { events } from '@/data/events';
 import { EventCard } from './EventCard';
 
