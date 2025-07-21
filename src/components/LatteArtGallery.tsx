@@ -59,7 +59,6 @@ const LatteArtGallery = () => {
                 <LatteArtCard
                   key={work.id}
                   work={work}
-                  index={index}
                 />
               ))}
           </div>
