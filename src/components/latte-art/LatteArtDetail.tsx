@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { X, ArrowLeft, ArrowRight, Star, Clock, Coffee, Calendar, MessageSquare } from 'lucide-react';
+import { X, ArrowLeft, ArrowRight, Star, Calendar } from 'lucide-react';
 import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
 import { LatteArtWork, categoryLabels, difficultyLabels, DifficultyLevel } from '@/types/latte-art';
 import { useEffect, useState } from 'react';
@@ -14,6 +14,14 @@ interface LatteArtDetailProps {
 export const LatteArtDetail = ({ artwork, onClose }: LatteArtDetailProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const controls = useAnimationControls();
+  
+  useEffect(() => {
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
   
   if (!artwork) return null;
   
@@ -32,14 +40,6 @@ export const LatteArtDetail = ({ artwork, onClose }: LatteArtDetailProps) => {
     setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
     controls.start('slide');
   };
-
-  useEffect(() => {
-    // Prevent body scroll when modal is open
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, []);
   
   return (
     <AnimatePresence mode="wait">

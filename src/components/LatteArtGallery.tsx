@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ScrollReveal } from './latte-art/ScrollReveal';
 import { LatteArtWork, LatteArtCategory, categoryLabels } from '@/types/latte-art';
-import { latteArtWorks, getTodaysLatteArt, getArtworksByCategory, formatDate } from '@/data/latte-art';
+import { getTodaysLatteArt, getArtworksByCategory, formatDate } from '@/data/latte-art';
 import { CategoryTabs } from './latte-art/CategoryTabs';
 import { LatteArtCard } from './latte-art/LatteArtCard';
 import { LatteArtDetail } from './latte-art/LatteArtDetail';
@@ -27,7 +27,7 @@ const LatteArtGallery: React.FC = () => {
         <div className="bg-white shadow-sm">
           <div className="max-w-[400px] mx-auto px-4 py-6">
             <h1 className="text-2xl font-bold text-center text-gray-900 mb-1">
-              Kotarou's Latte Art
+              Kotarou&apos;s Latte Art
             </h1>
             <p className="text-sm text-center text-gray-600">
               一杯一杯、心を込めて作ったラテアートの記録です
