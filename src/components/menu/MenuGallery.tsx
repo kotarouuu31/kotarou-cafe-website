@@ -13,16 +13,21 @@ const MenuGallery = () => {
   // タブ定義
   const tabs = [
     { id: 'all', label: 'すべて', count: menuItems.length },
-    { id: 'coffee', label: '☕ コーヒー', count: getMenuByCategory('coffee').length },
-    { id: 'drinks', label: '🥤 ドリンク', count: getMenuByCategory('drinks').length },
-    { id: 'desserts', label: '🍰 デザート', count: getMenuByCategory('desserts').length },
-    { id: 'food', label: '🥪 フード', count: getMenuByCategory('food').length },
+    { id: 'drinks', label: 'ドリンク', count: getMenuByCategory('coffee').length + getMenuByCategory('drinks').length },
+    { id: 'desserts', label: 'デザート', count: getMenuByCategory('desserts').length },
+    { id: 'food', label: 'フード', count: getMenuByCategory('food').length },
   ];
 
   // 表示するメニューアイテムを取得
   const getDisplayItems = () => {
     if (activeTab === 'all') {
       return menuItems;
+    }
+    if (activeTab === 'drinks') {
+      // コーヒーとドリンクを統合して表示（コーヒー系を先に表示）
+      const coffeeItems = getMenuByCategory('coffee');
+      const drinkItems = getMenuByCategory('drinks');
+      return [...coffeeItems, ...drinkItems];
     }
     return getMenuByCategory(activeTab);
   };
