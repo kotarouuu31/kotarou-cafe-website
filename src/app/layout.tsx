@@ -42,7 +42,7 @@ export default function RootLayout({
         className={`${playfair.variable} ${poppins.variable} antialiased bg-gray-100 flex justify-center`}
         suppressHydrationWarning
       >
-        <div className="w-full max-w-[400px] bg-white min-h-screen shadow-md relative overflow-hidden">
+        <div className="w-full max-w-[400px] bg-white min-h-screen shadow-md relative">
           <Header />
           <main className="w-full">
             {children}
