@@ -8,10 +8,9 @@ import Link from 'next/link';
 
 interface LatteArtCardProps {
   work: LatteArtWork;
-  index: number;
 }
 
-export const LatteArtCard = ({ work, index }: LatteArtCardProps) => {
+export const LatteArtCard = ({ work }: LatteArtCardProps) => {
   return (
     <motion.div 
       className="group relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
