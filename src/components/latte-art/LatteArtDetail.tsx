@@ -1,9 +1,9 @@
 "use client";
 
 import Image from 'next/image';
-import { X, ArrowLeft, ArrowRight, Star, Calendar } from 'lucide-react';
+import { X, ArrowLeft, ArrowRight, Calendar } from 'lucide-react';
 import { motion, AnimatePresence, useAnimationControls } from 'framer-motion';
-import { LatteArtWork, categoryLabels, difficultyLabels, DifficultyLevel } from '@/types/latte-art';
+import { LatteArtWork } from '@/types/latte-art';
 import { useEffect, useState } from 'react';
 
 interface LatteArtDetailProps {
@@ -25,7 +25,6 @@ export const LatteArtDetail = ({ artwork, onClose }: LatteArtDetailProps) => {
   
   if (!artwork) return null;
   
-  const category = categoryLabels[artwork.category];
   const images = [
     { type: 'after', url: artwork.imageUrl, label: 'After' },
     ...(artwork.beforeImageUrl ? [{ type: 'before', url: artwork.beforeImageUrl, label: 'Before' }] : [])
@@ -63,16 +62,12 @@ export const LatteArtDetail = ({ artwork, onClose }: LatteArtDetailProps) => {
             >
               {/* Header */}
               <div className="sticky top-0 bg-white/90 backdrop-blur-sm p-4 border-b flex justify-between items-center z-10">
-                <div className="flex-1">
-                  <div className="flex items-center">
-                    <span className="text-xs font-medium text-primary">{category.emoji} {category.label}</span>
-                    {artwork.isNew && (
-                      <span className="ml-2 bg-primary text-white text-[10px] px-2 py-0.5 rounded-full">
-                        NEW
-                      </span>
-                    )}
-                  </div>
-                  <h2 className="text-lg font-bold text-gray-900 line-clamp-1">{artwork.title}</h2>
+                <div className="text-sm text-gray-500">
+                  {new Date(artwork.createdAt).toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
                 </div>
                 <motion.button 
                   onClick={onClose}
@@ -151,41 +146,14 @@ export const LatteArtDetail = ({ artwork, onClose }: LatteArtDetailProps) => {
 
                 {/* Details */}
                 <div className="space-y-5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar size={16} className="mr-2 text-gray-500" />
-                      <span>{new Date(artwork.createdAt).toLocaleDateString('ja-JP', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        weekday: 'short'
-                      })}</span>
-                    </div>
-                    
-                    <div className="flex items-center text-sm">
-                      <div className="flex items-center">
-                        {[1, 2, 3, 4, 5].map((i) => {
-                          const difficultyMap: Record<DifficultyLevel, number> = {
-                            'beginner': 1,
-                            'intermediate': 2,
-                            'advanced': 3,
-                            'expert': 5
-                          };
-                          const difficultyLevel = difficultyMap[artwork.difficulty];
-                          return (
-                            <Star 
-                              key={i} 
-                              size={16} 
-                              className={`${i <= difficultyLevel ? 'fill-amber-400' : 'fill-gray-200'} ${i <= difficultyLevel ? 'text-amber-400' : 'text-gray-200'}`} 
-                              strokeWidth={1.5}
-                            />
-                          );
-                        })}
-                      </div>
-                      <span className="ml-1.5 text-sm font-medium text-gray-700">
-                        {difficultyLabels[artwork.difficulty as keyof typeof difficultyLabels]}
-                      </span>
-                    </div>
+                  <div className="flex items-center text-sm text-gray-600">
+                    <Calendar size={16} className="mr-2 text-gray-500" />
+                    <span>{new Date(artwork.createdAt).toLocaleDateString('ja-JP', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      weekday: 'short'
+                    })}</span>
                   </div>
 
                   {artwork.description && (
