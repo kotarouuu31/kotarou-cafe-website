@@ -16,10 +16,8 @@ const LatteArtGallery = dynamic(() => import('@/components/LatteArtGallery'), {
 
 export default function LatteArtPage() {
   return (
-    <div className="min-h-screen overflow-y-auto">
-      <main className="max-w-[400px] mx-auto bg-gradient-to-b from-gray-50 to-gray-100">
-        <LatteArtGallery />
-      </main>
+    <div>
+      <LatteArtGallery />
     </div>
   );
 }
