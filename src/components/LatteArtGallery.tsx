@@ -21,7 +21,8 @@ const LatteArtGallery: React.FC = () => {
   ).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 overflow-y-auto">
+    <div className="bg-gradient-to-b from-gray-50 to-gray-100">
+      <div className="max-w-[400px] mx-auto bg-white relative">
       {/* ヘッダー */}
       <ScrollReveal>
         <div className="bg-white shadow-sm">
@@ -131,6 +132,7 @@ const LatteArtGallery: React.FC = () => {
         artwork={selectedArtwork} 
         onClose={() => setSelectedArtwork(null)} 
       />
+      </div>
     </div>
   );
 };
