@@ -55,7 +55,7 @@ const LatteArtGallery = () => {
           <div className="grid grid-cols-2 gap-3">
             {latteArtWorks
               .sort((a, b) => new Date(b.createdAt.replace(/\//g, '-')).getTime() - new Date(a.createdAt.replace(/\//g, '-')).getTime())
-              .map((work, index) => (
+              .map((work) => (
                 <LatteArtCard
                   key={work.id}
                   work={work}
