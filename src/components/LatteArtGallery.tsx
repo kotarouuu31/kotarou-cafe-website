@@ -21,7 +21,7 @@ const LatteArtGallery: React.FC = () => {
   ).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 overflow-y-auto">
       {/* ヘッダー */}
       <ScrollReveal>
         <div className="bg-white shadow-sm">
@@ -45,7 +45,7 @@ const LatteArtGallery: React.FC = () => {
       </ScrollReveal>
       
       {/* メインコンテンツ */}
-      <main className="max-w-[400px] mx-auto px-4 py-6">
+      <main className="max-w-[400px] mx-auto px-4 py-6 pb-24">
         {/* 今日のラテアート（ハイライト） */}
         {todaysArt && activeCategory === 'all' && (
           <ScrollReveal delay={0.4}>
@@ -88,9 +88,9 @@ const LatteArtGallery: React.FC = () => {
           </ScrollReveal>
         )}
         
-        {/* 作品一覧 */}
-        <ScrollReveal delay={0.6}>
-          <section>
+        {/* 作品一覧 - 常に表示 */}
+        <ScrollReveal delay={activeCategory === 'all' ? 0.6 : 0.4}>
+          <section className={activeCategory === 'all' ? 'mt-8' : ''}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-900">
                 {activeCategory === 'all' ? '作品一覧' : `${categoryLabels[activeCategory].label}の作品`}
