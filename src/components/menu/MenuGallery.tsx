@@ -73,7 +73,7 @@ const MenuGallery = () => {
                   </div>
 
                   {/* メニューアイテム */}
-                  <div className="grid grid-cols-1 gap-6">
+                  <div className="grid grid-cols-2 gap-3">
                     {categoryItems.map((item, index) => (
                       <MenuCard
                         key={item.id}

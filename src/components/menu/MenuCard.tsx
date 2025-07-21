@@ -15,31 +15,33 @@ export const MenuCard = ({ item, index }: MenuCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
+      className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group"
+      whileHover={{ y: -2 }}
     >
       {/* 商品画像 */}
-      <div className="relative aspect-[4/3] w-full">
+      <div className="relative aspect-[3/4] w-full overflow-hidden">
         <Image
           src={item.imageUrl}
           alt={item.name}
           fill
-          className="object-cover"
-          sizes="(max-width: 400px) 100vw, 400px"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 400px) 50vw, 200px"
         />
       </div>
 
       {/* 商品情報 */}
-      <div className="p-4 space-y-2">
-        <div className="flex justify-between items-start">
-          <h3 className="font-bold text-gray-900 text-base line-clamp-1 flex-1">
-            {item.name}
-          </h3>
-          <span className="text-primary font-bold text-lg ml-2">
+      <div className="p-3 space-y-2">
+        <h3 className="font-bold text-gray-900 text-sm line-clamp-1">
+          {item.name}
+        </h3>
+        
+        <div className="flex items-center justify-between">
+          <span className="text-primary font-bold text-base">
             ¥{item.price}
           </span>
         </div>
         
-        <p className="text-sm text-gray-600 line-clamp-2">
+        <p className="text-xs text-gray-600 line-clamp-2">
           {item.description}
         </p>
       </div>
