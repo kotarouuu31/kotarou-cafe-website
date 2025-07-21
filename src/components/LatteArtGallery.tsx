@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { latteArtWorks } from '@/data/latte-art-simple';
+import { LatteArtCard } from './latte-art/LatteArtCard';
 
 const LatteArtGallery = () => {
   return (
@@ -52,37 +53,16 @@ const LatteArtGallery = () => {
           </motion.div>
 
           {/* 作品ギャラリー（2列グリッド） */}
-          <div className="grid grid-cols-2 gap-4">
-            {latteArtWorks.map((artwork, index) => (
-              <motion.div
-                key={artwork.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
-              >
-                {/* 作品画像 */}
-                <div className="relative aspect-square w-full">
-                  <Image
-                    src={artwork.imageUrl}
-                    alt={artwork.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 400px) 50vw, 200px"
-                  />
-                </div>
-
-                {/* 作品情報 */}
-                <div className="p-3 space-y-2">
-                  <h3 className="font-bold text-gray-900 text-sm line-clamp-1">
-                    {artwork.title}
-                  </h3>
-                  <p className="text-xs text-gray-600 line-clamp-1">
-                    {artwork.comment}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-2 gap-3">
+            {latteArtWorks
+              .sort((a, b) => new Date(b.createdAt.replace(/\//g, '-')).getTime() - new Date(a.createdAt.replace(/\//g, '-')).getTime())
+              .map((work, index) => (
+                <LatteArtCard
+                  key={work.id}
+                  work={work}
+                  index={index}
+                />
+              ))}
           </div>
 
           {/* フッターメッセージ */}
