@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { menuItems, menuCategories, getMenuByCategory } from '@/data/menu-simple';
+import { menuItems, getMenuByCategory } from '@/data/menu-simple';
 import { MenuCard } from './MenuCard';
 
 const MenuGallery = () => {
