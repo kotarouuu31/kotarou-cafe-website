@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { getSortedNews, getNewsByCategory } from '@/data/news';
+import { getNewsByCategory } from '@/data/news';
 import { categoryLabels } from '@/types/news';
 import { NewsCard } from './NewsCard';
 
