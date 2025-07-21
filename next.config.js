@@ -3,8 +3,7 @@ const nextConfig = {
   images: {
     domains: [
       'source.unsplash.com',
-      'images.unsplash.com',
-      'chart.googleapis.com'
+      'images.unsplash.com'
     ],
   },
 }

@@ -11,7 +11,6 @@ const navLinks = [
   { href: '/menu', label: 'メニュー' },
   { href: '/latte-art', label: 'ラテアート' },
   { href: '/events', label: 'イベント' },
-  { href: '/social', label: 'ソーシャル' },
   { href: '/contact', label: 'お問い合わせ' },
 ];
 
