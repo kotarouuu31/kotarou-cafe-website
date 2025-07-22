@@ -7,7 +7,7 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { CookieConsent } from "@/components/analytics/CookieConsent";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { PWAInstallPrompt } from "@/components/pwa/PWAInstallPrompt";
+// import { PWAInstallPrompt } from "@/components/pwa/PWAInstallPrompt"; // 自動プロンプト無効化のためコメントアウト
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -92,7 +92,8 @@ export default function RootLayout({
             <ChatWidgetWrapper />
           </Suspense>
           <CookieConsent />
-          <PWAInstallPrompt />
+          {/* PWA自動インストールプロンプトを無効化 */}
+          {/* <PWAInstallPrompt /> */}
         </div>
       </body>
     </html>

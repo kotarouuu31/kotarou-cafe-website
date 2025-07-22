@@ -128,33 +128,6 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// プッシュ通知の処理（将来の拡張用）
-self.addEventListener('push', (event) => {
-  if (event.data) {
-    const data = event.data.json();
-    const options = {
-      body: data.body,
-      icon: '/icons/icon-192x192.png',
-      badge: '/icons/icon-72x72.png',
-      vibrate: [100, 50, 100],
-      data: {
-        dateOfArrival: Date.now(),
-        primaryKey: data.primaryKey
-      }
-    };
-
-    event.waitUntil(
-      self.registration.showNotification(data.title, options)
-    );
-  }
-});
-
-// 通知クリック時の処理
-self.addEventListener('notificationclick', (event) => {
-  console.log('通知がクリックされました');
-  event.notification.close();
-
-  event.waitUntil(
-    clients.openWindow('/')
-  );
-});
+// プッシュ通知機能は無効化されています（静かなPWA設計）
+// self.addEventListener('push', (event) => { ... });
+// self.addEventListener('notificationclick', (event) => { ... });
