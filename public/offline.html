@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オフライン - Kotarou Cafe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FFFBF5;
+            color: #4A3520;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .offline-container {
+            text-align: center;
+            max-width: 400px;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .coffee-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: #8B5A2B;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #8B5A2B;
+        }
+        
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            color: #6A4420;
+        }
+        
+        .retry-btn {
+            background: #8B5A2B;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .retry-btn:hover {
+            background: #6A4420;
+        }
+        
+        .features {
+            margin-top: 32px;
+            text-align: left;
+        }
+        
+        .features h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: #8B5A2B;
+        }
+        
+        .features ul {
+            list-style: none;
+        }
+        
+        .features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        
+        .features li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="coffee-icon">☕</div>
+        <h1>オフラインです</h1>
+        <p>
+            インターネット接続が見つかりません。<br>
+            接続を確認して、もう一度お試しください。
+        </p>
+        <button class="retry-btn" onclick="window.location.reload()">
+            再読み込み
+        </button>
+        
+        <div class="features">
+            <h2>Kotarou Cafeについて</h2>
+            <ul>
+                <li>📍 東京都渋谷区猫町1-2-3</li>
+                <li>⏰ 営業時間：9:00-20:00</li>
+                <li>☕ 美味しいコーヒーと癒しの空間</li>
+                <li>🎨 ラテアート体験も可能</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // オンライン状態の監視
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+        
+        // 定期的な接続チェック
+        setInterval(() => {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

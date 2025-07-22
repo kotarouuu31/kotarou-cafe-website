@@ -7,6 +7,7 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { CookieConsent } from "@/components/analytics/CookieConsent";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { PWAInstallPrompt } from "@/components/pwa/PWAInstallPrompt";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -24,6 +25,34 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Kotarou Cafe | コーヒーと癒しの空間",
   description: "Kotarou Cafeへようこそ。美味しいコーヒーとくつろぎの空間をお楽しみください。",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Kotarou Cafe",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icons/icon-152x152.png", sizes: "152x152", type: "image/png" },
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+  themeColor: '#8B5A2B',
 };
 
 export default function RootLayout({
@@ -37,6 +66,17 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
+        {/* PWA用メタタグ */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#8B5A2B" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Kotarou Cafe" />
+        <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
+        <meta name="msapplication-TileColor" content="#8B5A2B" />
+        <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
       </head>
       <body
         className={`${playfair.variable} ${poppins.variable} antialiased bg-gray-100 flex justify-center`}
@@ -48,8 +88,11 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <ChatWidgetWrapper />
+          <Suspense fallback={null}>
+            <ChatWidgetWrapper />
+          </Suspense>
           <CookieConsent />
+          <PWAInstallPrompt />
         </div>
       </body>
     </html>
