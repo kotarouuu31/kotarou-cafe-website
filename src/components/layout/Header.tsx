@@ -25,24 +25,34 @@ export default function Header() {
 
   // スクロール方向検出とヘッダー表示制御
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
     const updateScrollDirection = () => {
       const scrollY = window.scrollY;
+      const scrollDiff = scrollY - lastScrollY.current;
       
       // スクロール位置が10px以下の場合は常に表示
-      if (scrollY < 10) {
+      if (scrollY <= 10) {
         setIsVisible(true);
         setIsScrolled(false);
       } else {
         setIsScrolled(true);
         
-        // スクロール方向を判定
-        if (scrollY > lastScrollY.current && scrollY > 80) {
-          // 下にスクロール中かつ80px以上スクロールした場合は隠す
-          setIsVisible(false);
-        } else if (scrollY < lastScrollY.current) {
-          // 上にスクロール中は表示
-          setIsVisible(true);
+        // スクロール差分が5px以上の場合のみ判定（微細な変動を無視）
+        if (Math.abs(scrollDiff) > 5) {
+          if (scrollDiff > 0 && scrollY > 100) {
+            // 下にスクロール中かつ100px以上スクロールした場合は隠す
+            setIsVisible(false);
+          } else if (scrollDiff < 0) {
+            // 上にスクロール中は表示
+            setIsVisible(true);
+          }
         }
+      }
+      
+      // メニューが開いている場合は常に表示
+      if (isMobileMenuOpen) {
+        setIsVisible(true);
       }
       
       lastScrollY.current = scrollY;
@@ -50,15 +60,29 @@ export default function Header() {
     };
 
     const handleScroll = () => {
+      // デバウンス処理
+      clearTimeout(timeoutId);
+      
       if (!ticking.current) {
         requestAnimationFrame(updateScrollDirection);
         ticking.current = true;
       }
+      
+      // 100ms後に最終的な状態を確定
+      timeoutId = setTimeout(() => {
+        if (!ticking.current) {
+          requestAnimationFrame(updateScrollDirection);
+          ticking.current = true;
+        }
+      }, 100);
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [isMobileMenuOpen]);
 
   return (
     <>
@@ -324,9 +348,7 @@ export default function Header() {
       </AnimatePresence>
       
       {/* ヘッダーの高さ分のスペーサー */}
-      <div className={`transition-all duration-300 ${
-        isVisible ? 'h-20' : 'h-0'
-      }`} />
+      <div className="h-20" />
     </>
   );
 }
