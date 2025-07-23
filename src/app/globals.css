@@ -2,14 +2,15 @@
 @import "react-calendar/dist/Calendar.css";
 
 :root {
-  --background: #FFFBF5;
-  --foreground: #4A3520;
-  --primary: #8B5A2B;
-  --primary-light: #B78B5C;
-  --primary-dark: #6A4420;
-  --secondary: #D4A276;
-  --accent: #C8815F;
-  --accent-light: #E6C3B0;
+  --background: #F8FDF8;
+  --foreground: #2D4A2D;
+  --primary: #4A7C59;
+  --primary-light: #6B9B7A;
+  --primary-dark: #2F5233;
+  --secondary: #8FBC8F;
+  --accent: #FF8C42;
+  --accent-light: #FFB380;
+  --accent-dark: #E6722A;
 }
 
 @theme inline {
@@ -27,14 +28,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #2C1E12;
-    --foreground: #F5E8D7;
-    --primary: #D4A276;
-    --primary-light: #E6C3A0;
-    --primary-dark: #A37B59;
-    --secondary: #8B5A2B;
-    --accent: #E6A376;
-    --accent-light: #F5C4A6;
+    --background: #1A2E1A;
+    --foreground: #E8F5E8;
+    --primary: #6B9B7A;
+    --primary-light: #8FBC8F;
+    --primary-dark: #4A7C59;
+    --secondary: #2F5233;
+    --accent: #FFB380;
+    --accent-light: #FFD4B3;
+    --accent-dark: #FF8C42;
   }
 }
 

@@ -17,63 +17,93 @@ export default function Home() {
     <div className="flex flex-col items-center w-full">
       {/* 1. ファーストビュー - 全画面背景 */}
       <section className="relative w-full h-screen flex flex-col justify-end items-center pb-16">
-        {/* 背景画像 */}
-        <div className="absolute inset-0 z-0">
-          <Image 
-            src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb" 
-            alt="Kotarou Cafe Background" 
-            fill 
-            style={{objectFit: 'cover'}} 
-            priority
-            className="brightness-[0.85]"
-          />
+        {/* グラデーション背景 */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-primary via-secondary to-accent opacity-90">
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/30 via-transparent to-accent/20"></div>
+        </div>
+        
+        {/* 背景パターン */}
+        <div className="absolute inset-0 z-5 opacity-10">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-accent rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-1/3 right-20 w-24 h-24 bg-primary-light rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-secondary rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute bottom-1/3 right-1/3 w-28 h-28 bg-accent-light rounded-full blur-2xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
         </div>
         
         {/* 浮遊する音符のような装飾エフェクト */}
         <div className="absolute inset-0 z-10 overflow-hidden">
-          <div className="music-note absolute top-1/4 left-1/4 text-white text-4xl opacity-70 animate-float-slow">
+          <div className="music-note absolute top-1/4 left-1/4 text-accent-light text-4xl opacity-80 animate-float-slow drop-shadow-lg">
             ♪
           </div>
-          <div className="music-note absolute top-1/3 right-1/3 text-white text-3xl opacity-60 animate-float-medium">
+          <div className="music-note absolute top-1/3 right-1/3 text-primary-light text-3xl opacity-70 animate-float-medium drop-shadow-md">
             ♫
           </div>
-          <div className="music-note absolute bottom-1/2 right-1/4 text-white text-5xl opacity-50 animate-float-fast">
+          <div className="music-note absolute bottom-1/2 right-1/4 text-accent text-5xl opacity-60 animate-float-fast drop-shadow-lg">
             ♩
           </div>
-          <div className="music-note absolute bottom-1/3 left-1/3 text-white text-4xl opacity-40 animate-float-slow">
+          <div className="music-note absolute bottom-1/3 left-1/3 text-secondary text-4xl opacity-50 animate-float-slow drop-shadow-md">
             ♬
           </div>
         </div>
         
         {/* ロゴとサブタイトル */}
         <div className="relative z-20 text-center px-4 mb-8">
-          <h1 className="font-heading text-4xl font-bold mb-2 text-white drop-shadow-lg">
-            Kotarou Cafe
-          </h1>
-          <p className="text-white/90 text-sm font-medium tracking-wider drop-shadow-md">
-            東京のコーヒー & カフェ
-          </p>
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl px-8 py-6 border border-white/20 shadow-2xl">
+            <h1 className="font-heading text-4xl font-bold mb-3 text-white drop-shadow-2xl">
+              Kotarou Cafe
+            </h1>
+            <div className="w-16 h-0.5 bg-gradient-to-r from-accent to-accent-light mx-auto mb-3 rounded-full"></div>
+            <p className="text-white/95 text-sm font-medium tracking-wider drop-shadow-lg">
+              東京のコーヒー & カフェ
+            </p>
+          </div>
         </div>
       </section>
 
       {/* 2. キャッチコピーセクション */}
-      <section className="w-full pt-16 pb-12 px-4 text-center">
-        <h1 className="font-heading text-2xl font-bold mb-6 text-primary">
-          コーヒーとつながり、心を解き放つ。
-        </h1>
-        <p className="text-sm text-foreground/80 mb-8 leading-relaxed">
-          Kotarou Cafeは、コーヒーと音楽を通じて、自然と人、人と人をつなぐ場を目指しています。
-          厳選された豆と丁寧な焙煎、そして熟練のバリスタによる抽出。
-          心地よい音楽とともに、感覚がふっとひらく。
-          「あぁ」と自然にこぼれる、そのひとときが、記憶に、やさしく残る。
-        </p>
-
-
+      <section className="w-full pt-16 pb-12 px-4 text-center relative">
+        {/* 背景グラデーション */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/5 to-background"></div>
+        
+        <div className="relative z-10">
+          <div className="bg-white/60 backdrop-blur-sm rounded-3xl px-8 py-10 mx-auto max-w-md shadow-lg border border-primary/10">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full mx-auto mb-6 flex items-center justify-center">
+              <span className="text-white text-xl">☕</span>
+            </div>
+            
+            <h1 className="font-heading text-2xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              コーヒーとつながり、心を解き放つ。
+            </h1>
+            
+            <div className="space-y-4 text-sm text-foreground/90 leading-relaxed">
+              <p className="bg-primary/5 rounded-xl px-4 py-3 border-l-4 border-primary">
+                Kotarou Cafeは、コーヒーと音楽を通じて、自然と人、人と人をつなぐ場を目指しています。
+              </p>
+              <p className="bg-accent/5 rounded-xl px-4 py-3 border-l-4 border-accent">
+                厳選された豆と丁寧な焙煎、そして熟練のバリスタによる抽出。
+              </p>
+              <p className="bg-secondary/10 rounded-xl px-4 py-3 border-l-4 border-secondary">
+                心地よい音楽とともに、感覚がふっとひらく。「あぁ」と自然にこぼれる、そのひとときが、記憶に、やさしく残る。
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* 2列グリッド画像ギャラリー */}
-      <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-50px">
-        <div className="grid grid-cols-2 gap-3 mb-8">
+      <ScrollAnimation className="w-full px-4 mb-12 relative" rootMargin="-50px">
+        {/* 背景グラデーション */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 rounded-3xl -mx-4"></div>
+        
+        <div className="relative z-10">
+          <div className="text-center mb-8">
+            <h2 className="font-heading text-xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Gallery
+            </h2>
+            <div className="w-12 h-0.5 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"></div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3 mb-8">
           {/* 1. カフェの内装 */}
           <div className="relative mb-1 shadow-sm stagger-item" style={{ aspectRatio: '3/4' }}>
             <Image 
@@ -183,6 +213,7 @@ export default function Home() {
               className="rounded-lg"
             />
           </div>
+        </div>
         </div>
       </ScrollAnimation>
 
