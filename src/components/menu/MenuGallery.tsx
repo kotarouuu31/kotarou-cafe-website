@@ -12,10 +12,10 @@ const MenuGallery = () => {
 
   // タブ定義
   const tabs = [
-    { id: 'all', label: 'すべて', count: menuItems.length },
-    { id: 'drinks', label: 'ドリンク', count: getMenuByCategory('coffee').length + getMenuByCategory('drinks').length },
-    { id: 'desserts', label: 'デザート', count: getMenuByCategory('desserts').length },
-    { id: 'food', label: 'フード', count: getMenuByCategory('food').length },
+    { id: 'all', label: 'All', count: menuItems.length },
+    { id: 'drinks', label: 'Drinks', count: getMenuByCategory('coffee').length + getMenuByCategory('drinks').length },
+    { id: 'desserts', label: 'Dessert', count: getMenuByCategory('desserts').length },
+    { id: 'food', label: 'Food', count: getMenuByCategory('food').length },
   ];
 
   // 表示するメニューアイテムを取得
@@ -52,7 +52,7 @@ const MenuGallery = () => {
             </div>
             
             <h1 className="text-2xl font-bold text-center text-gray-900 mb-1">
-              メニュー
+              Menu
             </h1>
             <p className="text-sm text-center text-gray-600">
               こだわりの食材で作る美味しいメニューをご紹介します

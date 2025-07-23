@@ -78,7 +78,7 @@ export default function ContactPage() {
       {/* ヘッダーセクション */}
       <ScrollAnimation className="w-full max-w-[400px] px-4 pt-8 pb-6 text-center">
         <h1 className="font-heading text-2xl font-bold mb-4 text-primary">
-          お気軽にお問い合わせください。
+          Contact
         </h1>
         <p className="text-sm text-foreground/80 mb-6 leading-relaxed">
           ご質問、ご予約、ラテアートのリクエストなど、<br />

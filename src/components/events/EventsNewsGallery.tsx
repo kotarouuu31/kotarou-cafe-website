@@ -31,8 +31,8 @@ const EventsNewsGallery = () => {
   const allNews = getNewsByCategory();
 
   const tabs = [
-    { id: 'events', label: 'イベント', count: sortedEvents.length },
-    { id: 'news', label: 'ニュース', count: allNews.length },
+    { id: 'events', label: 'Events', count: sortedEvents.length },
+    { id: 'news', label: 'News', count: allNews.length },
   ];
 
   return (

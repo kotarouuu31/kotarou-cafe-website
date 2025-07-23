@@ -7,11 +7,11 @@ import { usePathname } from 'next/navigation';
 
 // ナビゲーションリンク定義
 const navLinks = [
-  { href: '/', label: 'ホーム' },
-  { href: '/menu', label: 'メニュー' },
-  { href: '/latte-art', label: 'ラテアート' },
-  { href: '/events', label: 'イベント' },
-  { href: '/contact', label: 'お問い合わせ' },
+  { href: '/', label: 'Home' },
+  { href: '/menu', label: 'Menu' },
+  { href: '/latte-art', label: 'Latte Art' },
+  { href: '/events', label: 'Events & News' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Header() {
