@@ -60,16 +60,16 @@ const MenuGallery = () => {
           </div>
 
           {/* タブナビゲーション */}
-          <div className="px-4 pb-4">
-            <div className="flex overflow-x-auto scrollbar-hide gap-2">
+          <div className="px-3 pb-4">
+            <div className="flex overflow-x-auto scrollbar-hide gap-1.5">
               {tabs.map((tab) => (
                 <motion.button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  className={`flex-shrink-0 px-3 py-2 rounded-full text-xs font-medium transition-all duration-300 ${
                     activeTab === tab.id
-                      ? 'bg-primary text-white shadow-md'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-primary text-white shadow-lg shadow-primary/25'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-sm'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -82,7 +82,7 @@ const MenuGallery = () => {
         </div>
 
         {/* メインコンテンツ */}
-        <main className="px-4 py-6 pb-24">
+        <main className="px-3 py-6 pb-24">
           {/* 現在の表示情報 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -103,7 +103,7 @@ const MenuGallery = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="grid grid-cols-2 gap-3"
+            className="grid grid-cols-3 gap-2"
           >
             {getDisplayItems().map((item, index) => (
               <MenuCard
