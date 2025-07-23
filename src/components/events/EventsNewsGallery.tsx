@@ -55,13 +55,10 @@ const EventsNewsGallery = () => {
             </div>
             
             <h1 className="text-2xl font-bold text-center text-gray-900 mb-1">
-              {activeTab === 'events' ? 'イベント情報' : 'ニュース'}
+              Events & News
             </h1>
             <p className="text-sm text-center text-gray-600">
-              {activeTab === 'events' 
-                ? 'Kotarou Cafeで開催される素敵なイベントをご紹介します'
-                : 'Kotarou Cafeの最新情報をお届けします'
-              }
+              Stay updated with our latest events and news
             </p>
           </div>
 
