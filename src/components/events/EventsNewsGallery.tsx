@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { events } from '@/data/events';
 import { getNewsByCategory } from '@/data/news';
 import { EventCard } from './EventCard';
-import { NewsCard } from '../news/NewsCard';
 
 const EventsNewsGallery = () => {
   const searchParams = useSearchParams();
