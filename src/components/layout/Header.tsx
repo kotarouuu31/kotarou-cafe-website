@@ -65,16 +65,34 @@ export default function Header() {
       <AnimatePresence>
         {isVisible && (
           <motion.header 
-            initial={{ y: 0 }}
-            animate={{ y: 0 }}
-            exit={{ y: -100 }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 300, 
-              damping: 30,
-              duration: 0.3 
+            initial={{ y: -100, opacity: 0, scale: 0.95 }}
+            animate={{ 
+              y: 0, 
+              opacity: 1, 
+              scale: 1,
+              transition: {
+                type: "spring",
+                stiffness: 400,
+                damping: 25,
+                mass: 0.8,
+                duration: 0.6
+              }
+            }}
+            exit={{ 
+              y: -100, 
+              opacity: 0, 
+              scale: 0.95,
+              transition: {
+                type: "spring",
+                stiffness: 500,
+                damping: 35,
+                duration: 0.4
+              }
             }}
             className="fixed top-0 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-[400px]"
+            style={{
+              filter: 'drop-shadow(0 10px 25px rgba(0, 0, 0, 0.1))'
+            }}
           >
             <div 
               className={`w-full px-4 py-3 transition-all duration-300 ${
@@ -88,8 +106,24 @@ export default function Header() {
                 <Link href="/" className="flex items-center space-x-3">
                   <motion.div 
                     className="relative w-10 h-10"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    initial={{ scale: 0, rotate: -180, opacity: 0 }}
+                    animate={{ 
+                      scale: 1, 
+                      rotate: 0, 
+                      opacity: 1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20,
+                        delay: 0.2
+                      }
+                    }}
+                    whileHover={{ 
+                      scale: 1.1, 
+                      rotate: 5,
+                      transition: { duration: 0.3 }
+                    }}
+                    whileTap={{ scale: 0.9, rotate: -5 }}
                   >
                     <Image 
                       src="/images/logo.png" 
@@ -100,12 +134,52 @@ export default function Header() {
                       priority
                     />
                   </motion.div>
-                  <div>
-                    <h1 className="text-lg font-heading font-bold text-primary">
-                      Kotarou <span className="text-accent">Cafe</span>
-                    </h1>
-                    <p className="text-xs text-gray-500 -mt-1">コーヒーと癒しの空間</p>
-                  </div>
+                  <motion.div
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ 
+                      x: 0, 
+                      opacity: 1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 25,
+                        delay: 0.3
+                      }
+                    }}
+                  >
+                    <motion.h1 
+                      className="text-lg font-heading font-bold text-primary"
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      Kotarou <motion.span 
+                        className="text-accent"
+                        initial={{ color: "#8B5A2B" }}
+                        animate={{ 
+                          color: ["#8B5A2B", "#D4A574", "#8B5A2B"],
+                          transition: {
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }
+                        }}
+                      >
+                        Cafe
+                      </motion.span>
+                    </motion.h1>
+                    <motion.p 
+                      className="text-xs text-gray-500 -mt-1"
+                      initial={{ opacity: 0 }}
+                      animate={{ 
+                        opacity: 1,
+                        transition: {
+                          delay: 0.5,
+                          duration: 0.8
+                        }
+                      }}
+                    >
+                      コーヒーと癒しの空間
+                    </motion.p>
+                  </motion.div>
                 </Link>
 
                 {/* モバイルメニューボタン */}
@@ -113,8 +187,25 @@ export default function Header() {
                   className="flex items-center justify-center w-12 h-12 rounded-xl hover:bg-gray-100 transition-colors"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   aria-label="メニューを開く"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  initial={{ scale: 0, opacity: 0, rotate: 90 }}
+                  animate={{ 
+                    scale: 1, 
+                    opacity: 1, 
+                    rotate: 0,
+                    transition: {
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 20,
+                      delay: 0.4
+                    }
+                  }}
+                  whileHover={{ 
+                    scale: 1.1, 
+                    rotate: isMobileMenuOpen ? 0 : 10,
+                    backgroundColor: "rgba(139, 90, 43, 0.1)",
+                    transition: { duration: 0.3 }
+                  }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   <motion.svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -160,21 +251,66 @@ export default function Header() {
                         return (
                           <motion.li 
                             key={link.href}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.1, duration: 0.3 }}
+                            initial={{ opacity: 0, x: -30, scale: 0.8 }}
+                            animate={{ 
+                              opacity: 1, 
+                              x: 0, 
+                              scale: 1,
+                              transition: {
+                                delay: index * 0.15,
+                                duration: 0.5,
+                                type: "spring",
+                                stiffness: 300,
+                                damping: 25
+                              }
+                            }}
+                            whileHover={{ 
+                              scale: 1.02, 
+                              x: 5,
+                              transition: { duration: 0.2 }
+                            }}
                           >
-                            <Link
-                              href={link.href}
-                              className={`block py-3 px-4 text-base font-medium transition-all duration-200 rounded-xl ${
-                                isActive
-                                  ? 'text-white bg-primary shadow-md transform scale-[0.98]'
-                                  : 'text-foreground/80 hover:text-primary hover:bg-primary/5 hover:transform hover:scale-[0.98]'
-                              }`}
-                              onClick={() => setIsMobileMenuOpen(false)}
+                            <motion.div
+                              whileHover={{
+                                boxShadow: isActive 
+                                  ? "0 8px 25px rgba(139, 90, 43, 0.3)"
+                                  : "0 4px 15px rgba(139, 90, 43, 0.1)",
+                                y: -2
+                              }}
+                              whileTap={{ scale: 0.98, y: 0 }}
                             >
-                              {link.label}
-                            </Link>
+                              <Link
+                                href={link.href}
+                                className={`block py-4 px-5 text-base font-medium transition-all duration-300 rounded-xl relative overflow-hidden ${
+                                  isActive
+                                    ? 'text-white bg-gradient-to-r from-primary to-accent shadow-lg'
+                                    : 'text-foreground/80 hover:text-primary hover:bg-gradient-to-r hover:from-primary/5 hover:to-accent/5'
+                                }`}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                              >
+                                <motion.span
+                                  className="relative z-10"
+                                  initial={{ y: 0 }}
+                                  whileHover={{ y: -1 }}
+                                >
+                                  {link.label}
+                                </motion.span>
+                                {isActive && (
+                                  <motion.div
+                                    className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"
+                                    initial={{ x: "-100%" }}
+                                    animate={{ 
+                                      x: "100%",
+                                      transition: {
+                                        duration: 1.5,
+                                        repeat: Infinity,
+                                        ease: "easeInOut"
+                                      }
+                                    }}
+                                  />
+                                )}
+                              </Link>
+                            </motion.div>
                           </motion.li>
                         );
                       })}
