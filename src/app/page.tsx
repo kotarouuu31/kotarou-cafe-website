@@ -209,7 +209,7 @@ export default function Home() {
       <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-40px" delay={150}>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-sm font-medium">News</h2>
-          <Link href="/news" className="text-xs text-accent flex items-center">
+          <Link href="/events?tab=news" className="text-xs text-accent flex items-center">
             View All
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
