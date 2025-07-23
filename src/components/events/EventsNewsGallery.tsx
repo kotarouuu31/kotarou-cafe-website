@@ -91,7 +91,7 @@ const EventsNewsGallery = () => {
         <main className="px-4 py-6 pb-24">
           {/* 現在の表示情報 */}
           <motion.div
-            key={activeTab}
+            key={`info-${activeTab}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -110,7 +110,7 @@ const EventsNewsGallery = () => {
           {/* イベントタブコンテンツ */}
           {activeTab === 'events' && (
             <motion.div
-              key="events"
+              key="content-events"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
@@ -129,7 +129,7 @@ const EventsNewsGallery = () => {
           {/* ニュースタブコンテンツ */}
           {activeTab === 'news' && (
             <motion.div
-              key="news"
+              key="content-news"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
