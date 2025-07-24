@@ -1,72 +1,144 @@
 "use client";
 
-import React from 'react';
+import React, { memo } from 'react';
 import Image from 'next/image';
 import { LatteArtWork } from '@/types/latte-art';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
+import { Eye } from 'lucide-react';
 
+// アニメーション設定を定数として分離
+const CARD_VARIANTS: Variants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  hover: {
+    y: -4,
+    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)'
+  }
+};
+
+const CARD_TRANSITION = {
+  type: 'spring' as const,
+  stiffness: 300,
+  damping: 20
+};
+
+// スタイル定数
+const STYLES = {
+  card: "group relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300",
+  imageContainer: "relative aspect-[3/4] overflow-hidden",
+  image: "object-cover transition-transform duration-500 group-hover:scale-105",
+  overlay: "absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+  viewIcon: "absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+  iconButton: "bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm",
+  content: "p-3 space-y-2",
+  title: "font-bold text-gray-900 text-sm line-clamp-1",
+  date: "text-xs text-gray-500",
+  comment: "text-xs text-gray-600 line-clamp-2"
+} as const;
+
+// Props型定義
 interface LatteArtCardProps {
   work: LatteArtWork;
+  index?: number;
+  priority?: boolean;
 }
 
-export const LatteArtCard = ({ work }: LatteArtCardProps) => {
+// 画像コンポーネントの分離
+const LatteArtImage = memo(({ work, priority = false }: { work: LatteArtWork; priority?: boolean }) => (
+  <div className={STYLES.imageContainer}>
+    <Image
+      src={work.imageUrl}
+      alt={`${work.title}のラテアート作品`}
+      fill
+      className={STYLES.image}
+      sizes="(max-width: 400px) 50vw, (max-width: 768px) 33vw, 200px"
+      priority={priority}
+      loading={priority ? 'eager' : 'lazy'}
+    />
+    
+    {/* ホバーオーバーレイ */}
+    <div className={STYLES.overlay} aria-hidden="true" />
+    
+    {/* 表示アイコン */}
+    <div className={STYLES.viewIcon} aria-hidden="true">
+      <div className={STYLES.iconButton}>
+        <Eye className="w-4 h-4 text-gray-700" aria-hidden="true" />
+      </div>
+    </div>
+  </div>
+));
+
+LatteArtImage.displayName = 'LatteArtImage';
+
+// 作品情報コンポーネントの分離
+const LatteArtInfo = memo(({ work }: { work: LatteArtWork }) => (
+  <div className={STYLES.content}>
+    <h3 className={STYLES.title} title={work.title}>
+      {work.title}
+    </h3>
+    
+    <time className={STYLES.date} dateTime={work.createdAt}>
+      {work.createdAt}
+    </time>
+    
+    {work.comment && (
+      <p className={STYLES.comment} title={work.comment}>
+        {work.comment}
+      </p>
+    )}
+  </div>
+));
+
+LatteArtInfo.displayName = 'LatteArtInfo';
+
+// メインコンポーネント
+export const LatteArtCard = memo<LatteArtCardProps>(({ work, index = 0, priority = false }) => {
+  const cardId = `latte-art-card-${work.id}`;
+  const linkHref = `/latte-art/${work.id}`;
+  
   return (
-    <motion.div 
-      className="group relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ 
-        y: -4,
-        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)'
+    <motion.article
+      id={cardId}
+      className={STYLES.card}
+      variants={CARD_VARIANTS}
+      initial="initial"
+      animate="animate"
+      whileHover="hover"
+      transition={{
+        ...CARD_TRANSITION,
+        delay: index * 0.1 // ステージングアニメーション
       }}
-      transition={{ 
-        type: 'spring',
-        stiffness: 300,
-        damping: 20
-      }}
+      role="article"
+      aria-labelledby={`${cardId}-title`}
     >
-      <Link href={`/latte-art/${work.id}`} className="block">
-        <div className="relative aspect-[3/4] overflow-hidden">
-          <Image
-            src={work.imageUrl}
-            alt={work.title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 400px) 50vw, 200px"
-          />
-          
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
-          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-              <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-            </div>
-          </div>
-        </div>
+      <Link 
+        href={linkHref} 
+        className="block focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-xl"
+        aria-describedby={work.comment ? `${cardId}-comment` : undefined}
+      >
+        <LatteArtImage work={work} priority={priority} />
         
-        {/* 作品情報 */}
-        <div className="p-3 space-y-2">
-          <h3 className="font-bold text-gray-900 text-sm line-clamp-1">
+        <div className={STYLES.content}>
+          <h3 id={`${cardId}-title`} className={STYLES.title} title={work.title}>
             {work.title}
           </h3>
           
-          <p className="text-xs text-gray-500">
+          <time className={STYLES.date} dateTime={work.createdAt}>
             {work.createdAt}
-          </p>
+          </time>
           
           {work.comment && (
-            <p className="text-xs text-gray-600 line-clamp-2">
+            <p id={`${cardId}-comment`} className={STYLES.comment} title={work.comment}>
               {work.comment}
             </p>
           )}
         </div>
       </Link>
-    </motion.div>
+    </motion.article>
   );
-};
+});
+
+LatteArtCard.displayName = 'LatteArtCard';
 
 export default LatteArtCard;
