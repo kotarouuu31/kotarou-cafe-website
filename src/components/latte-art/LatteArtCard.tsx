@@ -6,6 +6,7 @@ import { LatteArtWork } from '@/types/latte-art';
 import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
 import { Eye } from 'lucide-react';
+import { getOptimizedImageUrl } from '@/lib/notion';
 
 // アニメーション設定を定数として分離
 const CARD_VARIANTS: Variants = {
@@ -45,29 +46,35 @@ interface LatteArtCardProps {
 }
 
 // 画像コンポーネントの分離
-const LatteArtImage = memo(({ work, priority = false }: { work: LatteArtWork; priority?: boolean }) => (
-  <div className={STYLES.imageContainer}>
-    <Image
-      src={work.imageUrl}
-      alt={`${work.title}のラテアート作品`}
-      fill
-      className={STYLES.image}
-      sizes="(max-width: 400px) 50vw, (max-width: 768px) 33vw, 200px"
-      priority={priority}
-      loading={priority ? 'eager' : 'lazy'}
-    />
+const LatteArtImage = memo(({ work, priority = false }: { work: LatteArtWork; priority?: boolean }) => {
+  // Notion画像URLを最適化
+  const optimizedImageUrl = getOptimizedImageUrl(work.imageUrl, 400, 533);
+  
+  return (
+    <div className={STYLES.imageContainer}>
+      <Image
+        src={optimizedImageUrl}
+        alt={`${work.title}のラテアート作品`}
+        fill
+        className={STYLES.image}
+        sizes="(max-width: 400px) 50vw, (max-width: 768px) 33vw, 200px"
+        priority={priority}
+        loading={priority ? 'eager' : 'lazy'}
+        unoptimized={optimizedImageUrl.startsWith('/api/image-proxy')}
+      />
     
-    {/* ホバーオーバーレイ */}
-    <div className={STYLES.overlay} aria-hidden="true" />
-    
-    {/* 表示アイコン */}
-    <div className={STYLES.viewIcon} aria-hidden="true">
-      <div className={STYLES.iconButton}>
-        <Eye className="w-4 h-4 text-gray-700" aria-hidden="true" />
+      {/* ホバーオーバーレイ */}
+      <div className={STYLES.overlay} aria-hidden="true" />
+      
+      {/* 表示アイコン */}
+      <div className={STYLES.viewIcon} aria-hidden="true">
+        <div className={STYLES.iconButton}>
+          <Eye className="w-4 h-4 text-gray-700" aria-hidden="true" />
+        </div>
       </div>
     </div>
-  </div>
-));
+  );
+});
 
 LatteArtImage.displayName = 'LatteArtImage';
 

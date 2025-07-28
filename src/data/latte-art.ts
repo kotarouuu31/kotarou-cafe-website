@@ -1,6 +1,63 @@
 import { LatteArtWork } from '../types/latte-art';
+import { fallbackLatteArtWorks } from '../lib/notion';
 
-// ラテアート作品データ（シンプル構成）
+// サーバーサイドAPIからラテアート作品データを取得
+export async function getLatteArtWorksData(): Promise<LatteArtWork[]> {
+  try {
+    const response = await fetch('/api/latte-art', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    
+    if (result.success && result.data && result.data.length > 0) {
+      // Notion APIからデータが取得できた場合
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return result.data.map((work: any) => ({
+        ...work,
+        comment: work.description || work.comment || '',
+        createdAt: formatDate(work.createdAt)
+      }));
+    }
+    
+    // データが取得できない場合はフォールバックデータを使用
+    return fallbackLatteArtWorks.map(work => ({
+      ...work,
+      comment: work.description || work.comment || '',
+      createdAt: formatDate(work.createdAt)
+    }));
+  } catch (err) {
+    console.error('Error loading latte art works from API:', err);
+    // エラー時はフォールバックデータを使用
+    return fallbackLatteArtWorks.map(work => ({
+      ...work,
+      comment: work.description || work.comment || '',
+      createdAt: formatDate(work.createdAt)
+    }));
+  }
+}
+
+// 日付フォーマット関数（"2025/07/10"形式に統一）
+function formatDate(dateString: string): string {
+  try {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
+  } catch {
+    return dateString; // フォーマットに失敗した場合は元の文字列を返す
+  }
+}
+
+// 後方互換性のため、静的データも保持（フォールバック用）
 export const latteArtWorks: LatteArtWork[] = [
   {
     id: '1',

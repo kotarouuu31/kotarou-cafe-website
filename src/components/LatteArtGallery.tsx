@@ -3,10 +3,32 @@
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { latteArtWorks } from '@/data/latte-art-simple';
+import { useEffect, useState } from 'react';
+import { getLatteArtWorksData } from '@/data/latte-art';
+import { LatteArtWork } from '@/types/latte-art';
 import { LatteArtCard } from './latte-art/LatteArtCard';
 
 const LatteArtGallery = () => {
+  const [latteArtWorks, setLatteArtWorks] = useState<LatteArtWork[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadLatteArtWorks = async () => {
+      try {
+        setLoading(true);
+        const works = await getLatteArtWorksData();
+        setLatteArtWorks(works);
+      } catch (err) {
+        console.error('Failed to load latte art works:', err);
+        setError('作品の読み込みに失敗しました');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadLatteArtWorks();
+  }, []);
   return (
     <div className="bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="max-w-[400px] mx-auto bg-white relative">
@@ -37,33 +59,69 @@ const LatteArtGallery = () => {
 
         {/* メインコンテンツ */}
         <main className="px-4 py-6 pb-24">
-          {/* 作品統計 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-8 text-center"
-          >
-            <div className="inline-flex items-center bg-primary/10 text-primary px-4 py-2 rounded-full">
-              <span className="text-sm font-medium">
-                {latteArtWorks.length}作品を展示中
-              </span>
-            </div>
-          </motion.div>
+          {/* ローディング状態 */}
+          {loading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-12"
+            >
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <p className="mt-4 text-sm text-gray-600">作品を読み込み中...</p>
+            </motion.div>
+          )}
 
-          {/* 作品ギャラリー（2列グリッド） */}
-          <div className="grid grid-cols-2 gap-3">
-            {latteArtWorks
-              .sort((a, b) => new Date(b.createdAt.replace(/\//g, '-')).getTime() - new Date(a.createdAt.replace(/\//g, '-')).getTime())
-              .map((work, index) => (
-                <LatteArtCard
-                  key={work.id}
-                  work={work}
-                  index={index}
-                  priority={index < 4} // 最初の4枚を優先読み込み
-                />
-              ))}
-          </div>
+          {/* エラー状態 */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-12"
+            >
+              <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+                <p className="text-red-600 text-sm">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="mt-4 px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary/90 transition-colors"
+                >
+                  再読み込み
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* 作品表示 */}
+          {!loading && !error && (
+            <>
+              {/* 作品統計 */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="mb-8 text-center"
+              >
+                <div className="inline-flex items-center bg-primary/10 text-primary px-4 py-2 rounded-full">
+                  <span className="text-sm font-medium">
+                    {latteArtWorks.length}作品を展示中
+                  </span>
+                </div>
+              </motion.div>
+
+              {/* 作品ギャラリー（2列グリッド） */}
+              <div className="grid grid-cols-2 gap-3">
+                {latteArtWorks
+                  .sort((a, b) => new Date(b.createdAt.replace(/\//g, '-')).getTime() - new Date(a.createdAt.replace(/\//g, '-')).getTime())
+                  .map((work, index) => (
+                    <LatteArtCard
+                      key={work.id}
+                      work={work}
+                      index={index}
+                      priority={index < 4} // 最初の4枚を優先読み込み
+                    />
+                  ))}
+              </div>
+            </>
+          )}
 
           {/* フッターメッセージ */}
           <motion.div
