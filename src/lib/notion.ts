@@ -55,20 +55,16 @@ export async function getLatteArtWorks(): Promise<LatteArtWork[]> {
         imageUrl = file.type === 'external' ? file.external.url : file.file.url;
       }
 
-      // タグの取得
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const tags = properties.タグ?.multi_select?.map((tag: Record<string, any>) => tag.name) || [];
-
       return {
         id: page.id as string,
-        title: properties.タイトル?.title?.[0]?.plain_text || 'Untitled',
+        title: properties.作品名?.title?.[0]?.plain_text || 'Untitled',
         description: properties.説明?.rich_text?.[0]?.plain_text || '',
         imageUrl,
         createdAt: properties.作成日?.date?.start || (page.created_time as string),
         isPublic: properties.公開状態?.select?.name === '公開',
-        artist: properties.アーティスト?.rich_text?.[0]?.plain_text || '',
-        difficulty: properties.難易度?.select?.name || '',
-        tags
+        artist: 'Kotarou', // 固定値
+        difficulty: properties.技法?.select?.name || '',
+        tags: [] // 空配列
       };
     });
 
