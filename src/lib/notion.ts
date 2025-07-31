@@ -44,34 +44,43 @@ export async function getLatteArtWorks(): Promise<LatteArtWork[]> {
     console.log('📊 Raw Response Results Count:', response.results.length);
     
     if (response.results.length > 0) {
-      const firstResult = response.results[0] as any;
-      console.log('📊 First result properties keys:', Object.keys(firstResult.properties));
-      console.log('📊 First result full properties:', JSON.stringify(firstResult.properties, null, 2));
+      const firstResult = response.results[0] as Record<string, unknown>;
+      const properties = (firstResult as { properties: Record<string, unknown> }).properties;
+      console.log('📊 First result properties keys:', Object.keys(properties));
+      console.log('📊 First result full properties:', JSON.stringify(properties, null, 2));
     }
 
     const latteArtWorks: LatteArtWork[] = response.results.map((page: Record<string, unknown>) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const properties = page.properties as Record<string, any>;
+      const properties = page.properties as Record<string, unknown>;
       
       console.log('🎨 Processing page ID:', page.id);
       console.log('🎨 Available properties:', Object.keys(properties));
       
       // 画像URLの取得
       let imageUrl = '/images/latte-art/default.jpg'; // デフォルト画像
-      if (properties.画像?.files && properties.画像.files.length > 0) {
-        const file = properties.画像.files[0];
-        imageUrl = file.type === 'external' ? file.external.url : file.file.url;
+      const typedProperties = properties as {
+        画像?: { files?: Array<{ type: string; external?: { url: string }; file?: { url: string } }> };
+        作品名?: { title?: Array<{ plain_text: string }> };
+        説明?: { rich_text?: Array<{ plain_text: string }> };
+        作成日?: { date?: { start: string } };
+        公開状態?: { select?: { name: string } };
+        技法?: { select?: { name: string } };
+      };
+      
+      if (typedProperties.画像?.files && typedProperties.画像.files.length > 0) {
+        const file = typedProperties.画像.files[0];
+        imageUrl = file.type === 'external' ? file.external?.url || imageUrl : file.file?.url || imageUrl;
       }
 
       const result = {
         id: page.id as string,
-        title: properties.作品名?.title?.[0]?.plain_text || 'Untitled',
-        description: properties.説明?.rich_text?.[0]?.plain_text || '',
+        title: typedProperties.作品名?.title?.[0]?.plain_text || 'Untitled',
+        description: typedProperties.説明?.rich_text?.[0]?.plain_text || '',
         imageUrl,
-        createdAt: properties.作成日?.date?.start || (page.created_time as string),
-        isPublic: properties.公開状態?.select?.name === '公開',
+        createdAt: typedProperties.作成日?.date?.start || (page.created_time as string),
+        isPublic: typedProperties.公開状態?.select?.name === '公開',
         artist: 'Kotarou', // 固定値
-        difficulty: properties.技法?.select?.name || '',
+        difficulty: typedProperties.技法?.select?.name || '',
         tags: [] // 空配列
       };
       
