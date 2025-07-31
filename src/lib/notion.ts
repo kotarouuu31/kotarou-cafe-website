@@ -56,7 +56,7 @@ async function getLatteArtWorksFromPage(pageId: string): Promise<LatteArtWork[]>
     
     // データベースブロックを検索
     const databaseBlock = response.results.find(
-      (block: any) => block.type === 'child_database'
+      (block) => (block as { type?: string }).type === 'child_database'
     );
 
     if (!databaseBlock) {
