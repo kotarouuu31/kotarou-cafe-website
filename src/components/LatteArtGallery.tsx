@@ -4,8 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { getLatteArtWorksData } from '@/data/latte-art';
-import { LatteArtWork } from '@/types/latte-art';
+import { getLatteArtWorks, fallbackLatteArtWorks, LatteArtWork } from '@/lib/notion';
 import { LatteArtCard } from './latte-art/LatteArtCard';
 
 const LatteArtGallery = () => {
@@ -13,15 +12,69 @@ const LatteArtGallery = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // 日付フォーマット関数（"2025/07/10"形式に統一）
+  const formatDate = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}/${month}/${day}`;
+    } catch {
+      return dateString; // フォーマットに失敗した場合は元の文字列を返す
+    }
+  };
+
   useEffect(() => {
     const loadLatteArtWorks = async () => {
       try {
         setLoading(true);
-        const works = await getLatteArtWorksData();
-        setLatteArtWorks(works);
+        setError(null);
+        
+        // Notion APIからデータを取得
+        const works = await getLatteArtWorks();
+        
+        if (works && works.length > 0) {
+          // 既存のcommentフィールドとの互換性を保つため、descriptionをcommentにマッピング
+          const mappedWorks = works.map(work => ({
+            ...work,
+            comment: work.description || work.comment || '',
+            createdAt: formatDate(work.createdAt)
+          }));
+          setLatteArtWorks(mappedWorks);
+        } else {
+          // Notion APIからデータが取得できない場合はフォールバックデータを使用
+          const mappedFallback = fallbackLatteArtWorks.map(work => ({
+            ...work,
+            comment: work.description || work.comment || '',
+            createdAt: formatDate(work.createdAt)
+          }));
+          setLatteArtWorks(mappedFallback);
+          setError('Notionからデータを取得できませんでした。フォールバックデータを表示しています。');
+        }
       } catch (err) {
-        console.error('Failed to load latte art works:', err);
-        setError('作品の読み込みに失敗しました');
+        console.error('Failed to load latte art works from Notion:', err);
+        
+        // エラー時はフォールバックデータを使用
+        const mappedFallback = fallbackLatteArtWorks.map(work => ({
+          ...work,
+          comment: work.description || work.comment || '',
+          createdAt: formatDate(work.createdAt)
+        }));
+        setLatteArtWorks(mappedFallback);
+        
+        // エラーメッセージを詳細化
+        if (err instanceof Error) {
+          if (err.message.includes('NOTION_API_KEY')) {
+            setError('Notion APIキーが設定されていません。環境変数を確認してください。');
+          } else if (err.message.includes('NOTION_LATTE_ART_DATABASE_ID')) {
+            setError('NotionデータベースIDが設定されていません。環境変数を確認してください。');
+          } else {
+            setError(`Notion API接続エラー: ${err.message}`);
+          }
+        } else {
+          setError('作品の読み込みに失敗しました。フォールバックデータを表示しています。');
+        }
       } finally {
         setLoading(false);
       }
