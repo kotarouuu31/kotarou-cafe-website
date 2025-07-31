@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { getLatteArtWorks, fallbackLatteArtWorks, LatteArtWork } from '@/lib/notion';
+import { LatteArtWork } from '@/types/latte-art';
 import { LatteArtCard } from './latte-art/LatteArtCard';
 
 const LatteArtGallery = () => {
@@ -31,47 +31,95 @@ const LatteArtGallery = () => {
         setLoading(true);
         setError(null);
         
-        // Notion APIからデータを取得
-        const works = await getLatteArtWorks();
+        // サーバーサイドAPIからデータを取得
+        const response = await fetch('/api/latte-art', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
         
-        if (works && works.length > 0) {
-          // 既存のcommentフィールドとの互換性を保つため、descriptionをcommentにマッピング
-          const mappedWorks = works.map(work => ({
+        if (result.success && result.data && result.data.length > 0) {
+          // Notion APIからデータが取得できた場合
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const mappedWorks = result.data.map((work: any) => ({
             ...work,
             comment: work.description || work.comment || '',
             createdAt: formatDate(work.createdAt)
           }));
           setLatteArtWorks(mappedWorks);
         } else {
-          // Notion APIからデータが取得できない場合はフォールバックデータを使用
-          const mappedFallback = fallbackLatteArtWorks.map(work => ({
-            ...work,
-            comment: work.description || work.comment || '',
-            createdAt: formatDate(work.createdAt)
-          }));
-          setLatteArtWorks(mappedFallback);
+          // データが取得できない場合はフォールバックデータを使用
+          const fallbackData = [
+            {
+              id: 'fallback-1',
+              title: 'Classic Rosetta',
+              description: 'シンプルで美しいロゼッタパターン',
+              comment: 'シンプルで美しいロゼッタパターン',
+              imageUrl: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=533&fit=crop',
+              createdAt: '2024/01/01',
+              isPublic: true,
+              artist: 'Kotarou',
+              difficulty: '中級',
+              tags: []
+            },
+            {
+              id: 'fallback-2',
+              title: 'Heart Latte',
+              description: '愛を込めたハートのラテアート',
+              comment: '愛を込めたハートのラテアート',
+              imageUrl: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=533&fit=crop',
+              createdAt: '2024/01/02',
+              isPublic: true,
+              artist: 'Kotarou',
+              difficulty: '初級',
+              tags: []
+            }
+          ];
+          setLatteArtWorks(fallbackData);
           setError('Notionからデータを取得できませんでした。フォールバックデータを表示しています。');
         }
       } catch (err) {
-        console.error('Failed to load latte art works from Notion:', err);
+        console.error('Failed to load latte art works from API:', err);
         
         // エラー時はフォールバックデータを使用
-        const mappedFallback = fallbackLatteArtWorks.map(work => ({
-          ...work,
-          comment: work.description || work.comment || '',
-          createdAt: formatDate(work.createdAt)
-        }));
-        setLatteArtWorks(mappedFallback);
+        const fallbackData = [
+          {
+            id: 'fallback-1',
+            title: 'Classic Rosetta',
+            description: 'シンプルで美しいロゼッタパターン',
+            comment: 'シンプルで美しいロゼッタパターン',
+            imageUrl: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=533&fit=crop',
+            createdAt: '2024/01/01',
+            isPublic: true,
+            artist: 'Kotarou',
+            difficulty: '中級',
+            tags: []
+          },
+          {
+            id: 'fallback-2',
+            title: 'Heart Latte',
+            description: '愛を込めたハートのラテアート',
+            comment: '愛を込めたハートのラテアート',
+            imageUrl: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=533&fit=crop',
+            createdAt: '2024/01/02',
+            isPublic: true,
+            artist: 'Kotarou',
+            difficulty: '初級',
+            tags: []
+          }
+        ];
+        setLatteArtWorks(fallbackData);
         
         // エラーメッセージを詳細化
         if (err instanceof Error) {
-          if (err.message.includes('NOTION_API_KEY')) {
-            setError('Notion APIキーが設定されていません。環境変数を確認してください。');
-          } else if (err.message.includes('NOTION_LATTE_ART_DATABASE_ID')) {
-            setError('NotionデータベースIDが設定されていません。環境変数を確認してください。');
-          } else {
-            setError(`Notion API接続エラー: ${err.message}`);
-          }
+          setError(`API接続エラー: ${err.message}`);
         } else {
           setError('作品の読み込みに失敗しました。フォールバックデータを表示しています。');
         }

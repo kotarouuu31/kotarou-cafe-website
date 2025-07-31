@@ -28,14 +28,11 @@ export async function getLatteArtWorks(): Promise<LatteArtWork[]> {
       throw new Error('NOTION_LATTE_ART_DATABASE_ID is not defined');
     }
 
+    console.log('🔍 Database ID:', databaseId);
+
     const response = await notion.databases.query({
       database_id: databaseId,
-      filter: {
-        property: '公開状態',
-        select: {
-          equals: '公開'
-        }
-      },
+      // フィルターを一時的に無効化してテスト
       sorts: [
         {
           property: '作成日',
@@ -44,9 +41,20 @@ export async function getLatteArtWorks(): Promise<LatteArtWork[]> {
       ]
     });
 
+    console.log('📊 Raw Response Results Count:', response.results.length);
+    
+    if (response.results.length > 0) {
+      const firstResult = response.results[0] as any;
+      console.log('📊 First result properties keys:', Object.keys(firstResult.properties));
+      console.log('📊 First result full properties:', JSON.stringify(firstResult.properties, null, 2));
+    }
+
     const latteArtWorks: LatteArtWork[] = response.results.map((page: Record<string, unknown>) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const properties = page.properties as Record<string, any>;
+      
+      console.log('🎨 Processing page ID:', page.id);
+      console.log('🎨 Available properties:', Object.keys(properties));
       
       // 画像URLの取得
       let imageUrl = '/images/latte-art/default.jpg'; // デフォルト画像
@@ -55,7 +63,7 @@ export async function getLatteArtWorks(): Promise<LatteArtWork[]> {
         imageUrl = file.type === 'external' ? file.external.url : file.file.url;
       }
 
-      return {
+      const result = {
         id: page.id as string,
         title: properties.作品名?.title?.[0]?.plain_text || 'Untitled',
         description: properties.説明?.rich_text?.[0]?.plain_text || '',
@@ -66,11 +74,15 @@ export async function getLatteArtWorks(): Promise<LatteArtWork[]> {
         difficulty: properties.技法?.select?.name || '',
         tags: [] // 空配列
       };
+      
+      console.log('🎨 Mapped result:', result);
+      return result;
     });
 
+    console.log('✅ Final mapped works count:', latteArtWorks.length);
     return latteArtWorks;
   } catch (error) {
-    console.error('Error fetching latte art works from Notion:', error);
+    console.error('❌ Error fetching latte art works from Notion:', error);
     // エラー時はフォールバック用の空配列を返す
     return [];
   }
