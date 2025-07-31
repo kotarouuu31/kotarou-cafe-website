@@ -19,16 +19,64 @@ export interface LatteArtWork {
   tags?: string[];
 }
 
-// Notionデータベースからラテアート作品を取得
+// Notionデータベースからラテアート作品を取得（2025年API対応：親ページ経由）
 export async function getLatteArtWorks(): Promise<LatteArtWork[]> {
   try {
+    // 2025年Notion APIでは親ページIDを使用
+    const pageId = process.env.NOTION_PAGE_ID;
     const databaseId = process.env.NOTION_LATTE_ART_DATABASE_ID;
     
-    if (!databaseId) {
-      throw new Error('NOTION_LATTE_ART_DATABASE_ID is not defined');
+    if (!pageId && !databaseId) {
+      throw new Error('NOTION_PAGE_ID or NOTION_LATTE_ART_DATABASE_ID is not defined');
     }
 
-    console.log('🔍 Database ID:', databaseId);
+    // 親ページIDが設定されている場合は、親ページ経由でデータベースを検索
+    if (pageId) {
+      console.log('🔍 Using Parent Page ID:', pageId);
+      return await getLatteArtWorksFromPage(pageId);
+    } else {
+      console.log('🔍 Using Database ID (legacy):', databaseId);
+      return await getLatteArtWorksFromDatabase(databaseId!);
+    }
+  } catch (error) {
+    console.error('❌ Error fetching latte art works from Notion:', error);
+    return [];
+  }
+}
+
+// 親ページ経由でデータベースにアクセス（2025年API対応）
+async function getLatteArtWorksFromPage(pageId: string): Promise<LatteArtWork[]> {
+  try {
+    // 親ページの子要素（データベース）を検索
+    const response = await notion.blocks.children.list({
+      block_id: pageId,
+    });
+
+    console.log('📊 Parent page children:', response.results.length);
+    
+    // データベースブロックを検索
+    const databaseBlock = response.results.find(
+      (block: any) => block.type === 'child_database'
+    );
+
+    if (!databaseBlock) {
+      console.log('❌ No database found in parent page');
+      return [];
+    }
+
+    const databaseId = databaseBlock.id;
+    console.log('🔍 Found database ID from parent page:', databaseId);
+    
+    return await getLatteArtWorksFromDatabase(databaseId);
+  } catch (error) {
+    console.error('❌ Error accessing parent page:', error);
+    return [];
+  }
+}
+
+// データベースから直接データを取得（共通関数）
+async function getLatteArtWorksFromDatabase(databaseId: string): Promise<LatteArtWork[]> {
+  try {
 
     const response = await notion.databases.query({
       database_id: databaseId,
