@@ -19,6 +19,24 @@ async function fetchMenu(): Promise<MenuData[]> {
   }
 }
 
+// Notionカテゴリを表示用カテゴリにマッピング
+function mapNotionCategoryToDisplayCategory(notionCategory: string): string {
+  const drinkCategories = ['Hot Coffee', 'Iced Coffee', 'Espresso', 'Tea', 'Cold Drinks', 'Alcohol'];
+  
+  if (drinkCategories.includes(notionCategory)) {
+    return 'drinks';
+  }
+  
+  switch (notionCategory) {
+    case 'Food':
+      return 'food';
+    case 'Dessert':
+      return 'desserts';
+    default:
+      return 'other';
+  }
+}
+
 const MenuGallery = () => {
   const [activeTab, setActiveTab] = useState<string>('all');
   const [menuItems, setMenuItems] = useState<MenuData[]>([]);
@@ -41,17 +59,30 @@ const MenuGallery = () => {
     loadMenu();
   }, []);
 
-  // カテゴリ別にメニューアイテムを取得する関数
-  const getMenuByCategory = (category: string) => {
-    return menuItems.filter(item => item.category?.toLowerCase() === category.toLowerCase());
-  };
-
   // タブ定義
   const tabs = [
     { id: 'all', label: 'All', count: menuItems.length },
-    { id: 'drinks', label: 'Drinks', count: getMenuByCategory('coffee').length + getMenuByCategory('drinks').length + getMenuByCategory('beverage').length },
-    { id: 'desserts', label: 'Dessert', count: getMenuByCategory('dessert').length + getMenuByCategory('desserts').length },
-    { id: 'food', label: 'Food', count: getMenuByCategory('food').length + getMenuByCategory('main').length },
+    { 
+      id: 'drinks', 
+      label: 'Drinks', 
+      count: menuItems.filter(item => 
+        mapNotionCategoryToDisplayCategory(item.category) === 'drinks'
+      ).length 
+    },
+    { 
+      id: 'desserts', 
+      label: 'Dessert', 
+      count: menuItems.filter(item => 
+        mapNotionCategoryToDisplayCategory(item.category) === 'desserts'
+      ).length 
+    },
+    { 
+      id: 'food', 
+      label: 'Food', 
+      count: menuItems.filter(item => 
+        mapNotionCategoryToDisplayCategory(item.category) === 'food'
+      ).length 
+    },
   ];
 
   // メニューアイテムが利用可能かどうかを判定する関数
@@ -64,24 +95,10 @@ const MenuGallery = () => {
     if (activeTab === 'all') {
       return menuItems.filter(item => isItemAvailable(item));
     }
-    if (activeTab === 'drinks') {
-      // コーヒーとドリンクを統合して表示（コーヒー系を先に表示）
-      const coffeeItems = getMenuByCategory('coffee');
-      const drinkItems = getMenuByCategory('drinks');
-      const beverageItems = getMenuByCategory('beverage');
-      return [...coffeeItems, ...drinkItems, ...beverageItems].filter(item => isItemAvailable(item));
-    }
-    if (activeTab === 'desserts') {
-      const dessertItems = getMenuByCategory('dessert');
-      const dessertsItems = getMenuByCategory('desserts');
-      return [...dessertItems, ...dessertsItems].filter(item => isItemAvailable(item));
-    }
-    if (activeTab === 'food') {
-      const foodItems = getMenuByCategory('food');
-      const mainItems = getMenuByCategory('main');
-      return [...foodItems, ...mainItems].filter(item => isItemAvailable(item));
-    }
-    return getMenuByCategory(activeTab).filter(item => isItemAvailable(item));
+    
+    return menuItems.filter(item => 
+      mapNotionCategoryToDisplayCategory(item.category) === activeTab && isItemAvailable(item)
+    );
   };
 
   return (
