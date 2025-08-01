@@ -5,13 +5,38 @@ import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { events } from '@/data/events';
-import { getNewsByCategory } from '@/data/news';
+import { EventData, NewsData } from '@/lib/notion';
 import { EventCard } from './EventCard';
+
+// API呼び出し関数
+async function fetchEvents(): Promise<EventData[]> {
+  try {
+    const response = await fetch('/api/events');
+    const data = await response.json();
+    return data.success ? data.data : [];
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    return [];
+  }
+}
+
+async function fetchNews(): Promise<NewsData[]> {
+  try {
+    const response = await fetch('/api/news');
+    const data = await response.json();
+    return data.success ? data.data : [];
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    return [];
+  }
+}
 
 const EventsNewsGallery = () => {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<'events' | 'news'>('events');
+  const [events, setEvents] = useState<EventData[]>([]);
+  const [news, setNews] = useState<NewsData[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // URLクエリパラメータからタブを設定
   useEffect(() => {
@@ -21,13 +46,36 @@ const EventsNewsGallery = () => {
     }
   }, [searchParams]);
 
+  // データ取得
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const [eventsData, newsData] = await Promise.all([
+          fetchEvents(),
+          fetchNews()
+        ]);
+        setEvents(eventsData);
+        setNews(newsData);
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
   // イベントを日付順でソート（最新順）
   const sortedEvents = [...events]
-    .filter(event => event.type !== 'closed') // 休業日は除外
-    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+    .filter(event => event.isPublic) // 公開設定のもののみ
+    .sort((a, b) => new Date(a.eventDate || '').getTime() - new Date(b.eventDate || '').getTime());
 
   // ニュースを取得（全て）
-  const allNews = getNewsByCategory();
+  const allNews = [...news]
+    .filter(newsItem => newsItem.publishStatus === '公開')
+    .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0) || new Date(b.publishDate || '').getTime() - new Date(a.publishDate || '').getTime());
 
   const tabs = [
     { id: 'events', label: 'Events', count: sortedEvents.length },
@@ -85,6 +133,12 @@ const EventsNewsGallery = () => {
 
         {/* メインコンテンツ */}
         <main className="px-4 py-6 pb-24">
+          {/* ローディング状態 */}
+          {loading && (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          )}
           {/* 現在の表示情報 */}
           <motion.div
             key={`info-${activeTab}`}
@@ -104,7 +158,7 @@ const EventsNewsGallery = () => {
           </motion.div>
 
           {/* イベントタブコンテンツ */}
-          {activeTab === 'events' && (
+          {!loading && activeTab === 'events' && (
             <motion.div
               key="content-events"
               initial={{ opacity: 0, y: 20 }}
@@ -112,18 +166,52 @@ const EventsNewsGallery = () => {
               transition={{ duration: 0.4 }}
               className="space-y-4"
             >
-              {sortedEvents.map((event, index) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  index={index}
-                />
-              ))}
+              {sortedEvents.length > 0 ? (
+                sortedEvents.map((event, index) => (
+                  <motion.div
+                    key={event.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                    className="bg-white rounded-xl border border-gray-100 p-4 hover:shadow-md transition-all duration-300"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
+                        {new Date(event.eventDate || '').toLocaleDateString('ja-JP', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit'
+                        }).replace(/\//g, '/')}
+                      </span>
+                      <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
+                        {event.genre || 'イベント'}
+                      </span>
+                    </div>
+                    
+                    <h3 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2">
+                      {event.eventName}
+                    </h3>
+                    
+                    <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed mb-2">
+                      {event.description}
+                    </p>
+                    
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <span>{event.startTime} - {event.endTime}</span>
+                      <span>{event.djArtist}</span>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-500">現在、公開中のイベントはありません</p>
+                </div>
+              )}
             </motion.div>
           )}
 
           {/* ニュースタブコンテンツ */}
-          {activeTab === 'news' && (
+          {!loading && activeTab === 'news' && (
             <motion.div
               key="content-news"
               initial={{ opacity: 0, y: 20 }}
@@ -131,36 +219,52 @@ const EventsNewsGallery = () => {
               transition={{ duration: 0.4 }}
               className="space-y-3"
             >
-              {allNews.map((news, index) => (
-                <motion.div
-                  key={news.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className="bg-white rounded-xl border border-gray-100 p-4 hover:shadow-md transition-all duration-300"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
-                      {new Date(news.date).toLocaleDateString('ja-JP', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                      }).replace(/\//g, '/')}
-                    </span>
-                    <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
-                      {news.category}
-                    </span>
-                  </div>
-                  
-                  <h3 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2">
-                    {news.title}
-                  </h3>
-                  
-                  <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">
-                    {news.summary}
-                  </p>
-                </motion.div>
-              ))}
+              {allNews.length > 0 ? (
+                allNews.map((newsItem, index) => (
+                  <motion.div
+                    key={newsItem.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                    className="bg-white rounded-xl border border-gray-100 p-4 hover:shadow-md transition-all duration-300"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
+                        {new Date(newsItem.publishDate || '').toLocaleDateString('ja-JP', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit'
+                        }).replace(/\//g, '/')}
+                      </span>
+                      <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
+                        {newsItem.category}
+                      </span>
+                    </div>
+                    
+                    <h3 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2">
+                      {newsItem.title}
+                    </h3>
+                    
+                    <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">
+                      {newsItem.content || 'コンテンツがありません'}
+                    </p>
+                    
+                    {newsItem.tags && newsItem.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {newsItem.tags.map((tag, tagIndex) => (
+                          <span key={tagIndex} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                ))
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-500">現在、公開中のニュースはありません</p>
+                </div>
+              )}
             </motion.div>
           )}
 
