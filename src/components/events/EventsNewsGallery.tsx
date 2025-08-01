@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { EventData, NewsData } from '@/lib/notion';
-import { EventCard } from './EventCard';
 
 // API呼び出し関数
 async function fetchEvents(): Promise<EventData[]> {
