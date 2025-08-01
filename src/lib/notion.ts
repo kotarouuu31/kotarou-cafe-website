@@ -19,6 +19,38 @@ export interface LatteArtWork {
   tags?: string[];
 }
 
+// イベント管理の型定義
+export interface EventData {
+  id: string;
+  eventName: string;
+  eventDate: string;
+  startTime: string;
+  endTime: string;
+  genre: string;
+  djArtist: string;
+  price: number;
+  description: string;
+  eventImage: string;
+  status: string;
+  isPublic: boolean;
+  createdAt: string;
+}
+
+// ニュース管理の型定義
+export interface NewsData {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  publishDate: string;
+  tags: string[];
+  thumbnailImage: string;
+  publishStatus: string;
+  displayOrder: number;
+  relatedEvents: string[];
+  createdAt: string;
+}
+
 // Notionデータベースからラテアート作品を取得（2025年API対応：親ページ経由）
 export async function getLatteArtWorks(): Promise<LatteArtWork[]> {
   try {
@@ -197,3 +229,129 @@ export const fallbackLatteArtWorks: LatteArtWork[] = [
     tags: ['ハート', 'ベーシック']
   }
 ];
+
+// イベントデータ取得関数
+export async function getEvents(): Promise<EventData[]> {
+  try {
+    const databaseId = process.env.NOTION_EVENTS_DATABASE_ID;
+    
+    if (!databaseId) {
+      throw new Error('NOTION_EVENTS_DATABASE_ID is not defined');
+    }
+
+    const response = await notion.databases.query({
+      database_id: databaseId,
+      filter: {
+        property: '公開設定',
+        checkbox: {
+          equals: true
+        }
+      },
+      sorts: [
+        {
+          property: '開催日時',
+          direction: 'ascending'
+        }
+      ]
+    });
+
+    return response.results.map((page: Record<string, unknown>) => {
+      const typedProperties = (page as { properties: Record<string, unknown> }).properties as {
+        'イベント名'?: { title?: Array<{ plain_text: string }> };
+        '開催日時'?: { date?: { start: string } };
+        '開始時間'?: { rich_text?: Array<{ plain_text: string }> };
+        '終了時間'?: { rich_text?: Array<{ plain_text: string }> };
+        'ジャンル'?: { select?: { name: string } };
+        'DJ/アーティスト'?: { rich_text?: Array<{ plain_text: string }> };
+        '料金'?: { number?: number };
+        '詳細説明'?: { rich_text?: Array<{ plain_text: string }> };
+        'イベント画像'?: { files?: Array<{ file?: { url: string }; external?: { url: string } }> };
+        'ステータス'?: { select?: { name: string } };
+        '公開設定'?: { checkbox?: boolean };
+        '作成日'?: { created_time?: string };
+      };
+      
+      return {
+        id: page.id as string,
+        eventName: typedProperties['イベント名']?.title?.[0]?.plain_text || '',
+        eventDate: typedProperties['開催日時']?.date?.start || '',
+        startTime: typedProperties['開始時間']?.rich_text?.[0]?.plain_text || '',
+        endTime: typedProperties['終了時間']?.rich_text?.[0]?.plain_text || '',
+        genre: typedProperties['ジャンル']?.select?.name || '',
+        djArtist: typedProperties['DJ/アーティスト']?.rich_text?.[0]?.plain_text || '',
+        price: typedProperties['料金']?.number || 0,
+        description: typedProperties['詳細説明']?.rich_text?.[0]?.plain_text || '',
+        eventImage: typedProperties['イベント画像']?.files?.[0]?.file?.url || typedProperties['イベント画像']?.files?.[0]?.external?.url || '',
+        status: typedProperties['ステータス']?.select?.name || '',
+        isPublic: typedProperties['公開設定']?.checkbox || false,
+        createdAt: typedProperties['作成日']?.created_time || (page.created_time as string)
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    return [];
+  }
+}
+
+// ニュースデータ取得関数
+export async function getNews(): Promise<NewsData[]> {
+  try {
+    const databaseId = process.env.NOTION_NEWS_DATABASE_ID;
+    
+    if (!databaseId) {
+      throw new Error('NOTION_NEWS_DATABASE_ID is not defined');
+    }
+
+    const response = await notion.databases.query({
+      database_id: databaseId,
+      filter: {
+        property: '公開ステータス',
+        select: {
+          equals: '公開'
+        }
+      },
+      sorts: [
+        {
+          property: '表示順序',
+          direction: 'ascending'
+        },
+        {
+          property: '公開日',
+          direction: 'descending'
+        }
+      ]
+    });
+
+    return response.results.map((page: Record<string, unknown>) => {
+      const typedProperties = (page as { properties: Record<string, unknown> }).properties as {
+        'タイトル'?: { title?: Array<{ plain_text: string }> };
+        '内容'?: { rich_text?: Array<{ plain_text: string }> };
+        'カテゴリ'?: { select?: { name: string } };
+        '公開日'?: { date?: { start: string } };
+        'タグ'?: { multi_select?: Array<{ name: string }> };
+        'アイキャッチ画像'?: { files?: Array<{ file?: { url: string }; external?: { url: string } }> };
+        '公開ステータス'?: { select?: { name: string } };
+        '表示順序'?: { number?: number };
+        '関連イベント'?: { relation?: Array<{ id: string }> };
+        '作成日'?: { created_time?: string };
+      };
+      
+      return {
+        id: page.id as string,
+        title: typedProperties['タイトル']?.title?.[0]?.plain_text || '',
+        content: typedProperties['内容']?.rich_text?.[0]?.plain_text || '',
+        category: typedProperties['カテゴリ']?.select?.name || '',
+        publishDate: typedProperties['公開日']?.date?.start || '',
+        tags: typedProperties['タグ']?.multi_select?.map((tag) => tag.name) || [],
+        thumbnailImage: typedProperties['アイキャッチ画像']?.files?.[0]?.file?.url || typedProperties['アイキャッチ画像']?.files?.[0]?.external?.url || '',
+        publishStatus: typedProperties['公開ステータス']?.select?.name || '',
+        displayOrder: typedProperties['表示順序']?.number || 0,
+        relatedEvents: typedProperties['関連イベント']?.relation?.map((rel) => rel.id) || [],
+        createdAt: typedProperties['作成日']?.created_time || (page.created_time as string)
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    return [];
+  }
+}
