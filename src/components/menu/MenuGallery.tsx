@@ -1,35 +1,87 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { menuItems, getMenuByCategory } from '@/data/menu-simple';
+import { MenuData } from '@/lib/notion';
 import { MenuCard } from './MenuCard';
+
+// API呼び出し関数
+async function fetchMenu(): Promise<MenuData[]> {
+  try {
+    const response = await fetch('/api/menu');
+    const data = await response.json();
+    return data.success ? data.data : [];
+  } catch (error) {
+    console.error('Error fetching menu:', error);
+    return [];
+  }
+}
 
 const MenuGallery = () => {
   const [activeTab, setActiveTab] = useState<string>('all');
+  const [menuItems, setMenuItems] = useState<MenuData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // データ取得
+  useEffect(() => {
+    const loadMenu = async () => {
+      setLoading(true);
+      try {
+        const menuData = await fetchMenu();
+        setMenuItems(menuData);
+      } catch (error) {
+        console.error('Error loading menu:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMenu();
+  }, []);
+
+  // カテゴリ別にメニューアイテムを取得する関数
+  const getMenuByCategory = (category: string) => {
+    return menuItems.filter(item => item.category?.toLowerCase() === category.toLowerCase());
+  };
 
   // タブ定義
   const tabs = [
     { id: 'all', label: 'All', count: menuItems.length },
-    { id: 'drinks', label: 'Drinks', count: getMenuByCategory('coffee').length + getMenuByCategory('drinks').length },
-    { id: 'desserts', label: 'Dessert', count: getMenuByCategory('desserts').length },
-    { id: 'food', label: 'Food', count: getMenuByCategory('food').length },
+    { id: 'drinks', label: 'Drinks', count: getMenuByCategory('coffee').length + getMenuByCategory('drinks').length + getMenuByCategory('beverage').length },
+    { id: 'desserts', label: 'Dessert', count: getMenuByCategory('dessert').length + getMenuByCategory('desserts').length },
+    { id: 'food', label: 'Food', count: getMenuByCategory('food').length + getMenuByCategory('main').length },
   ];
+
+  // メニューアイテムが利用可能かどうかを判定する関数
+  const isItemAvailable = (item: MenuData) => {
+    return item.isPublic && item.stockStatus !== '売り切れ' && item.stockStatus !== '品切れ';
+  };
 
   // 表示するメニューアイテムを取得
   const getDisplayItems = () => {
     if (activeTab === 'all') {
-      return menuItems;
+      return menuItems.filter(item => isItemAvailable(item));
     }
     if (activeTab === 'drinks') {
       // コーヒーとドリンクを統合して表示（コーヒー系を先に表示）
       const coffeeItems = getMenuByCategory('coffee');
       const drinkItems = getMenuByCategory('drinks');
-      return [...coffeeItems, ...drinkItems];
+      const beverageItems = getMenuByCategory('beverage');
+      return [...coffeeItems, ...drinkItems, ...beverageItems].filter(item => isItemAvailable(item));
     }
-    return getMenuByCategory(activeTab);
+    if (activeTab === 'desserts') {
+      const dessertItems = getMenuByCategory('dessert');
+      const dessertsItems = getMenuByCategory('desserts');
+      return [...dessertItems, ...dessertsItems].filter(item => isItemAvailable(item));
+    }
+    if (activeTab === 'food') {
+      const foodItems = getMenuByCategory('food');
+      const mainItems = getMenuByCategory('main');
+      return [...foodItems, ...mainItems].filter(item => isItemAvailable(item));
+    }
+    return getMenuByCategory(activeTab).filter(item => isItemAvailable(item));
   };
 
   return (
@@ -83,36 +135,60 @@ const MenuGallery = () => {
 
         {/* メインコンテンツ */}
         <main className="px-3 py-6 pb-24">
-          {/* 現在の表示情報 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-8 text-center"
-          >
-            <div className="inline-flex items-center bg-primary/10 text-primary px-4 py-2 rounded-full">
-              <span className="text-sm font-medium">
-                {getDisplayItems().length}種類のメニューを表示中
-              </span>
-            </div>
-          </motion.div>
+          {loading ? (
+            /* ローディング状態 */
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center py-12"
+            >
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+              <p className="text-sm text-gray-600">メニューを読み込み中...</p>
+            </motion.div>
+          ) : menuItems.length === 0 ? (
+            /* 空状態 */
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-12"
+            >
+              <p className="text-gray-600 mb-2">メニューデータがありません</p>
+              <p className="text-sm text-gray-500">しばらくしてから再度お試しください</p>
+            </motion.div>
+          ) : (
+            <>
+              {/* 現在の表示情報 */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="mb-8 text-center"
+              >
+                <div className="inline-flex items-center bg-primary/10 text-primary px-4 py-2 rounded-full">
+                  <span className="text-sm font-medium">
+                    {getDisplayItems().length}種類のメニューを表示中
+                  </span>
+                </div>
+              </motion.div>
 
-          {/* メニューアイテム表示 */}
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="grid grid-cols-3 gap-2"
-          >
-            {getDisplayItems().map((item, index) => (
-              <MenuCard
-                key={item.id}
-                item={item}
-                index={index}
-              />
-            ))}
-          </motion.div>
+              {/* メニューアイテム表示 */}
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="grid grid-cols-3 gap-2"
+              >
+                {getDisplayItems().map((item, index) => (
+                  <MenuCard
+                    key={item.id}
+                    item={item}
+                    index={index}
+                  />
+                ))}
+              </motion.div>
+            </>
+          )}
 
           {/* フッターメッセージ */}
           <motion.div

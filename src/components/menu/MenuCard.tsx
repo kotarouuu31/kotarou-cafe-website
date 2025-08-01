@@ -2,10 +2,10 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { MenuItem } from '@/data/menu-simple';
+import { MenuData } from '@/lib/notion';
 
 interface MenuCardProps {
-  item: MenuItem;
+  item: MenuData;
   index: number;
 }
 
@@ -22,8 +22,8 @@ export const MenuCard = ({ item, index }: MenuCardProps) => {
       {/* 商品画像 */}
       <div className="relative aspect-square w-full overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
         <Image
-          src={item.imageUrl}
-          alt={item.name}
+          src={item.menuImage || '/images/menu/default.jpg'}
+          alt={item.menuName}
           fill
           className="object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-105"
           sizes="(max-width: 400px) 33vw, 130px"
@@ -35,7 +35,7 @@ export const MenuCard = ({ item, index }: MenuCardProps) => {
       {/* 商品情報 */}
       <div className="p-2.5 space-y-1.5">
         <h3 className="font-bold text-gray-900 text-xs leading-tight line-clamp-2 group-hover:text-primary transition-colors duration-300">
-          {item.name}
+          {item.menuName}
         </h3>
         
         <div className="flex items-center justify-center">
