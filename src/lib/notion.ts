@@ -51,6 +51,23 @@ export interface NewsData {
   createdAt: string;
 }
 
+// メニュー管理の型定義
+export interface MenuData {
+  id: string;
+  menuName: string;
+  category: string;
+  price: number;
+  description: string;
+  menuImage: string;
+  stockStatus: string;
+  isSeasonalLimited: boolean;
+  isRecommended: boolean;
+  allergyInfo: string[];
+  displayOrder: number;
+  isPublic: boolean;
+  createdAt: string;
+}
+
 // Notionデータベースからラテアート作品を取得（2025年API対応：親ページ経由）
 export async function getLatteArtWorks(): Promise<LatteArtWork[]> {
   try {
@@ -352,6 +369,73 @@ export async function getNews(): Promise<NewsData[]> {
     });
   } catch (error) {
     console.error('Error fetching news:', error);
+    return [];
+  }
+}
+
+// メニューデータ取得関数
+export async function getMenu(): Promise<MenuData[]> {
+  try {
+    const databaseId = process.env.NOTION_MENU_DATABASE_ID;
+    
+    if (!databaseId) {
+      throw new Error('NOTION_MENU_DATABASE_ID is not defined');
+    }
+
+    const response = await notion.databases.query({
+      database_id: databaseId,
+      filter: {
+        property: '公開設定',
+        checkbox: {
+          equals: true
+        }
+      },
+      sorts: [
+        {
+          property: '表示順序',
+          direction: 'ascending'
+        },
+        {
+          property: 'カテゴリ',
+          direction: 'ascending'
+        }
+      ]
+    });
+
+    return response.results.map((page: Record<string, unknown>) => {
+      const typedProperties = (page as { properties: Record<string, unknown> }).properties as {
+        'メニュー名'?: { title?: Array<{ plain_text: string }> };
+        'カテゴリ'?: { select?: { name: string } };
+        '価格'?: { number?: number };
+        '説明'?: { rich_text?: Array<{ plain_text: string }> };
+        'メニュー画像'?: { files?: Array<{ file?: { url: string }; external?: { url: string } }> };
+        '在庫状況'?: { select?: { name: string } };
+        '季節限定'?: { checkbox?: boolean };
+        'おすすめ'?: { checkbox?: boolean };
+        'アレルギー情報'?: { multi_select?: Array<{ name: string }> };
+        '表示順序'?: { number?: number };
+        '公開設定'?: { checkbox?: boolean };
+        '作成日'?: { created_time?: string };
+      };
+      
+      return {
+        id: page.id as string,
+        menuName: typedProperties['メニュー名']?.title?.[0]?.plain_text || '',
+        category: typedProperties['カテゴリ']?.select?.name || '',
+        price: typedProperties['価格']?.number || 0,
+        description: typedProperties['説明']?.rich_text?.[0]?.plain_text || '',
+        menuImage: typedProperties['メニュー画像']?.files?.[0]?.file?.url || typedProperties['メニュー画像']?.files?.[0]?.external?.url || '',
+        stockStatus: typedProperties['在庫状況']?.select?.name || '販売中',
+        isSeasonalLimited: typedProperties['季節限定']?.checkbox || false,
+        isRecommended: typedProperties['おすすめ']?.checkbox || false,
+        allergyInfo: typedProperties['アレルギー情報']?.multi_select?.map((allergy) => allergy.name) || [],
+        displayOrder: typedProperties['表示順序']?.number || 0,
+        isPublic: typedProperties['公開設定']?.checkbox || false,
+        createdAt: typedProperties['作成日']?.created_time || (page.created_time as string)
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching menu:', error);
     return [];
   }
 }
