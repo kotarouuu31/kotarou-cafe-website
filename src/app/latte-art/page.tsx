@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from 'next/dynamic';
+import { PCLayout } from '@/components/layout/PCLayout';
 
 // コンポーネントを動的インポート
 const LatteArtGallery = dynamic(() => import('@/components/LatteArtGallery'), {
@@ -16,8 +17,10 @@ const LatteArtGallery = dynamic(() => import('@/components/LatteArtGallery'), {
 
 export default function LatteArtPage() {
   return (
-    <div>
-      <LatteArtGallery />
-    </div>
+    <PCLayout>
+      <div>
+        <LatteArtGallery />
+      </div>
+    </PCLayout>
   );
 }

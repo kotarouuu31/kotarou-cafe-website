@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from 'next/dynamic';
+import { PCLayout } from '@/components/layout/PCLayout';
 
 // コンポーネントを動的インポート
 const MenuGallery = dynamic(() => import('@/components/menu/MenuGallery'), {
@@ -13,8 +14,10 @@ const MenuGallery = dynamic(() => import('@/components/menu/MenuGallery'), {
 
 export default function MenuPage() {
   return (
-    <div>
-      <MenuGallery />
-    </div>
+    <PCLayout>
+      <div>
+        <MenuGallery />
+      </div>
+    </PCLayout>
   );
 }

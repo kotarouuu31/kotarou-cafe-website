@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ScrollAnimation } from '@/components/ui/ScrollAnimation';
 import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
+import { PCLayout } from '@/components/layout/PCLayout';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -74,7 +75,8 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen">
+    <PCLayout>
+      <div className="flex flex-col items-center w-full min-h-screen">
       {/* ヘッダーセクション */}
       <ScrollAnimation className="w-full max-w-[400px] px-4 pt-8 pb-6 text-center">
         <h1 className="font-heading text-2xl font-bold mb-4 text-primary">
@@ -335,6 +337,7 @@ export default function ContactPage() {
           </Link>
         </div>
       </ScrollAnimation>
-    </div>
+      </div>
+    </PCLayout>
   );
 }

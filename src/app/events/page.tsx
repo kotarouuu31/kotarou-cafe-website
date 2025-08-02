@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from 'next/dynamic';
+import { PCLayout } from '@/components/layout/PCLayout';
 
 // 統合コンポーネントを動的インポート
 const EventsNewsGallery = dynamic(() => import('@/components/events/EventsNewsGallery'), {
@@ -13,8 +14,10 @@ const EventsNewsGallery = dynamic(() => import('@/components/events/EventsNewsGa
 
 export default function EventsPage() {
   return (
-    <div className="min-h-screen">
-      <EventsNewsGallery />
-    </div>
+    <PCLayout>
+      <div className="min-h-screen">
+        <EventsNewsGallery />
+      </div>
+    </PCLayout>
   );
 }

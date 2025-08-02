@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { ScrollAnimation } from '@/components/ui/ScrollAnimation';
 import { AutoUpdatingRecordPlayer } from '@/components/RecordPlayer';
+import { PCLayout } from '@/components/layout/PCLayout';
 
 export default function Home() {
   // 音符のような装飾エフェクトのアニメーション用
@@ -14,7 +15,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <PCLayout>
+      <div className="flex flex-col items-center w-full">
       {/* 1. ファーストビュー - 全画面背景 */}
       <section className="relative w-full h-screen flex flex-col justify-end items-center pb-16">
         {/* 背景画像 */}
@@ -459,6 +461,7 @@ export default function Home() {
           </Button>
         </div>
       </ScrollAnimation>
-    </div>
+      </div>
+    </PCLayout>
   );
 }
