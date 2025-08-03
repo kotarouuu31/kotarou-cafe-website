@@ -83,7 +83,9 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <div className="w-full max-w-[400px] bg-white min-h-screen shadow-md relative">
-          <Header />
+          <div className="lg:hidden">
+            <Header />
+          </div>
           <main className="w-full">
             {children}
           </main>

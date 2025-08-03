@@ -1,16 +1,28 @@
 "use client";
 
 import { ReactNode } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface PCLayoutProps {
   children: ReactNode;
 }
 
+// ナビゲーションリンク定義
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/menu', label: 'Menu' },
+  { href: '/latte-art', label: 'Latte Art' },
+  { href: '/events', label: 'Events & News' },
+  { href: '/contact', label: 'Contact' },
+];
+
 export const PCLayout = ({ children }: PCLayoutProps) => {
+  const pathname = usePathname();
   return (
-    <div className="min-h-screen lg:flex">
+    <div className="min-h-screen lg:flex lg:w-full lg:h-screen lg:fixed lg:inset-0">
       {/* 左側：固定コンテンツエリア（画面の60%） */}
-      <div className="hidden lg:flex lg:w-[60%] lg:relative lg:h-screen lg:overflow-hidden">
+      <div className="hidden lg:flex lg:w-[60%] lg:relative lg:h-full lg:overflow-hidden">
         {/* 背景画像 */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -60,6 +72,28 @@ export const PCLayout = ({ children }: PCLayoutProps) => {
             <span className="text-sm tracking-widest">MUSIC & COFFEE EXPERIENCE</span>
             <div className="w-12 h-px bg-white/40"></div>
           </div>
+          
+          {/* ナビゲーションメニュー */}
+          <nav className="mt-16">
+            <div className="space-y-4">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`block text-lg font-light transition-all duration-300 hover:text-amber-300 ${
+                      isActive 
+                        ? 'text-amber-300 border-l-2 border-amber-300 pl-4' 
+                        : 'text-white/80 hover:pl-2'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </nav>
         </div>
         
         {/* 音符の装飾 */}
@@ -69,9 +103,9 @@ export const PCLayout = ({ children }: PCLayoutProps) => {
       </div>
 
       {/* 右側：モバイルプレビューフレーム（画面の40%） */}
-      <div className="hidden lg:flex lg:w-[40%] lg:p-8 lg:items-center lg:justify-center lg:h-screen">
-        <div className="bg-black rounded-[2.5rem] p-2 shadow-2xl">
-          <div className="bg-white rounded-[2rem] overflow-hidden h-[800px] w-[400px]">
+      <div className="hidden lg:flex lg:w-[40%] lg:p-8 lg:items-center lg:justify-center lg:h-full lg:bg-gray-100">
+        <div className="bg-black rounded-[2.5rem] p-2 shadow-2xl" style={{width: 'min(420px, 80%)', height: 'min(800px, 85%)'}}>
+          <div className="bg-white rounded-[2rem] overflow-hidden w-full h-full">
             <div className="h-full overflow-y-auto scrollbar-hide">
               {children}
             </div>
