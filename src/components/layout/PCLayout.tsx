@@ -20,9 +20,9 @@ const navLinks = [
 export const PCLayout = ({ children }: PCLayoutProps) => {
   const pathname = usePathname();
   return (
-    <div className="min-h-screen lg:flex lg:w-full lg:h-screen lg:fixed lg:inset-0 lg:bg-gray-50">
+    <div className="min-h-screen lg:flex lg:bg-gray-50">
       {/* 左側：固定コンテンツエリア（画面の60%） */}
-      <div className="hidden lg:flex lg:w-[60%] lg:relative lg:h-full lg:overflow-hidden">
+      <div className="hidden lg:flex lg:w-[60%] lg:relative lg:min-h-screen">
         {/* 背景画像 */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -36,7 +36,7 @@ export const PCLayout = ({ children }: PCLayoutProps) => {
         <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60 z-10"></div>
         
         {/* コンテンツ：より中央寄せ、余白を活かした配置 */}
-        <div className="relative z-20 flex flex-col justify-center items-start w-full h-full px-20 py-16 max-w-4xl">
+        <div className="relative z-20 flex flex-col justify-center items-start w-full min-h-screen px-20 py-16">
           {/* ロゴエリア - よりシンプルに */}
           <div className="mb-16">
             <div className="w-16 h-16 rounded-full border border-white/60 mb-6 flex items-center justify-center backdrop-blur-sm bg-white/5">
@@ -103,7 +103,7 @@ export const PCLayout = ({ children }: PCLayoutProps) => {
       </div>
 
       {/* 右側：モバイルプレビューフレーム（画面の40%） */}
-      <div className="hidden lg:flex lg:w-[40%] lg:p-4 lg:items-center lg:justify-end lg:pr-12 lg:h-full lg:bg-gray-50">
+      <div className="hidden lg:flex lg:w-[40%] lg:p-4 lg:items-center lg:justify-end lg:pr-12 lg:min-h-screen">
         <div className="bg-black rounded-[2.5rem] p-2 shadow-2xl" style={{width: '380px', height: '760px'}}>
           <div className="bg-white rounded-[2rem] overflow-hidden w-full h-full">
             <div className="h-full overflow-y-auto scrollbar-hide">
