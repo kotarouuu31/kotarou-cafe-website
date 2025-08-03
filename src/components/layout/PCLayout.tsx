@@ -9,8 +9,8 @@ interface PCLayoutProps {
 export const PCLayout = ({ children }: PCLayoutProps) => {
   return (
     <div className="min-h-screen lg:flex">
-      {/* 左側：固定コンテンツエリア（PC画面全体を使用） */}
-      <div className="hidden lg:flex lg:flex-1 lg:relative lg:h-screen lg:overflow-hidden">
+      {/* 左側：固定コンテンツエリア（画面の60%） */}
+      <div className="hidden lg:flex lg:w-[60%] lg:relative lg:h-screen lg:overflow-hidden">
         {/* 背景画像 */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -23,8 +23,8 @@ export const PCLayout = ({ children }: PCLayoutProps) => {
         {/* グラデーションオーバーレイ */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60 z-10"></div>
         
-        {/* コンテンツ */}
-        <div className="relative z-20 flex flex-col justify-center items-start p-16 max-w-2xl">
+        {/* コンテンツ：画面全体に配置 */}
+        <div className="relative z-20 flex flex-col justify-center items-start w-full h-full p-16">
           {/* ロゴエリア */}
           <div className="mb-12">
             <div className="w-20 h-20 rounded-full border-2 border-white/80 mb-6 flex items-center justify-center backdrop-blur-sm bg-white/10">
@@ -68,12 +68,11 @@ export const PCLayout = ({ children }: PCLayoutProps) => {
         <div className="absolute top-1/2 right-1/6 text-white/10 text-3xl animate-float-fast z-15">♬</div>
       </div>
 
-      {/* 右側：モバイルプレビューフレーム */}
-      <div className="hidden lg:flex lg:w-[440px] lg:p-8 lg:items-center lg:justify-center lg:h-screen">
+      {/* 右側：モバイルプレビューフレーム（画面の40%） */}
+      <div className="hidden lg:flex lg:w-[40%] lg:p-8 lg:items-center lg:justify-center lg:h-screen">
         <div className="bg-black rounded-[2.5rem] p-2 shadow-2xl">
           <div className="bg-white rounded-[2rem] overflow-hidden h-[800px] w-[400px]">
             <div className="h-full overflow-y-auto scrollbar-hide">
-              {/* モバイル版コンテンツ（スクロール可能） */}
               {children}
             </div>
           </div>
