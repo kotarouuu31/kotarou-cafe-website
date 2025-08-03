@@ -146,6 +146,11 @@ module.exports = {
           '&::-webkit-scrollbar': {
             display: 'none'
           }
+        },
+        '.writing-mode-vertical': {
+          'writing-mode': 'vertical-rl',
+          'text-orientation': 'upright',
+          'letter-spacing': '0.1em'
         }
       }
       addUtilities(newUtilities)

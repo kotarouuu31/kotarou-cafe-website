@@ -1,8 +1,9 @@
 "use client";
 
-import { ReactNode } from 'react';
-import Link from 'next/link';
+import { ReactNode, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import Footer from './Footer';
 
 interface PCLayoutProps {
   children: ReactNode;
@@ -19,81 +20,127 @@ const navLinks = [
 
 export const PCLayout = ({ children }: PCLayoutProps) => {
   const pathname = usePathname();
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = (event: Event) => {
+      const target = event.target as HTMLElement;
+      if (target && target.classList.contains('mobile-preview-content')) {
+        setScrollY(target.scrollTop);
+      }
+    };
+
+    // コンポーネントがマウントされた後にスクロールリスナーを設定
+    const timer = setTimeout(() => {
+      const mobilePreviewContent = document.querySelector('.mobile-preview-content');
+      if (mobilePreviewContent) {
+        mobilePreviewContent.addEventListener('scroll', handleScroll);
+      }
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      const mobilePreviewContent = document.querySelector('.mobile-preview-content');
+      if (mobilePreviewContent) {
+        mobilePreviewContent.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
+  // スクロール量に応じてモバイルプレビューの位置と高さを調整
+  const mobilePreviewTop = Math.max(0, 64 - scrollY); // 初期64px、スクロールで0まで減少
+  const mobilePreviewHeight = `calc(100vh - 4rem + ${64 - mobilePreviewTop}px)`; // 上に移動した分だけ高さを増加
+
   return (
-    <div className="min-h-screen lg:flex lg:bg-gray-50">
-      {/* 左側：固定コンテンツエリア（画面の60%） */}
-      <div className="hidden lg:flex lg:w-[60%] lg:relative lg:min-h-screen">
+    <div className="min-h-screen lg:w-screen lg:h-screen lg:fixed lg:inset-0 lg:overflow-hidden">
+      {/* 背景全体：左側コンテンツを画面全体に表示 */}
+      <div className="hidden lg:block lg:absolute lg:inset-0 lg:w-full lg:h-full">
         {/* 背景画像 */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb" 
-            alt="Kotarou Cafe Background" 
-            className="w-full h-full object-cover brightness-[0.4]"
-          />
-        </div>
+        <div 
+          className="absolute inset-0 z-0 w-full h-full bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2047&q=80)',
+            filter: 'brightness(0.7)'
+          }}
+        ></div>
         
         {/* グラデーションオーバーレイ */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60 z-10"></div>
         
-        {/* コンテンツ：より中央寄せ、余白を活かした配置 */}
-        <div className="relative z-20 flex flex-col justify-center items-start w-full min-h-screen px-20 py-16">
-          {/* ロゴエリア - よりシンプルに */}
-          <div className="mb-16">
-            <div className="w-16 h-16 rounded-full border border-white/60 mb-6 flex items-center justify-center backdrop-blur-sm bg-white/5">
-              <span className="text-xl">☕</span>
+        {/* コンテンツ：中央寄りに配置（右側はモバイルプレビュー用に空ける） */}
+        <div className="relative z-20 flex flex-col justify-between w-full h-full pl-24 pr-[45%] py-12 items-center">
+          {/* 上部エリア */}
+          <div className="flex-1 flex flex-col justify-center">
+            {/* ロゴエリア */}
+            <div className="mb-16">
+              <div className="w-16 h-16 rounded-full border border-white/60 mb-4 flex items-center justify-center backdrop-blur-sm bg-white/5">
+                <span className="text-xl">☕</span>
+              </div>
+              <div className="text-white/90 text-xs font-light tracking-[0.3em] mb-1">KOTAROU CAFE</div>
+              <div className="text-white/50 text-[10px] tracking-[0.2em]">EST. 2024</div>
             </div>
-            <div className="text-white/80 text-xs font-light tracking-[0.2em] mb-2 uppercase">KOTAROU CAFE</div>
-          </div>
-          
-          {/* メインメッセージ - より洗練されたタイポグラフィ */}
-          <h1 className="text-white text-5xl lg:text-6xl font-extralight mb-12 leading-[1.1] tracking-tight">
-            音楽と<br />
-            コーヒーが<br />
-            つながる<br />
-            <span className="text-amber-200 font-light">特別な時間</span>
-          </h1>
-          
-          {/* サブメッセージ - より余白を活かして */}
-          <div className="space-y-8 text-white/90 max-w-lg">
-            <p className="text-lg leading-relaxed font-light opacity-90">
-              Kotarou Cafeは、<br />
-              DJと音楽を組み合わせた体験を通して、<br />
-              日常と非日常をつなぐ場を目指しています。
-            </p>
-            <p className="text-base leading-relaxed opacity-75">
-              こだわりのコーヒーと心地よい音楽で、<br />
-              特別なひとときをお過ごしください。
-            </p>
-          </div>
-          
-          {/* 装飾的な要素 - よりミニマルに */}
-          <div className="mt-16 flex items-center space-x-6 text-white/50">
-            <div className="w-16 h-px bg-white/30"></div>
-            <span className="text-xs tracking-[0.3em] uppercase">Music & Coffee Experience</span>
-            <div className="w-16 h-px bg-white/30"></div>
-          </div>
-          
-          {/* ナビゲーションメニュー - よりエレガントに */}
-          <nav className="mt-20">
-            <div className="space-y-3">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`block text-base font-extralight transition-all duration-500 hover:text-amber-200 hover:tracking-wide ${
-                      isActive 
-                        ? 'text-amber-200 border-l border-amber-200 pl-4 tracking-wide' 
-                        : 'text-white/70 hover:pl-2'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
+            
+            {/* メインメッセージ */}
+            <div className="mb-12">
+              <div className="flex items-start space-x-6">
+                <div className="text-white text-4xl font-extralight leading-none tracking-tight writing-mode-vertical">
+                  音<br />楽<br />と<br />コ<br />ー<br />ヒ<br />ー<br />が
+                </div>
+                <div className="text-white text-4xl font-extralight leading-none tracking-tight writing-mode-vertical">
+                  織<br />り<br />な<br />す
+                </div>
+                <div className="text-amber-300 text-4xl font-extralight leading-none tracking-tight writing-mode-vertical">
+                  特<br />別<br />な<br />ひ<br />と<br />と<br />き
+                </div>
+              </div>
             </div>
-          </nav>
+            
+            {/* サブメッセージ */}
+            <div className="space-y-4 text-white/80 max-w-md">
+              <p className="text-sm leading-relaxed font-light">
+                音楽とコーヒー、そして人との出会いが<br />
+                新しいインスピレーションを生み出す。
+              </p>
+              <p className="text-xs leading-relaxed opacity-70">
+                一杯のコーヒーから始まる、新しい物語をお楽しみください。
+              </p>
+            </div>
+          </div>
+          
+          {/* 下部エリア */}
+          <div className="flex flex-col space-y-8">
+            {/* 装飾的な要素 */}
+            <div className="flex items-center space-x-3 text-white/40">
+              <div className="w-8 h-px bg-white/30"></div>
+              <span className="text-[10px] tracking-[0.2em]">WHERE MUSIC MEETS COFFEE</span>
+              <div className="w-8 h-px bg-white/30"></div>
+            </div>
+            
+            {/* ナビゲーションメニュー */}
+            <nav>
+              <div className="flex items-center space-x-6">
+                {navLinks.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`text-sm font-light transition-all duration-300 hover:text-amber-300 relative ${
+                        isActive 
+                          ? 'text-amber-300' 
+                          : 'text-white/70'
+                      }`}
+                    >
+                      {link.label}
+                      {isActive && (
+                        <div className="absolute -bottom-1 left-0 w-full h-px bg-amber-300"></div>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            </nav>
+          </div>
         </div>
         
         {/* 音符の装飾 */}
@@ -102,12 +149,21 @@ export const PCLayout = ({ children }: PCLayoutProps) => {
         <div className="absolute top-1/2 right-1/6 text-white/10 text-3xl animate-float-fast z-15">♬</div>
       </div>
 
-      {/* 右側：モバイルプレビューフレーム（画面の40%） */}
-      <div className="hidden lg:flex lg:w-[40%] lg:p-4 lg:items-center lg:justify-end lg:pr-12 lg:min-h-screen">
-        <div className="bg-black rounded-[2.5rem] p-2 shadow-2xl" style={{width: '380px', height: '760px'}}>
+      {/* 右側：モバイルプレビューフレーム（背景の上に重ねて表示） */}
+      <div 
+        className="hidden lg:flex lg:absolute lg:right-4 lg:z-30 lg:transition-all lg:duration-300" 
+        style={{
+          top: `${mobilePreviewTop}px`,
+          transform: 'translateX(-80px) translateY(0)'
+        }}
+      >
+        <div className="bg-black rounded-[2.5rem] p-2 shadow-2xl" style={{width: '400px', height: mobilePreviewHeight}}>
           <div className="bg-white rounded-[2rem] overflow-hidden w-full h-full">
-            <div className="h-full overflow-y-auto scrollbar-hide">
-              {children}
+            <div className="h-full overflow-y-auto scrollbar-hide mobile-preview-content flex flex-col">
+              <div className="flex-1">
+                {children}
+              </div>
+              <Footer />
             </div>
           </div>
         </div>
