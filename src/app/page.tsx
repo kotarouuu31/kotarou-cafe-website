@@ -109,7 +109,7 @@ export default function Home() {
       </section>
 
       {/* 2. キャッチコピーセクション */}
-      <section className="w-full pt-16 pb-12 px-4 text-center">
+      <section className="w-full pt-20 pb-16 px-4 text-center">
         <h1 className="font-heading text-2xl font-bold mb-6 text-primary">
           コーヒーとつながり、心を解き放つ。
         </h1>
@@ -124,7 +124,7 @@ export default function Home() {
       </section>
 
       {/* 2列グリッド画像ギャラリー */}
-      <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-50px">
+      <ScrollAnimation className="w-full px-4 mb-16" rootMargin="-50px">
         <div className="grid grid-cols-2 gap-3 mb-8">
           {/* 1. カフェの内装 */}
           <div className="relative mb-1 shadow-sm stagger-item" style={{ aspectRatio: '3/4' }}>
@@ -258,18 +258,11 @@ export default function Home() {
       </ScrollAnimation>
 
       {/* ニュースセクション */}
-      <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-40px" delay={150}>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm font-medium">News</h2>
-          <Link href="/events?tab=news" className="text-xs text-accent flex items-center">
-            View All
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
+      <ScrollAnimation className="w-full px-4 mb-16" rootMargin="-40px" delay={150}>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-8">News</h2>
         
-        <div className="grid grid-cols-1 gap-4 mb-6">
+        <div className="max-w-xs mx-auto mb-8">
           {loading ? (
             Array.from({ length: 3 }).map((_, index) => (
               <div key={index} className="bg-white/5 p-4 rounded-md shadow-sm animate-pulse">
@@ -279,36 +272,40 @@ export default function Home() {
               </div>
             ))
           ) : homeData.news.length > 0 ? (
-            homeData.news.map((newsItem) => (
-              <div key={newsItem.id} className="bg-white/5 p-4 rounded-md shadow-sm">
-                <div className="flex items-center mb-2">
-                  <span className="text-xs text-accent mr-2">
-                    {new Date(newsItem.publishDate).toLocaleDateString('ja-JP', { 
-                      year: 'numeric', 
-                      month: '2-digit', 
-                      day: '2-digit' 
-                    })}
-                  </span>
-                  <span className="text-xs px-2 py-0.5 bg-primary/20 rounded-full">
-                    {newsItem.category || 'ニュース'}
-                  </span>
-                </div>
-                <h3 className="font-medium text-sm mb-1 line-clamp-1">{newsItem.title}</h3>
-                <p className="text-xs text-foreground/70 line-clamp-2">
-                  {newsItem.content.length > 100 ? newsItem.content.substring(0, 100) + '...' : newsItem.content}
-                </p>
-              </div>
-            ))
-          ) : (
-            <div className="bg-white/5 p-4 rounded-md shadow-sm text-center">
-              <p className="text-xs text-foreground/70">最新ニュースはまだありません</p>
-            </div>
-          )}
+             homeData.news.map((newsItem) => (
+               <div key={newsItem.id} className="text-left py-6 border-b border-foreground/10 last:border-b-0">
+                 <div className="mb-3">
+                   <span className="text-sm text-accent mr-3">
+                     {new Date(newsItem.publishDate).toLocaleDateString('ja-JP', { 
+                       year: 'numeric', 
+                       month: '2-digit', 
+                       day: '2-digit' 
+                     })}
+                   </span>
+                   <span className="text-sm text-foreground/70">
+                     {newsItem.category || 'Information'}
+                   </span>
+                 </div>
+                 <h3 className="text-base font-medium mb-2">{newsItem.title}</h3>
+               </div>
+             ))
+           ) : (
+             <div className="text-center py-6">
+               <p className="text-sm text-foreground/70">最新ニュースはまだありません</p>
+             </div>
+           )}
+         </div>
+         
+         <div className="text-center">
+           <Link href="/events?tab=news" className="inline-block px-8 py-3 border border-foreground/20 rounded-md text-sm font-medium hover:bg-foreground/5 transition-colors">
+             News All
+           </Link>
+         </div>
         </div>
         
-        <div className="mb-8">
-          <h3 className="text-sm font-medium mb-4">Upcoming Events</h3>
-          <div className="flex overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent snap-x snap-mandatory">
+        <div className="text-center mb-12 mt-16">
+          <h2 className="text-3xl font-bold mb-8">Upcoming Events</h2>
+          <div className="flex overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent snap-x snap-mandatory pl-4">
             {loading ? (
               Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className="flex-none w-[160px] mr-3 snap-start">
@@ -348,21 +345,13 @@ export default function Home() {
       </ScrollAnimation>
 
       {/* ラテアートギャラリー - 自動スクロール */}
-      <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-40px" delay={200}>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm font-medium">Latte Art Gallery</h2>
-          <Link href="/latte-art" className="text-xs text-accent flex items-center">
-            View More
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
+      <ScrollAnimation className="w-full px-4 mb-24" rootMargin="-40px" delay={250}>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Latte Art Gallery</h2>
+          <p className="text-sm text-foreground/80 mb-8">日々進化するラテアート作品</p>
         
-        <p className="text-xs text-foreground/80 mb-4">日々進化するラテアート作品</p>
-        
-        {/* 自動スクロールギャラリー */}
-        <div className="relative mb-6 overflow-hidden">
+          {/* 自動スクロールギャラリー */}
+          <div className="relative mb-6 overflow-hidden">
           {loading ? (
             <div className="flex space-x-4">
               {Array.from({ length: 5 }).map((_, index) => (
@@ -418,7 +407,13 @@ export default function Home() {
             <div className="text-center py-8">
               <p className="text-xs text-foreground/70">ラテアート作品はまだありません</p>
             </div>
-          )}
+           )}
+         </div>
+         <div className="text-center mt-8">
+           <Link href="/latte-art" className="inline-block px-8 py-3 border border-foreground/20 rounded-md text-sm font-medium hover:bg-foreground/5 transition-colors">
+             View More
+           </Link>
+         </div>
         </div>
       </ScrollAnimation>
 
