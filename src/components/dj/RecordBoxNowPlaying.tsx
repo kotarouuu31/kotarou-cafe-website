@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { NowPlaying } from '@/types/dj';
 import { getRecordBoxData, getDJStats } from '@/lib/recordboxReader';
+import { MIDIController, DDJState } from './MIDIController';
+import { DDJVisualizer } from './DDJVisualizer';
 
 interface RecordBoxNowPlayingProps {
   className?: string;
@@ -15,6 +17,27 @@ export const RecordBoxNowPlaying = ({ className = "" }: RecordBoxNowPlayingProps
   const [progress, setProgress] = useState(0);
   const [djStats] = useState(getDJStats());
   const [waveform, setWaveform] = useState<number[]>([]);
+  const [ddjState, setDdjState] = useState<DDJState>({
+    jogWheelLeft: 0,
+    jogWheelRight: 0,
+    crossfader: 64,
+    channelFaderLeft: 0,
+    channelFaderRight: 0,
+    highLeft: 64,
+    midLeft: 64,
+    lowLeft: 64,
+    highRight: 64,
+    midRight: 64,
+    lowRight: 64,
+    playLeft: false,
+    playRight: false,
+    cueLeft: false,
+    cueRight: false,
+    bpmLeft: 120,
+    bpmRight: 120,
+    isConnected: false,
+    deviceName: ''
+  });
 
   useEffect(() => {
     // RecordBoxデータ取得
@@ -48,6 +71,13 @@ export const RecordBoxNowPlaying = ({ className = "" }: RecordBoxNowPlayingProps
       clearInterval(progressInterval);
     };
   }, []);
+
+  // MIDI状態変更ハンドラ
+  const handleMIDIStateChange = (newState: DDJState) => {
+    setDdjState(newState);
+    // 接続状態を更新
+    setIsLive(newState.isConnected);
+  };
 
   if (!nowPlaying.track) {
     return (
@@ -208,6 +238,12 @@ export const RecordBoxNowPlaying = ({ className = "" }: RecordBoxNowPlayingProps
           </div>
         </div>
       </div>
+      
+      {/* MIDI Controller (バックグラウンド動作) */}
+      <MIDIController onStateChange={handleMIDIStateChange} />
+      
+      {/* DDJ Controller Visualizer */}
+      <DDJVisualizer ddjState={ddjState} className="mt-6" />
     </div>
   );
 };
