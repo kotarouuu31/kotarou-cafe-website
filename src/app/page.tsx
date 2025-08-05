@@ -8,6 +8,7 @@ import { ScrollAnimation } from '@/components/ui/ScrollAnimation';
 import { AutoUpdatingRecordPlayer } from '@/components/RecordPlayer';
 import { PCLayout } from '@/components/layout/PCLayout';
 import { EventData, NewsData, LatteArtWork } from '@/lib/notion';
+import { RecordBoxNowPlaying } from '@/components/dj/RecordBoxNowPlaying';
 
 // ホーム画面用API呼び出し関数
 async function fetchHomeData() {
@@ -417,39 +418,17 @@ export default function Home() {
         </div>
       </ScrollAnimation>
 
-      {/* Music Corner */}
-      <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-40px" delay={225}>
-        <div className="bg-gradient-to-br from-primary/20 to-accent/20 p-6 rounded-md">
-          <h2 className="text-lg font-heading font-bold mb-2 text-center">音楽が、空間を包み込む</h2>
-          <p className="text-xs text-foreground/80 mb-6 text-center leading-relaxed">
-            厳選されたプレイリストと共に、コーヒーの香りに包まれながら、
-            心地よい時間をお過ごしください。
-          </p>
-          
-          {/* レコードプレーヤーとDJスケジュール */}
-          <div className="flex flex-col gap-4">
-            {/* レコードプレーヤー */}
-            <div className="bg-white/10 p-4 rounded-md">
-              <AutoUpdatingRecordPlayer className="text-white" />
-            </div>
-            
-            {/* DJ Schedule */}
-            <div className="bg-white/10 p-4 rounded-md">
-              <h3 className="font-heading text-sm font-bold mb-3 text-center">DJ Schedule</h3>
-              <div className="grid grid-cols-2 gap-3 text-center">
-                <div className="bg-white/10 p-3 rounded">
-                  <p className="text-xs text-foreground/80 mb-1">Friday</p>
-                  <p className="font-medium text-xs">DJ Kotarou</p>
-                  <p className="text-xs text-accent">House</p>
-                </div>
-                <div className="bg-white/10 p-3 rounded">
-                  <p className="text-xs text-foreground/80 mb-1">Saturday</p>
-                  <p className="font-medium text-xs">Guest DJ</p>
-                  <p className="text-xs text-accent">Jazz</p>
-                </div>
-              </div>
-            </div>
+      {/* RecordBox + DDJ-FLX4 Integration */}
+      <ScrollAnimation className="w-full px-4 py-8 mb-20" rootMargin="-40px" delay={225}>
+        <div className="space-y-6">
+          <div className="text-center mb-8">
+            <h2 className="text-lg font-heading font-bold mb-2">RecordBox × DDJ-FLX4</h2>
+            <p className="text-xs text-foreground/80 leading-relaxed">
+              プロ仕様のDJ機材でお届けする本格的な音楽体験
+            </p>
           </div>
+            
+          <RecordBoxNowPlaying className="mb-6" />
         </div>
       </ScrollAnimation>
 
