@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { TrackInfo, NowPlaying } from '@/types/dj';
+import { NowPlaying } from '@/types/dj';
 import { getRecordBoxData, getDJStats } from '@/lib/recordboxReader';
 
 interface RecordBoxNowPlayingProps {
@@ -13,7 +13,7 @@ export const RecordBoxNowPlaying = ({ className = "" }: RecordBoxNowPlayingProps
   const [nowPlaying, setNowPlaying] = useState<NowPlaying>({ track: null, startedAt: null });
   const [isLive, setIsLive] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [djStats, setDjStats] = useState(getDJStats());
+  const [djStats] = useState(getDJStats());
   const [waveform, setWaveform] = useState<number[]>([]);
 
   useEffect(() => {
@@ -198,7 +198,7 @@ export const RecordBoxNowPlaying = ({ className = "" }: RecordBoxNowPlayingProps
             </div>
           </div>
           <div className="text-right">
-            <div className="text-gray-400 text-xs mb-1">Today's Session</div>
+            <div className="text-gray-400 text-xs mb-1">Today&apos;s Session</div>
             <div className="text-blue-400 font-mono text-lg">
               {djStats.todayHours}h
             </div>

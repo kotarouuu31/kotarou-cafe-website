@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { ScrollAnimation } from '@/components/ui/ScrollAnimation';
-import { AutoUpdatingRecordPlayer } from '@/components/RecordPlayer';
 import { PCLayout } from '@/components/layout/PCLayout';
 import { EventData, NewsData, LatteArtWork } from '@/lib/notion';
 import { RecordBoxNowPlaying } from '@/components/dj/RecordBoxNowPlaying';

@@ -1,11 +1,10 @@
-import { TrackInfo, NowPlaying, RecordBoxData, DJSession } from '@/types/dj';
+import { TrackInfo, NowPlaying, RecordBoxData } from '@/types/dj';
 
 /**
  * RecordBox履歴データを読み取る（クライアントサイド対応）
- * @param customPath カスタムパス（オプション）
  * @returns 解析された履歴データ
  */
-export async function readRecordBoxHistory(customPath?: string): Promise<TrackInfo[]> {
+export async function readRecordBoxHistory(): Promise<TrackInfo[]> {
   try {
     // クライアントサイドではモックデータを使用
     // 実際のRecordBox連携は将来的にAPIエンドポイント経由で実装
@@ -89,11 +88,10 @@ function generateMockTracks(): TrackInfo[] {
 
 /**
  * RecordBox統合データを取得
- * @param customPath カスタムパス（オプション）
  * @returns 統合データ
  */
-export async function getRecordBoxData(customPath?: string): Promise<RecordBoxData> {
-  const tracks = await readRecordBoxHistory(customPath);
+export async function getRecordBoxData(): Promise<RecordBoxData> {
+  const tracks = await readRecordBoxHistory();
   const nowPlaying = getNowPlaying(tracks);
   
   return {
