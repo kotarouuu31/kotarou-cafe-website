@@ -3,12 +3,62 @@
 import Image from "next/image";
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ScrollAnimation } from '@/components/ui/ScrollAnimation';
 import { AutoUpdatingRecordPlayer } from '@/components/RecordPlayer';
 import { PCLayout } from '@/components/layout/PCLayout';
+import { EventData, NewsData, LatteArtWork } from '@/lib/notion';
+
+// ホーム画面用API呼び出し関数
+async function fetchHomeData() {
+  try {
+    const [newsResponse, eventsResponse, latteArtResponse] = await Promise.all([
+      fetch('/api/news'),
+      fetch('/api/events'), 
+      fetch('/api/latte-art')
+    ]);
+
+    const [newsData, eventsData, latteArtData] = await Promise.all([
+      newsResponse.json(),
+      eventsResponse.json(),
+      latteArtResponse.json()
+    ]);
+
+    return {
+      news: newsData.success ? newsData.data.slice(0, 3) : [],
+      events: eventsData.success ? eventsData.data.slice(0, 3) : [],
+      latteArt: latteArtData.success ? latteArtData.data.slice(0, 5) : []
+    };
+  } catch (error) {
+    console.error('Error fetching home data:', error);
+    return { news: [], events: [], latteArt: [] };
+  }
+}
 
 export default function Home() {
+  const [homeData, setHomeData] = useState<{
+    news: NewsData[];
+    events: EventData[];
+    latteArt: LatteArtWork[];
+  }>({ news: [], events: [], latteArt: [] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadHomeData = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchHomeData();
+        setHomeData(data);
+      } catch (error) {
+        console.error('Error loading home data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadHomeData();
+  }, []);
+
   // 音符のような装飾エフェクトのアニメーション用
   useEffect(() => {
     // アニメーションの実装はクライアントサイドでのみ実行
@@ -220,92 +270,79 @@ export default function Home() {
         </div>
         
         <div className="grid grid-cols-1 gap-4 mb-6">
-          {/* ニュース1 */}
-          <div className="bg-white/5 p-4 rounded-md shadow-sm">
-            <div className="flex items-center mb-2">
-              <span className="text-xs text-accent mr-2">2023.07.15</span>
-              <span className="text-xs px-2 py-0.5 bg-primary/20 rounded-full">イベント</span>
+          {loading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="bg-white/5 p-4 rounded-md shadow-sm animate-pulse">
+                <div className="h-4 bg-gray-300 rounded mb-2 w-3/4"></div>
+                <div className="h-3 bg-gray-300 rounded mb-1 w-1/2"></div>
+                <div className="h-3 bg-gray-300 rounded w-full"></div>
+              </div>
+            ))
+          ) : homeData.news.length > 0 ? (
+            homeData.news.map((newsItem) => (
+              <div key={newsItem.id} className="bg-white/5 p-4 rounded-md shadow-sm">
+                <div className="flex items-center mb-2">
+                  <span className="text-xs text-accent mr-2">
+                    {new Date(newsItem.publishDate).toLocaleDateString('ja-JP', { 
+                      year: 'numeric', 
+                      month: '2-digit', 
+                      day: '2-digit' 
+                    })}
+                  </span>
+                  <span className="text-xs px-2 py-0.5 bg-primary/20 rounded-full">
+                    {newsItem.category || 'ニュース'}
+                  </span>
+                </div>
+                <h3 className="font-medium text-sm mb-1 line-clamp-1">{newsItem.title}</h3>
+                <p className="text-xs text-foreground/70 line-clamp-2">
+                  {newsItem.content.length > 100 ? newsItem.content.substring(0, 100) + '...' : newsItem.content}
+                </p>
+              </div>
+            ))
+          ) : (
+            <div className="bg-white/5 p-4 rounded-md shadow-sm text-center">
+              <p className="text-xs text-foreground/70">最新ニュースはまだありません</p>
             </div>
-            <h3 className="font-medium text-sm mb-1 line-clamp-1">7月のJazz Night開催のお知らせ</h3>
-            <p className="text-xs text-foreground/70 line-clamp-2">
-              毎月恒例のJazz Nightを7月20日(金)に開催します。今回は特別ゲストとして、ジャズピアニストの山田太郎氏をお迎えします。
-            </p>
-          </div>
-          
-          {/* ニュース2 */}
-          <div className="bg-white/5 p-4 rounded-md shadow-sm">
-            <div className="flex items-center mb-2">
-              <span className="text-xs text-accent mr-2">2023.07.10</span>
-              <span className="text-xs px-2 py-0.5 bg-secondary/20 rounded-full">メニュー</span>
-            </div>
-            <h3 className="font-medium text-sm mb-1 line-clamp-1">夏季限定ドリンク登場</h3>
-            <p className="text-xs text-foreground/70 line-clamp-2">
-              暑い夏にぴったりの冷たいドリンク「サマーベリーフラッペ」と「マンゴーコールドブリュー」が登場しました。
-              フレッシュなフルーツを使用した爽やかな一杯をお楽しみください。
-            </p>
-          </div>
-          
-          {/* ニュース3 */}
-          <div className="bg-white/5 p-4 rounded-md shadow-sm">
-            <div className="flex items-center mb-2">
-              <span className="text-xs text-accent mr-2">2023.07.05</span>
-              <span className="text-xs px-2 py-0.5 bg-accent/20 rounded-full">お知らせ</span>
-            </div>
-            <h3 className="font-medium text-sm mb-1 line-clamp-1">営業時間変更のお知らせ</h3>
-            <p className="text-xs text-foreground/70 line-clamp-2">
-              7月15日より、平日の営業時間を8:00〜22:00に拡大いたします。
-              モーニングメニューも充実させ、早朝からご利用いただけるようになりました。
-            </p>
-          </div>
+          )}
         </div>
         
         <div className="mb-8">
           <h3 className="text-sm font-medium mb-4">Upcoming Events</h3>
           <div className="flex overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent snap-x snap-mandatory">
-            {/* イベント1 */}
-            <div className="flex-none w-[160px] mr-3 snap-start">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
-                  alt="Jazz Night"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
+            {loading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="flex-none w-[160px] mr-3 snap-start">
+                  <div className="relative aspect-square mb-2 shadow-sm bg-gray-300 animate-pulse rounded-lg"></div>
+                  <div className="h-3 bg-gray-300 rounded mb-1 w-3/4"></div>
+                  <div className="h-2 bg-gray-300 rounded w-1/2"></div>
+                </div>
+              ))
+            ) : homeData.events.length > 0 ? (
+              homeData.events.map((event) => (
+                <div key={event.id} className="flex-none w-[160px] mr-3 snap-start">
+                  <div className="relative aspect-square mb-2 shadow-sm">
+                    <Image
+                      src={event.eventImage || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819'}
+                      alt={event.eventName}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className="rounded-lg"
+                    />
+                  </div>
+                  <h3 className="font-medium text-xs mb-1 line-clamp-2">{event.eventName}</h3>
+                  <p className="text-[10px] text-accent">
+                    {new Date(event.eventDate).toLocaleDateString('ja-JP', { 
+                      month: 'numeric', 
+                      day: 'numeric' 
+                    })} {event.startTime}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="flex-none w-full text-center py-4">
+                <p className="text-xs text-foreground/70">イベントはまだありません</p>
               </div>
-              <h3 className="font-medium text-xs mb-1">Jazz Night</h3>
-              <p className="text-[10px] text-accent">7/20 19:00-21:00</p>
-            </div>
-            
-            {/* イベント2 */}
-            <div className="flex-none w-[160px] mr-3 snap-start">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1505236858219-8359eb29e329"
-                  alt="Coffee Workshop"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">コーヒー教室</h3>
-              <p className="text-[10px] text-accent">7/25 14:00-16:00</p>
-            </div>
-            
-            {/* イベント3 */}
-            <div className="flex-none w-[160px] mr-3 snap-start">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39"
-                  alt="Art Exhibition"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">猫アート展</h3>
-              <p className="text-[10px] text-accent">8/1-8/15</p>
-            </div>
+            )}
           </div>
         </div>
       </ScrollAnimation>
@@ -326,89 +363,62 @@ export default function Home() {
         
         {/* 自動スクロールギャラリー */}
         <div className="relative mb-6 overflow-hidden">
-          <div 
-            className="flex space-x-4" 
-            style={{ 
-              width: 'max-content', 
-              transform: 'translateX(0)', 
-              animation: 'marquee 30s linear infinite' 
-            }}
-          >
-            {/* ラテアート1 */}
-            <div className="flex-none w-[160px] mr-3">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1541167760496-1628856ab772"
-                  alt="リーフラテアート"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">リーフデザイン</h3>
-              <p className="text-[10px] text-accent">Free Pour</p>
+          {loading ? (
+            <div className="flex space-x-4">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="flex-none w-[160px] mr-3">
+                  <div className="relative aspect-square mb-2 shadow-sm bg-gray-300 animate-pulse rounded-lg"></div>
+                  <div className="h-3 bg-gray-300 rounded mb-1 w-3/4"></div>
+                  <div className="h-2 bg-gray-300 rounded w-1/2"></div>
+                </div>
+              ))}
             </div>
-            
-            {/* ラテアート2 */}
-            <div className="flex-none w-[160px] mr-3">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1577968897966-3d4325b36b61"
-                  alt="ハートラテアート"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">ハートデザイン</h3>
-              <p className="text-[10px] text-accent">Free Pour</p>
+          ) : homeData.latteArt.length > 0 ? (
+            <div 
+              className="flex space-x-4" 
+              style={{ 
+                width: 'max-content', 
+                transform: 'translateX(0)', 
+                animation: 'marquee 30s linear infinite' 
+              }}
+            >
+              {homeData.latteArt.map((artwork) => (
+                <div key={artwork.id} className="flex-none w-[160px] mr-3">
+                  <div className="relative aspect-square mb-2 shadow-sm">
+                    <Image
+                      src={artwork.imageUrl || 'https://images.unsplash.com/photo-1541167760496-1628856ab772'}
+                      alt={artwork.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className="rounded-lg"
+                    />
+                  </div>
+                  <h3 className="font-medium text-xs mb-1 line-clamp-1">{artwork.title}</h3>
+                  <p className="text-[10px] text-accent">{artwork.difficulty || 'Latte Art'}</p>
+                </div>
+              ))}
+              {/* シームレスループのために重複表示 */}
+              {homeData.latteArt.map((artwork) => (
+                <div key={`duplicate-${artwork.id}`} className="flex-none w-[160px] mr-3">
+                  <div className="relative aspect-square mb-2 shadow-sm">
+                    <Image
+                      src={artwork.imageUrl || 'https://images.unsplash.com/photo-1541167760496-1628856ab772'}
+                      alt={artwork.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className="rounded-lg"
+                    />
+                  </div>
+                  <h3 className="font-medium text-xs mb-1 line-clamp-1">{artwork.title}</h3>
+                  <p className="text-[10px] text-accent">{artwork.difficulty || 'Latte Art'}</p>
+                </div>
+              ))}
             </div>
-            
-            {/* ラテアート3 */}
-            <div className="flex-none w-[160px] mr-3">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1534040385115-33dcb3acba5b"
-                  alt="スワンラテアート"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">スワンデザイン</h3>
-              <p className="text-[10px] text-accent">Etching</p>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-xs text-foreground/70">ラテアート作品はまだありません</p>
             </div>
-            
-            {/* ラテアート4 */}
-            <div className="flex-none w-[160px] mr-3">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1572286258217-215b98b0d184"
-                  alt="フラワーラテアート"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">フラワーデザイン</h3>
-              <p className="text-[10px] text-accent">Free Pour</p>
-            </div>
-            
-            {/* ラテアート5 */}
-            <div className="flex-none w-[160px] mr-3">
-              <div className="relative aspect-square mb-2 shadow-sm">
-                <Image
-                  src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39"
-                  alt="猫のラテアート"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="rounded-lg"
-                />
-              </div>
-              <h3 className="font-medium text-xs mb-1">猫ラテ</h3>
-              <p className="text-[10px] text-accent">Etching Technique</p>
-            </div>
-          </div>
+          )}
         </div>
       </ScrollAnimation>
 
