@@ -89,7 +89,9 @@ export default function RootLayout({
           <main className="w-full">
             {children}
           </main>
-          <Footer />
+          <div className="lg:hidden">
+            <Footer />
+          </div>
           <Suspense fallback={null}>
             <ChatWidgetWrapper />
           </Suspense>

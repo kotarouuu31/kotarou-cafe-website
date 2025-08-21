@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { ScrollAnimation } from '@/components/ui/ScrollAnimation';
 import { PCLayout } from '@/components/layout/PCLayout';
 import { EventData, NewsData, LatteArtWork } from '@/lib/notion';
-import { RecordBoxNowPlaying } from '@/components/dj/RecordBoxNowPlaying';
+import { SimpleDJDisplay } from '@/components/dj/SimpleDJDisplay';
 
 // ホーム画面用API呼び出し関数
 async function fetchHomeData() {
@@ -427,7 +427,7 @@ export default function Home() {
             </p>
           </div>
             
-          <RecordBoxNowPlaying className="mb-6" />
+          <SimpleDJDisplay className="mb-6" />
         </div>
       </ScrollAnimation>
 
