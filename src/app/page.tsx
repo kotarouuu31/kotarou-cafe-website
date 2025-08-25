@@ -8,6 +8,7 @@ import { ScrollAnimation } from '@/components/ui/ScrollAnimation';
 import { PCLayout } from '@/components/layout/PCLayout';
 import { EventData, NewsData, LatteArtWork } from '@/lib/notion';
 import { SimpleDJDisplay } from '@/components/dj/SimpleDJDisplay';
+import { InlineChatWidget } from '@/components/chat/InlineChatWidget';
 
 // ホーム画面用API呼び出し関数
 async function fetchHomeData() {
@@ -431,18 +432,9 @@ export default function Home() {
         </div>
       </ScrollAnimation>
 
-      {/* Chat with DJ Nyanko */}
+      {/* Chat with DJ Nyanko - Interactive Chat Widget */}
       <ScrollAnimation className="w-full px-4 mb-12" rootMargin="-40px" delay={250}>
-        <div className="bg-gradient-to-br from-accent/20 to-primary/20 p-6 rounded-md text-center">
-          <h2 className="text-lg font-heading font-bold mb-3">DJ Nyanko AI</h2>
-          <p className="text-xs text-foreground/80 mb-4">
-            音楽のことならなんでも知っている、Kotarou Cafeの看板猫DJ。
-            好きな音楽や気分を伝えれば、ぴったりの一曲をおすすめしてくれます。
-          </p>
-          <Button href="/chat" variant="accent" size="sm">
-            Chat with DJ Nyanko
-          </Button>
-        </div>
+        <InlineChatWidget />
       </ScrollAnimation>
       </div>
     </PCLayout>
