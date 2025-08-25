@@ -258,12 +258,99 @@ export default function Home() {
         </Button>
       </ScrollAnimation>
 
+      {/* イベントセクション */}
+      <ScrollAnimation className="w-full px-4 mb-16" rootMargin="-40px" delay={175}>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-8">Events</h2>
+        
+        <div className="w-full max-w-[400px] mx-auto mb-8">
+          {loading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="bg-white/5 p-4 rounded-md shadow-sm animate-pulse">
+                <div className="h-4 bg-gray-300 rounded mb-2 w-3/4"></div>
+                <div className="h-3 bg-gray-300 rounded mb-1 w-1/2"></div>
+                <div className="h-3 bg-gray-300 rounded w-full"></div>
+              </div>
+            ))
+          ) : homeData.events.length > 0 ? (
+             homeData.events.map((event) => (
+               <div key={event.id} className="text-left py-6 border-b border-foreground/10 last:border-b-0">
+                 <div className="mb-3">
+                   <span className="text-sm text-accent mr-3">
+                     {new Date(event.eventDate).toLocaleDateString('ja-JP', { 
+                       year: 'numeric', 
+                       month: '2-digit', 
+                       day: '2-digit' 
+                     })}
+                   </span>
+                   <span className="text-sm text-foreground/70">
+                     Information
+                   </span>
+                 </div>
+                 <h3 className="text-base font-medium mb-2">{event.eventName}</h3>
+               </div>
+             ))
+           ) : (
+             <div className="text-center py-6">
+               <p className="text-sm text-foreground/70">最新イベントはまだありません</p>
+             </div>
+           )}
+         </div>
+         
+         <div className="text-center">
+           <Link href="/events?tab=events" className="inline-block px-8 py-3 border border-foreground/20 rounded-md text-sm font-medium hover:bg-foreground/5 transition-colors">
+             Events All
+           </Link>
+         </div>
+        </div>
+        
+        <div className="text-center mb-12 mt-16">
+          <h2 className="text-3xl font-bold mb-8">Upcoming Events</h2>
+          <div className="flex overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-accent/20 scrollbar-track-transparent snap-x snap-mandatory pl-4">
+            {loading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="flex-none w-[160px] mr-3 snap-start">
+                  <div className="relative aspect-square mb-2 shadow-sm bg-gray-300 animate-pulse rounded-lg"></div>
+                  <div className="h-3 bg-gray-300 rounded mb-1 w-3/4"></div>
+                  <div className="h-2 bg-gray-300 rounded w-1/2"></div>
+                </div>
+              ))
+            ) : homeData.events.length > 0 ? (
+              homeData.events.map((event) => (
+                <div key={event.id} className="flex-none w-[160px] mr-3 snap-start">
+                  <div className="relative aspect-square mb-2 shadow-sm">
+                    <Image
+                      src={event.eventImage || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819'}
+                      alt={event.eventName}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className="rounded-lg"
+                    />
+                  </div>
+                  <h3 className="font-medium text-xs mb-1 line-clamp-2">{event.eventName}</h3>
+                  <p className="text-[10px] text-accent">
+                    {new Date(event.eventDate).toLocaleDateString('ja-JP', { 
+                      month: 'numeric', 
+                      day: 'numeric' 
+                    })} {event.startTime}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="flex-none w-full text-center py-4">
+                <p className="text-xs text-foreground/70">イベントはまだありません</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </ScrollAnimation>
+
       {/* ニュースセクション */}
       <ScrollAnimation className="w-full px-4 mb-16" rootMargin="-40px" delay={150}>
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-8">News</h2>
         
-        <div className="max-w-xs mx-auto mb-8">
+        <div className="w-full max-w-[400px] mx-auto mb-8">
           {loading ? (
             Array.from({ length: 3 }).map((_, index) => (
               <div key={index} className="bg-white/5 p-4 rounded-md shadow-sm animate-pulse">
@@ -284,7 +371,7 @@ export default function Home() {
                      })}
                    </span>
                    <span className="text-sm text-foreground/70">
-                     {newsItem.category || 'Information'}
+                     Information
                    </span>
                  </div>
                  <h3 className="text-base font-medium mb-2">{newsItem.title}</h3>
