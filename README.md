@@ -1,20 +1,10 @@
-# Kotarou Cafe Website
 
-![Kotarou Cafe](https://img.shields.io/badge/Kotarou%20Cafe-2025-amber)
-![Next.js](https://img.shields.io/badge/Next.js-15.0-black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.0-38bdf8)
-![Notion API](https://img.shields.io/badge/Notion%20API-Connected-000000)
-![PWA](https://img.shields.io/badge/PWA-Ready-4285f4)
-![AI Development](https://img.shields.io/badge/AI%20Development-Windsurf-purple)
 
 ## 📖 プロジェクト概要
 
 Kotarou Cafeは、最新技術を駆使した次世代カフェウェブサイトです。**Notion API連携**によるリアルタイムコンテンツ管理、**PWA対応**によるネイティブアプリ体験、**モバイルファーストデザイン**による最適化されたUX、**RecordBox × DDJ-FLX4連携**によるプロ仕様DJ機能を実装。単なる情報サイトを超え、実店舗運営に直結する実用的な機能群を提供します。
 
-<p align="center">
-  <img src="https://via.placeholder.com/800x400?text=Kotarou+Cafe+Screenshot" alt="Kotarou Cafe Screenshot" width="80%">
-</p>
+
 
 ## 🛠️ 技術スタック
 
